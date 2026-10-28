@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build and production outputs
+dist/
+dist-ssr/
+build/
+*.local
+
+# Environment files and credentials
+.env
+.env.*
+!.env.example
+.env.backup
+.env.production
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Laravel storage and runtime cache (future backend)
+storage/*.key
+storage/app/public/*
+!storage/app/public/.gitignore
+storage/framework/cache/*
+!storage/framework/cache/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/testing/*
+!storage/framework/testing/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+storage/logs/*
+!storage/logs/.gitignore
+
+# PHP / Composer artifacts
+composer.phar
+.phpunit.result.cache
+.php-cs-fixer.cache
+
+# Operating System and IDE files
+.DS_Store
+Thumbs.db
+[Dd]esktop.ini
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary and cache files
+*.tmp
+*.temp
+.cache/
