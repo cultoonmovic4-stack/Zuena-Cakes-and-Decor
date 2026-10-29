@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
-import sweetheartStageImg from '../../assets/images/decor 3.jpg'
-import receptionCanopyImg from '../../assets/images/decor 4.jpg'
-import lanternTableImg from '../../assets/images/decor 5.jpg'
+import sweetheartStageImg from '../../assets/images/decoration5.jpg'
+import receptionCanopyImg from '../../assets/images/decoration7.jpg'
+import lanternTableImg from '../../assets/images/decoration4.jpg'
 
 const occasionOptions = [
   'Wedding Reception',

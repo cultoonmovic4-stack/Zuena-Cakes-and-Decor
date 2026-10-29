@@ -1,600 +1,422 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router'
-import goldTableSettingImg from '../../assets/images/decor 1.jpg'
-import coralFloralHallImg from '../../assets/images/decor 2.jpg'
-import sweetheartStageImg from '../../assets/images/decor 3.jpg'
-import receptionCanopyImg from '../../assets/images/decor 4.jpg'
-import lanternTableImg from '../../assets/images/decor 5.jpg'
-import candlelitHallImg from '../../assets/images/decor 6.jpg'
-import kwanjulaCakeImg from '../../assets/images/1.jpg'
-import weddingCakeImg from '../../assets/images/wd 1.jpg'
-import crystalWeddingCakeImg from '../../assets/images/wd 2.jpg'
-import blackGoldCakeImg from '../../assets/images/gd 2.jpg'
+import decoration0Img from '../../assets/images/decoration0.jpg'
+import decoration1Img from '../../assets/images/decoration1.jpg'
+import decoration2Img from '../../assets/images/decoration2.jpg'
+import decoration3Img from '../../assets/images/decoration3.jpg'
+import decoration4Img from '../../assets/images/decoration4.jpg'
+import decoration5Img from '../../assets/images/decoration5.jpg'
+import decoration6Img from '../../assets/images/decoration6.jpg'
+import decoration7Img from '../../assets/images/decoration7.jpg'
+import decoration8Img from '../../assets/images/decoration8.jpg'
+import decoration9Img from '../../assets/images/decoration9.jpg'
+import decoration110Img from '../../assets/images/decoration110.jpg'
 
-const TOTAL_HERO_CHARS = 18
-
-const heroLine1 = [
+const stylingPillars = [
   {
-    word: 'ARTFUL',
-    chars: [
-      { char: 'A', index: 0 },
-      { char: 'R', index: 1 },
-      { char: 'T', index: 2 },
-      { char: 'F', index: 3 },
-      { char: 'U', index: 4 },
-      { char: 'L', index: 5 },
-    ],
+    title: 'Ceremonial & Bridal Stages',
+    summary:
+      'Custom fluted arches, velvet and voile drapery, couple monograms, and curated VIP lounge suites for weddings and Kwanjula ceremonies.',
   },
   {
-    word: 'SPACES',
-    chars: [
-      { char: 'S', index: 6 },
-      { char: 'P', index: 7 },
-      { char: 'A', index: 8 },
-      { char: 'C', index: 9 },
-      { char: 'E', index: 10 },
-      { char: 'S', index: 11 },
-    ],
-  },
-]
-
-const heroLine2 = [
-  {
-    word: 'STYLED.',
-    chars: [
-      { char: 'S', index: 12 },
-      { char: 'T', index: 13 },
-      { char: 'Y', index: 14 },
-      { char: 'L', index: 15 },
-      { char: 'E', index: 16 },
-      { char: 'D', index: 17 },
-      { char: '.', index: 18 },
-    ],
-  },
-]
-
-function AnimatedEditorialKicker({ cycle, phase }) {
-  const isDeleting = phase === 'deleting'
-  const letterClass = isDeleting ? 'editorial-letter-deleting' : 'editorial-letter'
-  const getDelay = (index) =>
-    isDeleting
-      ? `${(TOTAL_HERO_CHARS - index) * 0.04}s`
-      : `${index * 0.06}s`
-
-  return (
-    <span className="inline-flex flex-wrap items-center gap-x-[0.32em] tracking-[0.18em] uppercase font-serif text-xs sm:text-sm text-primary-gold">
-      {heroLine1.map((item, wordIdx) => (
-        <span key={`hk1-${item.word}`} className="inline-block whitespace-nowrap">
-          {item.chars.map((c) => (
-            <span
-              key={`hk1-${wordIdx}-${c.index}-${cycle}-${phase}`}
-              className={letterClass}
-              style={{ animationDelay: getDelay(c.index) }}
-              aria-hidden="true"
-            >
-              {c.char}
-            </span>
-          ))}
-        </span>
-      ))}
-      <span className="inline-block whitespace-nowrap">
-        {heroLine2[0].chars.map((c) => (
-          <span
-            key={`hk2-${c.index}-${cycle}-${phase}`}
-            className={letterClass}
-            style={{ animationDelay: getDelay(c.index) }}
-            aria-hidden="true"
-          >
-            {c.char}
-          </span>
-        ))}
-      </span>
-    </span>
-  )
-}
-
-const heroShowcases = [
-  {
-    id: 'canopy',
-    label: '01 / Starlit Reception Canopy',
-    kicker: 'Full-Hall Architecture',
-    title: 'Ceiling Voile Swags & Candlelit Banquet Tables',
-    caption: 'Warm fairy-light drapery and floral centerpieces composed for grand evening receptions.',
-    mainImage: receptionCanopyImg,
-    mainAlt: 'Warm candlelit reception hall with fairy-lit ceiling drapery, floral table centerpieces, and Chiavari chairs',
-    insetImage: lanternTableImg,
-    insetAlt: 'Reception banquet table centerpiece featuring a bronze lantern, white roses, and votive candles',
-    palette: [
-      { name: 'Warm Champagne', hex: '#EFC767' },
-      { name: 'Blush Rose', hex: '#E8B4B8' },
-      { name: 'Ivory Voile', hex: '#F7F3EB' },
-    ],
+    title: 'Canopies & Chandelier Lighting',
+    summary:
+      'Suspended wisteria clouds, crystal and serpentine chandeliers, and warm festoon lighting that transform halls and garden marquees.',
   },
   {
-    id: 'sweetheart',
-    label: '02 / Bridal Sweetheart Stage',
-    kicker: 'Stage & Backdrop Design',
-    title: 'Olive Satin Drapery & Botanical Hoop Framing',
-    caption: 'Intimate head-table focal points layered with hanging geometric lanterns and cascading white roses.',
-    mainImage: sweetheartStageImg,
-    mainAlt: 'Sweetheart bridal head table styled with olive green drapery, glowing fairy lights, hanging lanterns, white roses, and pillar candles',
-    insetImage: candlelitHallImg,
-    insetAlt: 'Wide view of reception hall styled with olive-draped banquet tables and fairy-light backdrop',
-    palette: [
-      { name: 'Olive Foliage', hex: '#4A5D3F' },
-      { name: 'Antique Gold', hex: '#DEAC4B' },
-      { name: 'alabaster White', hex: '#F4F1EA' },
-    ],
-  },
-  {
-    id: 'kwanjula',
-    label: '03 / Kwanjula & Garden Marquee',
-    kicker: 'Ceremonial & Table Styling',
-    title: 'Terracotta, Amber & Gold-Rimmed Place Settings',
-    caption: 'Vibrant marquee styling with bespoke couple backdrops, gold flatware, and fresh amber florals.',
-    mainImage: goldTableSettingImg,
-    mainAlt: 'Outdoor marquee banquet table set with gold-rimmed glass chargers, coral napkins, gold flatware, orange roses, and floral arch backdrop',
-    insetImage: coralFloralHallImg,
-    insetAlt: 'Sunlit reception room with round white-draped banquet tables and tall coral floral centerpieces',
-    palette: [
-      { name: 'Terracotta Linen', hex: '#D96B43' },
-      { name: 'Marigold Bloom', hex: '#E59A3A' },
-      { name: 'Polished Brass', hex: '#C8963E' },
-    ],
+    title: 'Tablescapes & Cake Staging',
+    summary:
+      'Gold-rimmed place settings, fresh botanical runners, and dedicated on-stage cake pedestals colour-matched to your celebration cake.',
   },
 ]
 
 const stylingCategories = [
-  { id: 'all', label: 'All Styling' },
-  { id: 'weddings', label: 'Wedding Receptions' },
-  { id: 'traditional', label: 'Kwanjula & Cultural' },
-  { id: 'tablescapes', label: 'Floral & Tablescapes' },
-  { id: 'milestones', label: 'Milestone Celebrations' },
+  { id: 'all', label: 'All Works (11)' },
+  { id: 'weddings', label: 'Bridal Stages & Halls' },
+  { id: 'traditional', label: 'Kwanjula & Introduction' },
+  { id: 'outdoor', label: 'Garden & Lakeside' },
+  { id: 'bespoke', label: 'Welcome Installations' },
 ]
 
 const portfolioStudies = [
   {
-    id: 'sweetheart-stage',
+    id: 'decoration-5',
     category: 'weddings',
     occasionParam: 'Wedding Reception',
-    tag: 'Bridal Stage & Canopy',
-    title: 'Olive & Ivory Sweetheart Backdrop',
-    venueType: 'Indoor Salon or Marquee Stage',
-    guestScale: 'Intimate to Grand (50–350+ Guests)',
+    title: 'Forest Velvet, Fluted Arches & Hydrangea Stage',
+    venueType: 'Hotel Ballroom or Reception Hall',
+    aspectClass: 'aspect-4/5',
+    gridSpan: 'md:col-span-6 lg:col-span-5',
     description:
-      'Asymmetrical satin olive drapery, warm fairy-light curtain walls, hanging geometric lanterns, and cascading white rose arrangements anchored by cylinder pillar candles.',
-    highlights: [
-      'Custom gold hoop signage & warm curtain lighting',
-      'Floor-to-ceiling asymmetrical satin & sheer voile draping',
-      'Fresh white roses, hydrangeas & tropical palm foliage',
-    ],
-    palette: [
-      { name: 'Olive Satin', hex: '#4D5D3B' },
-      { name: 'Warm Fairy Gold', hex: '#EFC767' },
-      { name: 'Ivory Rose', hex: '#F7F4EE' },
-    ],
-    image: sweetheartStageImg,
-    alt: 'Sweetheart bridal head table styled with olive green drapery, glowing fairy lights, hanging lanterns, white roses, and pillar candles',
+      'Blush-cream fluted arches draped in soft ivory voile against a forest-green velvet curtain, anchored by a curved boucle sofa and white hydrangea meadows.',
+    image: decoration5Img,
+    alt: 'Botanical emerald and blush-cream multi-arch stage against deep forest-green velvet drapery with curved ivory sofa and hydrangea mounds',
   },
   {
-    id: 'candlelit-canopy',
-    category: 'weddings',
-    occasionParam: 'Wedding Reception',
-    tag: 'Full-Hall Reception',
-    title: 'Starlit Canopy & Banquet Styling',
-    venueType: 'Banquet Hall or Evening Pavilion',
-    guestScale: 'Medium to Large (100–400+ Guests)',
-    description:
-      'Sweeping ceiling voile swags interwoven with warm string lighting, paired with pastel rose centerpieces, crystal stemware, and limewashed Chiavari seating.',
-    highlights: [
-      'Architectural ceiling voile swags & string-light canopy',
-      'Low conversational rose & baby’s-breath table arrangements',
-      'Clustered glass votive & pillar candle illumination',
-    ],
-    palette: [
-      { name: 'Champagne Voile', hex: '#F3E5C8' },
-      { name: 'Blush Petal', hex: '#E6B8B7' },
-      { name: 'Warm Candlelight', hex: '#DEAC4B' },
-    ],
-    image: receptionCanopyImg,
-    alt: 'Warm candlelit reception hall with fairy-lit ceiling drapery, floral table centerpieces, and Chiavari chairs',
-  },
-  {
-    id: 'kwanjula-royal',
+    id: 'decoration-4',
     category: 'traditional',
     occasionParam: 'Kwanjula / Introduction',
-    tag: 'Kwanjula & Introduction',
-    title: 'Ceremonial Pavilion & Guest Tableaux',
-    venueType: 'Garden Tent or Homestead Pavilion',
-    guestScale: 'Traditional Gathering (100–500+ Guests)',
+    title: 'Blush & Burgundy Multi-Arch Stage With Paired Cake',
+    venueType: 'Outdoor Garden or Homestead Lawn',
+    aspectClass: 'aspect-16/10',
+    gridSpan: 'md:col-span-6 lg:col-span-7',
     description:
-      'Warm terracotta, amber, and gold-accented marquee styling honoring cultural heritage with statement floral columns, custom couple backdrop signage, and fine guest banquet settings.',
-    highlights: [
-      'Custom arched couple backdrop with twin floral pillars',
-      'Gold-beaded glass chargers, gold cutlery & terracotta linens',
-      'Coordinated ceiling pleated lining & suspended floral accents',
-    ],
-    palette: [
-      { name: 'Terracotta Silk', hex: '#E07048' },
-      { name: 'Amber Rose', hex: '#D9822B' },
-      { name: 'Imperial Gold', hex: '#DEAC4B' },
-    ],
-    image: goldTableSettingImg,
-    alt: 'Outdoor marquee banquet table set with gold-rimmed glass chargers, coral napkins, gold flatware, orange roses, and floral arch backdrop',
+      'Recessed blush-pink arches framed against deep burgundy pleated drapery, complete with cascading crimson florals and a coordinated two-tier cake on a gold pedestal.',
+    image: decoration4Img,
+    alt: 'Outdoor Kukyala and Kwanjula multi-arch stage in blush and burgundy with coordinated two-tier cake on a gold pedestal',
   },
   {
-    id: 'lantern-tablescape',
-    category: 'tablescapes',
-    occasionParam: 'Table & Floral Styling',
-    tag: 'Centerpiece Architecture',
-    title: 'Bronze Lantern & White Rose Tablescape',
-    venueType: 'Banquet Rounds or Long Estate Tables',
-    guestScale: 'Modular per Guest Table Count',
+    id: 'decoration-0',
+    category: 'outdoor',
+    occasionParam: 'Wedding Reception',
+    title: 'Geometric Gold-Framed Monogram & Lounge Stage',
+    venueType: 'Garden Courtyard or Open Lawn',
+    aspectClass: 'aspect-16/10',
+    gridSpan: 'md:col-span-6 lg:col-span-7',
     description:
-      'Intimate guest table styling anchored by warm bronze lanterns, ivory and blush roses, glass votives, and sage satin chair sashes facing a draped bridal head table.',
-    highlights: [
-      'Vintage bronze lantern centerpieces with pillar candles',
-      '360-degree fresh white rose, lisianthus & eucalyptus rings',
-      'Coordinated sage-green chair sashes & botanical napkin ties',
-    ],
-    palette: [
-      { name: 'Sage Ribbon', hex: '#7A8B74' },
-      { name: 'Aged Bronze', hex: '#A36733' },
-      { name: 'Cream Linen', hex: '#EFECE6' },
-    ],
-    image: lanternTableImg,
-    alt: 'Reception banquet table centerpiece featuring a bronze lantern, white roses, votive candles, and draped head table',
+      'Angular wing panels in marble-grey and crisp white trimmed in brushed gold, topped with festoon string lighting, custom couple initials, and a five-piece teak lounge suite.',
+    image: decoration0Img,
+    alt: 'Outdoor architectural wedding stage with angled white and marble panels, gold frames, monogram, white roses, and teak lounge seating',
   },
   {
-    id: 'coral-garden-salon',
-    category: 'milestones',
-    occasionParam: 'Milestone Celebration',
-    tag: 'Milestone & Daytime Banquets',
-    title: 'Sunlit Coral & Marigold Reception Salon',
-    venueType: 'Daylight Ballroom or Garden Conservatory',
-    guestScale: 'Intimate to Medium (40–200 Guests)',
-    description:
-      'Elevated glass-vase floral clouds in vibrant coral, peach, and marigold tones paired with draped chair ties and a sculptural asymmetrical floral arch.',
-    highlights: [
-      'Tall clear-pedestal floral clouds for unobstructed conversation',
-      'Statement asymmetrical floral arch for guest photography',
-      'Draped coral chiffon chair backs & matching table napkins',
-    ],
-    palette: [
-      { name: 'Coral Blossom', hex: '#F06E5B' },
-      { name: 'Marigold Glow', hex: '#F59E3F' },
-      { name: 'Crisp White', hex: '#FFFFFF' },
-    ],
-    image: coralFloralHallImg,
-    alt: 'Sunlit reception room with round white-draped banquet tables, tall lush coral and orange floral centerpieces, and coral chair sashes',
-  },
-  {
-    id: 'grand-ballroom-ensemble',
+    id: 'decoration-110',
     category: 'traditional',
-    occasionParam: 'Full-Venue Styling',
-    tag: 'Grand Venue Transformation',
-    title: 'Emerald & Champagne Ballroom Panorama',
-    venueType: 'Large Reception Hall or Hotel Ballroom',
-    guestScale: 'Grand Scale (150–500+ Guests)',
+    occasionParam: 'Kwanjula / Introduction',
+    title: 'Woven Raffia Baskets, Terracotta & Kitenge Stage',
+    venueType: 'Traditional Pavilion or Marquee',
+    aspectClass: 'aspect-4/5',
+    gridSpan: 'md:col-span-6 lg:col-span-5',
     description:
-      'Full-room spatial composition uniting suspended botanical chandeliers, an illuminated extended bridal table, olive satin table linens, and a central cake-cutting stage.',
-    highlights: [
-      'Dedicated central cake table with cascading greenery & candles',
-      'Extended multi-couple or bridal-party illuminated head table',
-      'Suspended greenery chandeliers & full-room linen coordination',
-    ],
-    palette: [
-      { name: 'Deep Olive', hex: '#556044' },
-      { name: 'Champagne Gold', hex: '#EFC767' },
-      { name: 'Espresso Canvas', hex: '#231F1C' },
-    ],
-    image: candlelitHallImg,
-    alt: 'Candlelit reception hall styled with ceiling drapery, warm fairy lights, and olive-draped banquet tables',
-  },
-]
-
-const cakeAndDecorPairings = [
-  {
-    id: 'ivory-ballroom',
-    label: 'Ivory & Champagne Ballroom',
-    occasion: 'Wedding Receptions',
-    venueTitle: 'Starlit Voile Canopy & Lantern Tables',
-    venueImage: lanternTableImg,
-    venueAlt: 'Reception banquet table with bronze lantern, white roses, and fairy-lit head table',
-    cakeTitle: 'Four-Tier Ivory Magnolia & Crystal Cake',
-    cakeImage: crystalWeddingCakeImg,
-    cakeAlt: 'Four-tier ivory wedding cake adorned with handcrafted white sugar magnolias and crystal accents',
-    harmonyNote:
-      'Hand-sculpted sugar magnolias and champagne-gold accents on the cake mirror the white rose table rings and warm fairy-lit ceiling drapery across the hall.',
-    sharedElements: ['White & Blush Rose Palette', 'Warm Gold Pedestal & Chargers', 'Candlelit Cake Stage Framing'],
+      'Handwoven Ugandan raffia baskets across a warm terracotta backdrop with custom neon couple signage, carved woodwork, clay pottery, and cascading amber florals.',
+    image: decoration110Img,
+    alt: 'Cultural stage backdrop styled with woven raffia baskets, terracotta drapery, warm neon script, carved wooden stool with clay pot, and Kitenge fabric',
   },
   {
-    id: 'kwanjula-heritage',
-    label: 'Kwanjula Royal Heritage',
-    occasion: 'Introduction Ceremonies',
-    venueTitle: 'Terracotta, Amber & Gold Marquee',
-    venueImage: goldTableSettingImg,
-    venueAlt: 'Marquee banquet table with gold-rimmed chargers, coral napkins, and amber floral arch',
-    cakeTitle: 'Bespoke Barkcloth & Gomasi Tiered Cake',
-    cakeImage: kwanjulaCakeImg,
-    cakeAlt: 'Two-tier Ugandan cultural cake featuring textured barkcloth bottom tier and traditional striped Gomasi top tier',
-    harmonyNote:
-      'Rich cultural textures—from the sculpted Olubugo barkcloth tier to vibrant traditional stripes—are echoed in the warm amber roses, terracotta linens, and gold-rimmed tableware.',
-    sharedElements: ['Warm Earth & Gold Tones', 'Ceremonial Stage Placement', 'Cultural Motif Coordination'],
+    id: 'decoration-7',
+    category: 'weddings',
+    occasionParam: 'Wedding Reception',
+    title: 'Wisteria Cloud & Serpentine Chandelier Hall',
+    venueType: 'Grand Indoor Ballroom or Marquee',
+    aspectClass: 'aspect-4/5',
+    gridSpan: 'md:col-span-6 lg:col-span-4',
+    description:
+      'An overhead floral canopy of pastel lavender, powder blue, and ivory wisteria traversed by a glowing serpentine chandelier and classical arched stage paneling.',
+    image: decoration7Img,
+    alt: 'Grand reception hall with suspended pastel wisteria ceiling installation, serpentine LED chandelier, and arched stage backdrop',
   },
   {
-    id: 'emerald-soiree',
-    label: ' Botanical & Gold Soirée',
-    occasion: 'Evening Milestones & Galas',
-    venueTitle: 'Olive Satin Drapery & Botanical Hoop',
-    venueImage: sweetheartStageImg,
-    venueAlt: 'Sweetheart stage with olive drapery, glowing fairy lights, and white roses',
-    cakeTitle: 'Matte Black & 24k Gold-Leaf Tiered Cake',
-    cakeImage: blackGoldCakeImg,
-    cakeAlt: 'Three-tier matte black and gold drip celebration cake with gold leaf on a brass pedestal',
-    harmonyNote:
-      'Dramatic architectural contrast: metallic gold-leaf brushwork and brass cake pedestals pair with geometric hanging lanterns, deep olive drapery, and warm pillar candlelight.',
-    sharedElements: ['Geometric Brass & Gold Accents', 'Lush Monstera & Rose Greenery', 'Chiaroscuro Evening Lighting'],
+    id: 'decoration-8',
+    category: 'outdoor',
+    occasionParam: 'Wedding Reception',
+    title: 'Lakeside Pavilion & Double-Arch Floral Altar',
+    venueType: 'Lakeside Lawn or Waterfront Resort',
+    aspectClass: 'aspect-4/5',
+    gridSpan: 'md:col-span-6 lg:col-span-4',
+    description:
+      'Sunlit open-air pavilion dressed in billowing white voile drapery framing a concentric double-circle white arch adorned with hanging crystal strands and white roses.',
+    image: decoration8Img,
+    alt: 'Lakeside wedding ceremony pavilion with sheer white drapery, double-arch white floral altar, and white carpet aisle overlooking water',
+  },
+  {
+    id: 'decoration-9',
+    category: 'bespoke',
+    occasionParam: 'Milestone Celebration',
+    title: 'Storybook Pillar Welcome Installation',
+    venueType: 'Venue Entrance or Garden Lawn',
+    aspectClass: 'aspect-4/5',
+    gridSpan: 'md:col-span-12 lg:col-span-4',
+    description:
+      'Seven architectural white monolith pillars spelling "WELCOME To Our Wedding", personalized with couple photographs, love-story chapters, and peach rose meadows.',
+    image: decoration9Img,
+    alt: 'Seven white architectural pillars spelling Welcome To Our Wedding with couple photos, love story text, peach roses, and uplighting',
+  },
+  {
+    id: 'decoration-1',
+    category: 'outdoor',
+    occasionParam: 'Full-Venue Styling',
+    title: 'Emerald & Woven-Basket Garden Pavilion',
+    venueType: 'Garden Tent or Outdoor Reception',
+    aspectClass: 'aspect-16/10',
+    gridSpan: 'md:col-span-6 lg:col-span-6',
+    description:
+      'Deep emerald-green and white canopy draping accented with suspended woven basket planters spilling with trailing ferns, paired with a sculpted white lounge sofa.',
+    image: decoration1Img,
+    alt: 'Emerald green and white draped garden pavilion with hanging woven basket planters, curved white lounge sofa, and gold banquet chairs',
+  },
+  {
+    id: 'decoration-6',
+    category: 'traditional',
+    occasionParam: 'Kwanjula / Introduction',
+    title: 'Emerald Ombre & Sunflower Introduction Stage',
+    venueType: 'Garden Lawn or Marquee',
+    aspectClass: 'aspect-16/10',
+    gridSpan: 'md:col-span-6 lg:col-span-6',
+    description:
+      'Deep emerald-to-mint gradient stage wall with custom gold script ("Sheila Introduces Brian"), overhead crystal chandelier, gold triple-arch frames, and sunflowers.',
+    image: decoration6Img,
+    alt: 'Garden Introduction ceremony stage reading Sheila Introduces Brian with emerald ombre backdrop, gold arches, sunflowers, and emerald velvet chairs',
+  },
+  {
+    id: 'decoration-2',
+    category: 'weddings',
+    occasionParam: 'Wedding Reception',
+    title: 'Backlit Wave Panels & Mirrored Sweetheart Table',
+    venueType: 'Indoor Ballroom Stage',
+    aspectClass: 'aspect-16/10',
+    gridSpan: 'md:col-span-6 lg:col-span-6',
+    description:
+      'Curved white sculptural ribbons with soft ice-blue ambient backlighting, a faceted silver-mirror sweetheart table, and cascading dusty-blue hydrangea runners.',
+    image: decoration2Img,
+    alt: 'Sculptural wave-paneled bridal stage with soft blue backlighting, silver monogram, mirrored sweetheart table, and blue-and-white florals',
+  },
+  {
+    id: 'decoration-3',
+    category: 'weddings',
+    occasionParam: 'Wedding Reception',
+    title: 'Five-Arch Lavender & Crystal Chandelier Stage',
+    venueType: 'Banquet Hall or Indoor Venue',
+    aspectClass: 'aspect-16/10',
+    gridSpan: 'md:col-span-6 lg:col-span-6',
+    description:
+      'Classical five-arch colonnade in matte white adorned with clouds of lavender, lilac, and blush roses, mini crystal chandeliers suspended inside the side arches, and silver plinths.',
+    image: decoration3Img,
+    alt: 'Five-arch stage backdrop with lavender and blush rose clusters, crystal chandeliers, and cream velvet settee',
   },
 ]
 
 export default function DecorationsPage() {
-  const [activeHeroIdx, setActiveHeroIdx] = useState(0)
   const [activeCategory, setActiveCategory] = useState('all')
-  const [activePairingIdx, setActivePairingIdx] = useState(0)
-  const [selectedStudy, setSelectedStudy] = useState(null)
-  const [cycle, setCycle] = useState(0)
-  const [phase, setPhase] = useState('writing')
-
-  // Progressive letter animation cycle matching HomePage
-  useEffect(() => {
-    let deleteTimerId
-    let rewriteTimerId
-
-    const startCycle = () => {
-      setPhase('writing')
-      deleteTimerId = setTimeout(() => {
-        setPhase('deleting')
-        rewriteTimerId = setTimeout(() => {
-          setCycle((prev) => prev + 1)
-          startCycle()
-        }, 1250)
-      }, 4200)
-    }
-
-    startCycle()
-
-    return () => {
-      clearTimeout(deleteTimerId)
-      clearTimeout(rewriteTimerId)
-    }
-  }, [])
-
-  // Close lightbox modal on Escape key
-  useEffect(() => {
-    if (!selectedStudy) return
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setSelectedStudy(null)
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedStudy])
-
-  const currentHero = heroShowcases[activeHeroIdx]
-  const currentPairing = cakeAndDecorPairings[activePairingIdx]
+  const [lightboxIndex, setLightboxIndex] = useState(null)
+  const [isZoomed, setIsZoomed] = useState(false)
 
   const filteredStudies =
     activeCategory === 'all'
       ? portfolioStudies
       : portfolioStudies.filter((item) => item.category === activeCategory)
 
+  const openStudyById = (studyId) => {
+    const idx = portfolioStudies.findIndex((item) => item.id === studyId)
+    if (idx !== -1) {
+      setIsZoomed(false)
+      setLightboxIndex(idx)
+    }
+  }
+
+  const closeLightbox = () => {
+    setLightboxIndex(null)
+    setIsZoomed(false)
+  }
+
+  const showPrevImage = () => {
+    setIsZoomed(false)
+    setLightboxIndex((prev) =>
+      prev === null ? null : (prev - 1 + portfolioStudies.length) % portfolioStudies.length
+    )
+  }
+
+  const showNextImage = () => {
+    setIsZoomed(false)
+    setLightboxIndex((prev) =>
+      prev === null ? null : (prev + 1) % portfolioStudies.length
+    )
+  }
+
+  // Keyboard navigation (Escape, ArrowLeft, ArrowRight) in full-screen viewer
+  useEffect(() => {
+    if (lightboxIndex === null) return
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setLightboxIndex(null)
+        setIsZoomed(false)
+      } else if (e.key === 'ArrowLeft') {
+        setIsZoomed(false)
+        setLightboxIndex((prev) =>
+          prev === null ? null : (prev - 1 + portfolioStudies.length) % portfolioStudies.length
+        )
+      } else if (e.key === 'ArrowRight') {
+        setIsZoomed(false)
+        setLightboxIndex((prev) =>
+          prev === null ? null : (prev + 1) % portfolioStudies.length
+        )
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [lightboxIndex])
+
+  const activeLightboxStudy =
+    lightboxIndex !== null ? portfolioStudies[lightboxIndex] : null
+
   return (
     <div className="w-full font-sans bg-dark-canvas text-brand-white">
       {/* ===================================================================
-          SCENE 1 — Interactive Architectural Atelier Hero
-          (Combines HomePage Scene 1 Progressive Type + Scene 2 Editorial Depth)
+          SCENE 1 — Clean Edge-to-Edge Architectural Hero
           =================================================================== */}
       <section
-        aria-label="Scene 1 — Event Decoration & Venue Styling Hero"
-        className="relative w-full min-h-[680px] lg:min-h-[860px] flex flex-col justify-between overflow-hidden bg-dark-canvas border-b border-bronze/25"
+        aria-label="Scene 1 — An Atmosphere, Thoughtfully Created"
+        className="relative w-full min-h-[600px] sm:min-h-[660px] md:min-h-[760px] lg:min-h-[840px] flex items-center justify-center overflow-hidden bg-dark-canvas"
       >
-        {/* High-Resolution Full-Bleed Ballroom Background with Active Showcase Crossfade */}
+        {/* Full-Bleed Forest-Velvet & Arch Stage Background (decoration5.jpg) */}
         <img
-          src="/scene2_celebration_bg.jpg"
-          alt="Opulent candlelit ballroom floral setting with gold arch and tiered celebration cake"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-45 pointer-events-none select-none"
+          src={decoration5Img}
+          alt="Botanical emerald and blush-cream multi-arch stage against deep forest-green velvet drapery with curved ivory sofa, hydrangea mounds, and glowing pillar candles"
+          className="absolute inset-0 w-full h-full object-cover object-[center_58%] pointer-events-none select-none"
         />
 
-        {/* Ambient Studio Chiaroscuro Gradients */}
+        {/* Seamless Chiaroscuro Gradient Overlays */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-[#141210] via-[#141210]/90 to-[#141210]/65 pointer-events-none"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#141210] to-transparent pointer-events-none"
+          className="absolute inset-0 bg-[#141210]/72 sm:bg-transparent pointer-events-none"
         />
         <div
           aria-hidden="true"
-          className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#141210] via-[#141210]/85 to-transparent pointer-events-none"
+          className="hidden sm:block absolute inset-0 bg-gradient-to-r from-[#141210]/95 via-[#141210]/78 to-transparent sm:w-[75%] md:w-[65%] lg:w-[58%] pointer-events-none"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-[#141210] to-transparent pointer-events-none"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#141210] to-transparent pointer-events-none"
         />
 
-        {/* Main Hero Content Container */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16 lg:pt-20 pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            {/* Left Column (Cols 1-6): Editorial Headline, Narrative & CTAs */}
-            <div className="lg:col-span-6 flex flex-col items-center text-center sm:items-start sm:text-left">
-              {/* Progressive Animated Gold Kicker inspired by HomePage Scene 1 */}
-              <div className="flex items-center gap-3 mb-4 min-h-[24px]">
-                <span aria-hidden="true" className="w-7 h-[1px] bg-primary-gold/70" />
-                <AnimatedEditorialKicker cycle={cycle} phase={phase} />
-              </div>
-
-              <h1 className="font-serif font-normal text-3xl sm:text-5xl xl:text-[3.85rem] leading-[1.1] tracking-tight break-words">
-                <span className="block text-white">Where Every Space</span>
-                <span className="block text-primary-gold font-serif mt-1.5">
-                  Becomes a Celebration,
+        {/* Hero 12-Column Editorial Container */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+            {/* Left Column (Cols 1-7): Headline, Statement, CTAs & Metrics */}
+            <div className="lg:col-span-7 flex flex-col items-center text-center sm:items-start sm:text-left">
+              <h1
+                data-aos="fade-up"
+                className="font-serif font-normal text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[4rem] leading-[1.14] sm:leading-[1.12] tracking-tight break-words"
+              >
+                <span className="block text-white">More Than Decor.</span>
+                <span className="block text-primary-gold italic font-serif mt-1">
+                  An Atmosphere,
                 </span>
-                <span className="block text-white mt-1.5">Thoughtfully Styled.</span>
+                <span className="block text-white mt-1">
+                  Thoughtfully Created.
+                </span>
               </h1>
 
-              {/* Editorial Accent Line */}
+              {/* Subtle Editorial Accent Line */}
               <div
                 aria-hidden="true"
-                className="w-14 h-[1px] bg-primary-gold/60 my-6 sm:my-7 mx-auto sm:mx-0"
+                data-aos="fade-up"
+                data-aos-delay="100"
+                className="w-12 h-[1px] bg-primary-gold/60 my-5 sm:my-7 mx-auto sm:mx-0"
               />
 
-              <p className="font-sans text-sm sm:text-base text-gray-200/90 leading-relaxed max-w-xl mb-8 font-normal">
-                From sweeping reception canopies and ceremonial Kwanjula stages to candlelit floral tablescapes, our Kampala atelier composes full-room environments with the same bespoke artistry as our signature cakes.
+              <p
+                data-aos="fade-up"
+                data-aos-delay="150"
+                className="font-sans text-sm sm:text-base text-gray-200/90 leading-relaxed max-w-sm sm:max-w-lg mb-7 sm:mb-9 font-normal break-words"
+              >
+                From custom bridal stages and authentic Kwanjula pavilions to suspended floral ballrooms, we unite architectural framing and botanical artistry to give every celebration a distinctive sense of occasion.
               </p>
 
-              {/* Primary & Secondary CTAs */}
-              <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3.5 sm:gap-4 w-full max-w-xs sm:max-w-lg">
+              {/* Clean Dual Calls to Action */}
+              <div
+                data-aos="fade-up"
+                data-aos-delay="240"
+                className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 sm:gap-4 pt-1 w-full max-w-xs sm:max-w-md min-w-0"
+              >
                 <Link
                   to="/decorations/enquire"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-xs text-xs sm:text-sm font-semibold tracking-wider uppercase bg-primary-gold text-[#141210] hover:bg-gold-highlight hover:shadow-[0_4px_24px_rgba(222,172,75,0.35)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] min-h-[44px] text-center"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 rounded text-xs sm:text-sm font-semibold tracking-wider uppercase bg-primary-gold text-[#141210] hover:bg-gold-highlight hover:shadow-[0_4px_24px_rgba(222,172,75,0.35)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] min-h-[44px] text-center"
                 >
-                  Enquire About Event Decor
+                  Request a Consultation
                 </Link>
                 <a
                   href="#styling-portfolio"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-xs text-xs sm:text-sm font-semibold tracking-wider uppercase border border-primary-gold/60 text-champagne-gold hover:border-primary-gold hover:text-white hover:bg-primary-gold/10 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] min-h-[44px] text-center"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 rounded text-xs sm:text-sm font-semibold tracking-wider uppercase border border-primary-gold/60 text-champagne-gold hover:border-primary-gold hover:text-white hover:bg-primary-gold/10 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] min-h-[44px] text-center"
                 >
-                  Explore Styling Portfolio
+                  Explore Lookbook
                 </a>
               </div>
 
-              {/* Key Atelier Credentials Ledger */}
-              <div className="w-full max-w-lg mt-10 pt-6 border-t border-bronze/30 grid grid-cols-3 gap-4 text-center sm:text-left">
+              {/* Minimalist Key Metrics Ledger */}
+              <div
+                data-aos="fade-up"
+                data-aos-delay="300"
+                className="w-full max-w-xl mt-10 pt-6 border-t border-white/15 grid grid-cols-3 gap-4 sm:gap-6 text-center sm:text-left"
+              >
                 <div>
-                  <span className="block font-serif text-base sm:text-lg text-champagne-gold font-semibold">
-                    Full-Room
+                  <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-primary-gold">
+                    01 / Scope
                   </span>
-                  <span className="block font-sans text-[11px] text-gray-400 mt-0.5">
-                    Stage, canopy &amp; tables
-                  </span>
-                </div>
-                <div className="border-x border-bronze/25 px-3 sm:border-r-0 sm:pl-4">
-                  <span className="block font-serif text-base sm:text-lg text-champagne-gold font-semibold">
-                    Cake + Decor
-                  </span>
-                  <span className="block font-sans text-[11px] text-gray-400 mt-0.5">
-                    Unified colour story
+                  <span className="block font-serif text-sm sm:text-base text-brand-white mt-0.5">
+                    Full-Venue Styling
                   </span>
                 </div>
-                <div className="sm:border-l sm:border-bronze/25 sm:pl-4">
-                  <span className="block font-serif text-base sm:text-lg text-champagne-gold font-semibold">
-                    Since 2014
+                <div className="border-x border-white/15 px-3 sm:px-5">
+                  <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-primary-gold">
+                    02 / Distinction
                   </span>
-                  <span className="block font-sans text-[11px] text-gray-400 mt-0.5">
-                    Kampala event atelier
+                  <span className="block font-serif text-sm sm:text-base text-brand-white mt-0.5">
+                    Cake + Decor Unity
+                  </span>
+                </div>
+                <div>
+                  <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-primary-gold">
+                    03 / Heritage
+                  </span>
+                  <span className="block font-serif text-sm sm:text-base text-brand-white mt-0.5">
+                    Kampala Since 2014
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Right Column (Cols 7-12): Interactive Stepped Lookbook Stage */}
-            <div className="lg:col-span-6 flex flex-col">
-              <div className="relative grid grid-cols-12 gap-4 items-end">
-                {/* Main Tall Architectural Study (Cols 1-8) */}
-                <div className="col-span-8 sm:col-span-8">
-                  <div className="border border-bronze/40 bg-[#181512] p-2 sm:p-2.5 rounded-sm shadow-2xl">
-                    <div className="relative overflow-hidden rounded-xs">
-                      <img
-                        key={currentHero.id}
-                        src={currentHero.mainImage}
-                        alt={currentHero.mainAlt}
-                        className="w-full aspect-3/4 object-cover object-center block select-none transition-all duration-500"
-                      />
-                      <div
-                        aria-hidden="true"
-                        className="absolute inset-0 bg-gradient-to-t from-[#141210]/85 via-transparent to-transparent"
-                      />
-                      <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">
-                        <div>
-                          <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-primary-gold font-semibold">
-                            {currentHero.kicker}
-                          </span>
-                          <p className="font-serif text-sm sm:text-base text-brand-white leading-snug mt-0.5">
-                            {currentHero.title}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            {/* Right Column (Cols 8-12): Additional Floating Showcase Card on the Hero */}
+            <div
+              data-aos="fade-left"
+              data-aos-delay="200"
+              className="hidden lg:flex lg:col-span-5 flex-col items-end"
+            >
+              <div className="relative w-full max-w-[380px]">
+                {/* Primary Tall Portrait Showcase (decoration7.jpg) */}
+                <button
+                  type="button"
+                  onClick={() => openStudyById('decoration-7')}
+                  aria-label="View Wisteria Cloud & Serpentine Chandelier Hall full screen"
+                  className="w-full relative overflow-hidden rounded-sm shadow-[0_24px_60px_rgba(0,0,0,0.85)] group cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold"
+                >
+                  <img
+                    src={decoration7Img}
+                    alt="Grand reception hall with suspended pastel wisteria ceiling installation and serpentine LED chandelier"
+                    className="w-full aspect-4/5 object-cover object-center block select-none transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-[#141210]/75 via-transparent to-transparent"
+                  />
+                </button>
 
-                {/* Overlapping Secondary Detail Study + Palette Card (Cols 9-12) */}
-                <div className="col-span-4 flex flex-col gap-4 -ml-6 sm:-ml-8 relative z-20 pb-2">
-                  {/* Palette Swatch Plaque */}
-                  <div className="bg-[#141210]/95 backdrop-blur-xs border border-primary-gold/40 p-3 sm:p-4 rounded-sm shadow-2xl">
-                    <span className="block font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-champagne-gold mb-2">
-                      Palette Study
+                {/* Overlapping Additional Card (decoration110.jpg + Bespoke Curation Caption) */}
+                <button
+                  type="button"
+                  onClick={() => openStudyById('decoration-110')}
+                  aria-label="View Woven Raffia Baskets, Terracotta & Kitenge Stage full screen"
+                  className="relative z-20 -mt-20 -ml-12 w-[80%] bg-[#141210]/95 backdrop-blur-md border-l-2 border-l-primary-gold p-3.5 rounded-sm shadow-2xl flex items-center gap-3.5 text-left cursor-pointer hover:bg-[#1C1815] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold"
+                >
+                  <img
+                    src={decoration110Img}
+                    alt="Cultural Kwanjula stage with woven raffia baskets and terracotta drapery"
+                    className="w-16 h-20 object-cover rounded-xs shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <span className="block font-mono text-[9px] uppercase tracking-[0.2em] text-primary-gold">
+                      Bespoke Curation
                     </span>
-                    <div className="space-y-1.5">
-                      {currentHero.palette.map((swatch) => (
-                        <div key={swatch.name} className="flex items-center gap-2">
-                          <span
-                            aria-hidden="true"
-                            className="w-3 h-3 rounded-full border border-white/25 shrink-0"
-                            style={{ backgroundColor: swatch.hex }}
-                          />
-                          <span className="font-sans text-[10px] sm:text-[11px] text-gray-300 truncate">
-                            {swatch.name}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                    <p className="font-serif text-sm text-brand-white leading-snug mt-0.5 truncate">
+                      Weddings &amp; Kwanjula
+                    </p>
+                    <p className="font-sans text-[11px] text-gray-400 mt-1 leading-tight">
+                      Tailored stages, florals &amp; lighting composed to order.
+                    </p>
                   </div>
-
-                  {/* Secondary Framed Image */}
-                  <div className="border-4 border-dark-canvas bg-[#181512] rounded-sm shadow-2xl overflow-hidden">
-                    <img
-                      key={`${currentHero.id}-inset`}
-                      src={currentHero.insetImage}
-                      alt={currentHero.insetAlt}
-                      className="w-full aspect-4/3 object-cover block select-none"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Interactive Lookbook Switcher Tabs Under Hero Stage */}
-              <div
-                role="tablist"
-                aria-label="Switch featured decoration showcase"
-                className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-2.5"
-              >
-                {heroShowcases.map((item, idx) => {
-                  const isSelected = activeHeroIdx === idx
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isSelected}
-                      onClick={() => setActiveHeroIdx(idx)}
-                      className={`text-left px-3.5 py-2.5 rounded-xs border transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold ${
-                        isSelected
-                          ? 'bg-[#1F1B17] border-primary-gold text-brand-white shadow-lg'
-                          : 'bg-[#161311]/80 border-bronze/25 text-gray-400 hover:text-gray-200 hover:border-bronze/50'
-                      }`}
-                    >
-                      <span
-                        className={`block font-mono text-[10px] uppercase tracking-[0.16em] ${
-                          isSelected ? 'text-primary-gold font-semibold' : 'text-gray-400'
-                        }`}
-                      >
-                        {item.label}
-                      </span>
-                      <span className="block font-serif text-xs text-gray-200 truncate mt-0.5">
-                        {item.kicker}
-                      </span>
-                    </button>
-                  )
-                })}
+                </button>
               </div>
             </div>
           </div>
@@ -602,70 +424,100 @@ export default function DecorationsPage() {
       </section>
 
       {/* ===================================================================
-          SCENE 2 — The Stepped Horizon: Spatial Architecture & Tableaux
-          (Directly inspired by HomePage Scene 4 asymmetric stepped composition)
+          SCENE 2 — Three Pillars of Event Styling
           =================================================================== */}
       <section
-        aria-label="Scene 2 — Spatial Architecture and Tableaux"
-        className="relative w-full bg-dark-canvas text-brand-white overflow-hidden py-20 sm:py-24 lg:py-32"
+        aria-label="Scene 2 — Core Event Styling Disciplines"
+        className="relative w-full bg-dark-canvas pt-10 pb-6 sm:py-16"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            {stylingPillars.map((pillar, idx) => (
+              <div
+                key={pillar.title}
+                data-aos="fade-up"
+                data-aos-delay={idx * 90}
+              >
+                <div aria-hidden="true" className="w-8 h-[1px] bg-primary-gold/60 mb-4" />
+                <h2 className="font-serif font-normal text-xl sm:text-2xl text-primary-gold mb-2">
+                  {pillar.title}
+                </h2>
+                <p className="font-sans text-xs sm:text-sm text-gray-300/90 leading-relaxed">
+                  {pillar.summary}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===================================================================
+          SCENE 3 — The Stepped Horizon: Every Setting, Composed by Hand
+          =================================================================== */}
+      <section
+        aria-label="Scene 3 — Every Setting, Composed by Hand"
+        className="relative w-full bg-dark-canvas text-brand-white overflow-hidden py-16 sm:py-24 lg:py-32"
       >
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Desktop & Tablet Balanced Editorial Layout (md and up) */}
           <div className="hidden md:grid md:grid-cols-12 md:gap-8 lg:gap-12 items-start">
-            {/* Left Wing (Cols 1-7): Headline, Intro & Stepped Styling Triad */}
             <div className="md:col-span-7 flex flex-col">
               <div data-aos="fade-up" className="mb-8 lg:mb-12 max-w-xl">
-                <span className="text-[11px] font-sans uppercase tracking-[0.22em] text-champagne-gold font-semibold block mb-2">
-                  Equal Artistry &bull; Venue &amp; Table
-                </span>
                 <h2 className="font-serif font-normal text-3xl lg:text-5xl xl:text-[3.25rem] text-primary-gold leading-[1.1] tracking-tight">
-                  Rooms Transformed With Intention.
+                  Every Setting, Composed by Hand.
                 </h2>
                 <p className="font-sans text-sm lg:text-base text-gray-300 leading-relaxed mt-3.5 font-normal">
-                  Whether transforming an open garden marquee for a traditional Kwanjula or draping a candlelit ballroom for a wedding reception, every fabric swag, floral stem, and place setting is composed as part of a single visual story.
+                  From woven-raffia Kwanjula stages and personalized wedding welcome monoliths to sunlit lakeside altars, our portfolio spans intimate cultural ceremonies and grand ballroom transformations.
                 </p>
               </div>
 
-              {/* Stepped Decor Triad: Left Supporting Studies + Tall Center-Left Stage Anchor */}
               <div className="grid grid-cols-12 gap-5 lg:gap-7 items-start">
-                {/* Supporting Studies Column */}
                 <div className="col-span-5 flex flex-col">
-                  {/* Upper-Left Step: Place Setting & Chargers */}
-                  <div data-aos="fade-up" data-aos-delay="100" className="w-full">
+                  <div
+                    data-aos="fade-up"
+                    data-aos-delay="100"
+                    onClick={() => openStudyById('decoration-110')}
+                    className="w-full overflow-hidden rounded-sm shadow-2xl cursor-pointer group"
+                  >
                     <img
-                      src={goldTableSettingImg}
-                      alt="Banquet table set with gold-rimmed glass chargers, coral linen napkins, gold flatware, and amber floral arrangements"
-                      className="w-full aspect-4/5 object-cover rounded-sm shadow-2xl block"
+                      src={decoration110Img}
+                      alt="Cultural stage backdrop styled with woven raffia baskets, terracotta drapery, warm neon script, and Kitenge fabric"
+                      className="w-full aspect-4/5 object-cover block transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 
-                  {/* Lower-Left Step: Sunlit Floral Reception */}
-                  <div data-aos="fade-up" data-aos-delay="200" className="w-[88%] mt-6 lg:mt-8">
+                  <div
+                    data-aos="fade-up"
+                    data-aos-delay="200"
+                    onClick={() => openStudyById('decoration-9')}
+                    className="w-[88%] mt-6 lg:mt-8 overflow-hidden rounded-sm shadow-2xl cursor-pointer group"
+                  >
                     <img
-                      src={coralFloralHallImg}
-                      alt="Sunlit reception salon with elevated coral and marigold floral centerpieces and draped chairs"
-                      className="w-full aspect-4/5 object-cover rounded-sm shadow-2xl block"
+                      src={decoration9Img}
+                      alt="Seven white architectural pillars spelling Welcome To Our Wedding with couple photos and peach roses"
+                      className="w-full aspect-4/5 object-cover block transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                 </div>
 
-                {/* Primary Tall Stage Photograph (Center-Left Rising Anchor) */}
                 <div data-aos="fade-up" data-aos-delay="150" className="col-span-7 -mt-2 lg:-mt-6 flex flex-col">
-                  <div className="w-full">
+                  <div
+                    onClick={() => openStudyById('decoration-8')}
+                    className="w-full overflow-hidden rounded-sm shadow-2xl cursor-pointer group"
+                  >
                     <img
-                      src={sweetheartStageImg}
-                      alt="Sweetheart bridal stage styled with olive green drapery, fairy-light curtain, gold hoop signage, and white roses"
-                      className="w-full aspect-2/3 object-cover rounded-sm shadow-2xl block"
+                      src={decoration8Img}
+                      alt="Lakeside wedding ceremony pavilion with sheer white drapery, double-arch white floral altar, and white carpet aisle"
+                      className="w-full aspect-2/3 object-cover block transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 
-                  {/* Subtle Pathway to Enquiry Consultation */}
                   <div className="mt-6 lg:mt-8">
                     <Link
                       to="/decorations/enquire"
                       className="inline-flex items-center gap-2 text-xs lg:text-sm font-sans font-semibold tracking-[0.18em] uppercase text-primary-gold hover:text-gold-highlight border-b border-primary-gold/40 hover:border-gold-highlight pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold min-h-[44px]"
                     >
-                      <span>Request Styling Consultation</span>
+                      <span>Book a Styling Consultation</span>
                       <span aria-hidden="true">&rarr;</span>
                     </Link>
                   </div>
@@ -673,53 +525,41 @@ export default function DecorationsPage() {
               </div>
             </div>
 
-            {/* Right Wing (Cols 8-12): Prominent Full-Room Canopy & Overlapping Lantern Study */}
             <div className="md:col-span-5 md:mt-2 flex flex-col">
-              {/* Primary Immersive Canopy Feature */}
-              <div data-aos="fade-left" data-aos-delay="150" className="w-full">
+              <div
+                data-aos="fade-left"
+                data-aos-delay="150"
+                onClick={() => openStudyById('decoration-7')}
+                className="w-full overflow-hidden rounded-sm shadow-2xl cursor-pointer group"
+              >
                 <img
-                  src={receptionCanopyImg}
-                  alt="Warm candlelit reception hall with fairy-lit ceiling drapery, floral table centerpieces, and Chiavari chairs"
-                  className="w-full aspect-3/4 object-cover object-center rounded-sm shadow-2xl block"
+                  src={decoration7Img}
+                  alt="Grand reception hall with suspended pastel wisteria ceiling installation and serpentine LED chandelier"
+                  className="w-full aspect-3/4 object-cover object-center block transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
 
-              {/* Overlapping Secondary Lantern Centerpiece Study */}
               <div
                 data-aos="fade-up"
                 data-aos-delay="260"
-                className="relative z-10 -mt-16 lg:-mt-24 -ml-6 lg:-ml-12 w-[68%] max-w-[320px] border-4 border-dark-canvas rounded-sm shadow-2xl"
+                onClick={() => openStudyById('decoration-1')}
+                className="relative z-10 -mt-16 lg:-mt-24 -ml-6 lg:-ml-12 w-[66%] max-w-[320px] rounded-sm shadow-2xl overflow-hidden cursor-pointer group"
               >
                 <img
-                  src={lanternTableImg}
-                  alt="Reception banquet table centerpiece featuring a bronze lantern, white roses, votive candles, and draped head table"
-                  className="w-full aspect-4/3 object-cover block"
+                  src={decoration1Img}
+                  alt="Emerald green and white draped garden pavilion with hanging woven basket planters and curved white lounge sofa"
+                  className="w-full aspect-4/3 object-cover block transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
 
-              {/* Discipline Summary Ledger Under Right Wing */}
-              <div
-                data-aos="fade-up"
-                data-aos-delay="300"
-                className="mt-8 bg-[#181512] border border-bronze/30 p-5 rounded-sm shadow-xl"
-              >
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary-gold font-semibold block mb-2">
-                  Signature Styling Scope
-                </span>
-                <ul className="space-y-2 text-xs text-gray-300 font-sans">
-                  <li className="flex items-center justify-between border-b border-bronze/20 pb-2">
-                    <span>Bridal &amp; Kwanjula Stages</span>
-                    <span className="text-champagne-gold font-serif italic">Bespoke</span>
-                  </li>
-                  <li className="flex items-center justify-between border-b border-bronze/20 pb-2">
-                    <span>Ceiling Drapery &amp; Chandeliers</span>
-                    <span className="text-champagne-gold font-serif italic">Full-Venue</span>
-                  </li>
-                  <li className="flex items-center justify-between">
-                    <span>Floral &amp; Candlelit Tablescapes</span>
-                    <span className="text-champagne-gold font-serif italic">Coordinated</span>
-                  </li>
-                </ul>
+              <div className="mt-6 lg:mt-8 flex justify-end">
+                <a
+                  href="#styling-portfolio"
+                  className="inline-flex items-center gap-2 text-xs lg:text-sm font-sans font-semibold tracking-[0.18em] uppercase text-champagne-gold hover:text-gold-highlight border-b border-primary-gold/40 hover:border-gold-highlight pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold min-h-[44px]"
+                >
+                  <span>Explore Lookbook</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </a>
               </div>
             </div>
           </div>
@@ -727,42 +567,47 @@ export default function DecorationsPage() {
           {/* Mobile Balanced Editorial Recomposition (< 768px) */}
           <div className="md:hidden flex flex-col">
             <div data-aos="fade-up" className="mb-8">
-              <span className="text-[10px] font-sans uppercase tracking-[0.22em] text-champagne-gold font-semibold block mb-1.5">
-                Equal Artistry &bull; Venue &amp; Table
-              </span>
               <h2 className="font-serif font-normal text-3xl sm:text-4xl text-primary-gold leading-[1.12] tracking-tight">
-                Rooms Transformed With Intention.
+                Every Setting, Composed by Hand.
               </h2>
               <p className="font-sans text-sm text-gray-300 leading-relaxed mt-3 font-normal">
-                Whether transforming an open garden marquee for a traditional Kwanjula or draping a candlelit ballroom for a wedding reception, every element is composed as one visual story.
+                From woven-raffia Kwanjula stages and personalized wedding welcome monoliths to sunlit lakeside altars, every space is styled with intention.
               </p>
             </div>
 
-            {/* Stepped Cluster on Mobile */}
             <div data-aos="fade-up" data-aos-delay="100" className="flex flex-col">
               <div className="flex items-start justify-between gap-3.5">
-                <div className="w-[56%] shrink-0">
+                <div
+                  onClick={() => openStudyById('decoration-8')}
+                  className="w-[56%] shrink-0 overflow-hidden rounded-sm shadow-2xl cursor-pointer"
+                >
                   <img
-                    src={sweetheartStageImg}
-                    alt="Sweetheart bridal stage styled with olive green drapery, fairy-light curtain, and white roses"
-                    className="w-full aspect-2/3 object-cover rounded-sm shadow-2xl block"
+                    src={decoration8Img}
+                    alt="Lakeside wedding ceremony pavilion with sheer white drapery and double-arch white floral altar"
+                    className="w-full aspect-2/3 object-cover block"
                   />
                 </div>
 
-                <div className="w-[41%] mt-8">
+                <div
+                  onClick={() => openStudyById('decoration-110')}
+                  className="w-[41%] mt-8 overflow-hidden rounded-sm shadow-2xl cursor-pointer"
+                >
                   <img
-                    src={goldTableSettingImg}
-                    alt="Banquet table set with gold-rimmed glass chargers, coral napkins, and floral arrangements"
-                    className="w-full aspect-4/5 object-cover rounded-sm shadow-2xl block"
+                    src={decoration110Img}
+                    alt="Cultural stage backdrop styled with woven raffia baskets, terracotta drapery, and Kitenge fabric"
+                    className="w-full aspect-4/5 object-cover block"
                   />
                 </div>
               </div>
 
               <div className="flex items-end justify-between gap-3 -mt-6 pl-[6%]">
-                <div className="w-[50%] border-4 border-dark-canvas rounded-sm shadow-2xl relative z-10">
+                <div
+                  onClick={() => openStudyById('decoration-9')}
+                  className="w-[50%] rounded-sm shadow-2xl relative z-10 overflow-hidden cursor-pointer"
+                >
                   <img
-                    src={coralFloralHallImg}
-                    alt="Sunlit reception salon with elevated coral and marigold floral centerpieces"
+                    src={decoration9Img}
+                    alt="Seven white architectural pillars spelling Welcome To Our Wedding with couple photos"
                     className="w-full aspect-4/5 object-cover block"
                   />
                 </div>
@@ -779,21 +624,26 @@ export default function DecorationsPage() {
               </div>
             </div>
 
-            {/* Mobile Canopy & Lantern Wing */}
             <div data-aos="fade-up" data-aos-delay="150" className="mt-12 flex flex-col">
-              <div className="w-full">
+              <div
+                onClick={() => openStudyById('decoration-7')}
+                className="w-full overflow-hidden rounded-sm shadow-2xl cursor-pointer"
+              >
                 <img
-                  src={receptionCanopyImg}
-                  alt="Warm candlelit reception hall with fairy-lit ceiling drapery and floral table centerpieces"
-                  className="w-full aspect-3/4 object-cover object-center rounded-sm shadow-2xl block"
+                  src={decoration7Img}
+                  alt="Grand reception hall with suspended pastel wisteria ceiling installation and serpentine chandelier"
+                  className="w-full aspect-3/4 object-cover object-center block"
                 />
               </div>
 
               <div className="flex items-end justify-between gap-4 -mt-12 pl-3">
-                <div className="w-[58%] max-w-[220px] border-4 border-dark-canvas rounded-sm shadow-2xl relative z-10">
+                <div
+                  onClick={() => openStudyById('decoration-1')}
+                  className="w-[58%] max-w-[220px] rounded-sm shadow-2xl relative z-10 overflow-hidden cursor-pointer"
+                >
                   <img
-                    src={lanternTableImg}
-                    alt="Reception banquet table centerpiece featuring a bronze lantern and white roses"
+                    src={decoration1Img}
+                    alt="Emerald green and white draped garden pavilion with hanging woven basket planters"
                     className="w-full aspect-4/3 object-cover block"
                   />
                 </div>
@@ -803,7 +653,7 @@ export default function DecorationsPage() {
                     href="#styling-portfolio"
                     className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold tracking-[0.14em] uppercase text-champagne-gold hover:text-gold-highlight border-b border-primary-gold/40 pb-1 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold min-h-[44px]"
                   >
-                    <span>View Portfolio</span>
+                    <span>Explore Works</span>
                     <span aria-hidden="true">&rarr;</span>
                   </a>
                 </div>
@@ -814,35 +664,31 @@ export default function DecorationsPage() {
       </section>
 
       {/* ===================================================================
-          SCENE 3 — Curated Celebration Portfolio, Palette Swatches & Lightbox
+          SCENE 4 — Selected Styling Works (Click Any Image for Full-Screen View)
           =================================================================== */}
       <section
         id="styling-portfolio"
-        aria-label="Scene 3 — Curated Celebration Styling Portfolio"
-        className="relative w-full bg-[#161311] text-brand-white border-t border-bronze/25 py-20 sm:py-24 lg:py-28 overflow-hidden scroll-mt-20"
+        aria-label="Scene 4 — The Event Styling Lookbook"
+        className="relative w-full bg-dark-canvas text-brand-white py-16 sm:py-24 lg:py-28 overflow-hidden scroll-mt-20"
       >
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Editorial Section Header + Interactive Occasion Filter Pills */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-14">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
             <div data-aos="fade-up" className="max-w-2xl">
-              <span className="text-[11px] font-sans uppercase tracking-[0.22em] text-primary-gold font-semibold block mb-2">
-                Curated Portfolio &bull; Celebration Disciplines
-              </span>
               <h2 className="font-serif font-normal text-3xl sm:text-4xl lg:text-5xl text-brand-white leading-[1.12] tracking-tight">
-                Styled for the Moments <span className="text-primary-gold">That Matter.</span>
+                Selected Styling <span className="text-primary-gold">Works.</span>
               </h2>
               <p className="font-sans text-sm sm:text-base text-gray-300/90 leading-relaxed mt-3">
-                Filter our event styling studies by celebration discipline or click any setting to inspect its floral architecture, colour palette, and venue specifications.
+                Click any photograph to open it in full-screen view and browse through the collection.
               </p>
             </div>
 
-            {/* Interactive Category Filter Bar */}
+            {/* Minimal Underline Filter Tabs */}
             <div
               data-aos="fade-up"
               data-aos-delay="100"
               role="tablist"
-              aria-label="Filter decoration portfolio by occasion"
-              className="flex flex-wrap items-center gap-2"
+              aria-label="Filter decoration lookbook by discipline"
+              className="flex flex-wrap items-center gap-x-6 gap-y-2"
             >
               {stylingCategories.map((cat) => {
                 const isActive = activeCategory === cat.id
@@ -853,10 +699,10 @@ export default function DecorationsPage() {
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => setActiveCategory(cat.id)}
-                    className={`px-4 py-2.5 rounded-xs text-xs font-sans uppercase tracking-[0.14em] transition-all duration-200 cursor-pointer min-h-[40px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold ${
+                    className={`py-1.5 text-xs font-sans uppercase tracking-[0.16em] transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold ${
                       isActive
-                        ? 'bg-primary-gold text-[#141210] font-semibold shadow-[0_2px_16px_rgba(222,172,75,0.3)]'
-                        : 'bg-[#1C1916] text-gray-300 border border-bronze/35 hover:border-primary-gold/60 hover:text-gold-highlight'
+                        ? 'text-primary-gold font-semibold border-b border-primary-gold'
+                        : 'text-gray-400 hover:text-gold-highlight'
                     }`}
                   >
                     {cat.label}
@@ -866,107 +712,60 @@ export default function DecorationsPage() {
             </div>
           </div>
 
-          {/* Framed Atelier Portfolio Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 lg:gap-8">
+          {/* Frameless Edge-to-Edge Bento Grid with Full-Screen Lightbox Trigger */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10 items-start">
             {filteredStudies.map((study, index) => (
               <article
                 key={study.id}
                 data-aos="fade-up"
                 data-aos-delay={(index % 3) * 80}
-                className="group bg-[#141210] border border-bronze/35 hover:border-primary-gold/60 rounded-sm overflow-hidden flex flex-col justify-between shadow-2xl transition-colors duration-300"
+                className={`${
+                  activeCategory === 'all' ? study.gridSpan : 'md:col-span-6'
+                } group flex flex-col`}
               >
-                <div>
-                  {/* Framed Image Header with Quick-Inspect Trigger */}
-                  <div className="p-2 pb-0 bg-[#181512]">
-                    <div className="relative overflow-hidden rounded-xs">
-                      <img
-                        src={study.image}
-                        alt={study.alt}
-                        className="w-full aspect-4/5 object-cover object-center block transition-transform duration-700 group-hover:scale-105 select-none"
-                      />
-                      <div
-                        aria-hidden="true"
-                        className="absolute inset-0 bg-gradient-to-t from-[#141210]/80 via-transparent to-transparent opacity-85"
-                      />
-                      <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#141210]/85 backdrop-blur-xs border border-primary-gold/40 text-[10px] font-mono uppercase tracking-[0.18em] text-champagne-gold">
-                        {study.tag}
-                      </span>
+                <button
+                  type="button"
+                  onClick={() => openStudyById(study.id)}
+                  aria-label={`View ${study.title} in full screen`}
+                  className="relative w-full overflow-hidden rounded-sm shadow-2xl cursor-zoom-in text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold"
+                >
+                  <img
+                    src={study.image}
+                    alt={study.alt}
+                    className={`w-full ${study.aspectClass} object-cover object-center block transition-transform duration-700 group-hover:scale-[1.03] select-none`}
+                  />
 
-                      <button
-                        type="button"
-                        onClick={() => setSelectedStudy(study)}
-                        className="absolute bottom-3 right-3 px-3 py-1.5 bg-[#141210]/90 hover:bg-primary-gold text-champagne-gold hover:text-[#141210] border border-primary-gold/50 rounded-xs text-[10px] font-sans font-semibold uppercase tracking-[0.16em] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold"
-                      >
-                        Inspect Study +
-                      </button>
-                    </div>
+                  {/* Subtle Hover Full-Screen Indicator */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-300 flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 px-4 py-2 rounded-full bg-[#141210]/90 backdrop-blur-md text-champagne-gold text-xs font-sans uppercase tracking-[0.16em] flex items-center gap-2 shadow-xl">
+                      <svg aria-hidden="true" className="w-4 h-4 text-primary-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                      </svg>
+                      <span>View Full Image</span>
+                    </span>
                   </div>
+                </button>
 
-                  {/* Narrative Body */}
-                  <div className="p-6">
-                    {/* Palette Swatches Row */}
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <div className="flex items-center gap-1.5" aria-label="Color palette swatches">
-                        {study.palette.map((swatch) => (
-                          <span
-                            key={swatch.name}
-                            title={swatch.name}
-                            className="w-3.5 h-3.5 rounded-full border border-white/25 inline-block"
-                            style={{ backgroundColor: swatch.hex }}
-                          />
-                        ))}
-                        <span className="text-[11px] text-gray-400 font-sans ml-1">
-                          {study.palette.map((s) => s.name.split(' ')[0]).join(' · ')}
-                        </span>
-                      </div>
-                    </div>
-
-                    <h3 className="font-serif font-semibold text-xl text-primary-gold group-hover:text-gold-highlight transition-colors leading-snug mb-2">
+                {/* Minimalist Editorial Caption Below Photo */}
+                <div className="pt-4 flex items-baseline justify-between gap-4">
+                  <div>
+                    <h3
+                      onClick={() => openStudyById(study.id)}
+                      className="font-serif font-normal text-lg sm:text-xl text-brand-white group-hover:text-primary-gold transition-colors cursor-pointer leading-snug"
+                    >
                       {study.title}
                     </h3>
-                    <p className="font-sans text-xs sm:text-sm text-gray-300/90 leading-relaxed mb-5">
+                    <p className="font-sans text-xs text-gray-400 mt-1 line-clamp-1 max-w-xl">
                       {study.description}
                     </p>
-
-                    {/* Architectural Highlights List */}
-                    <ul className="border-t border-bronze/25 pt-4 space-y-2">
-                      {study.highlights.map((detail) => (
-                        <li
-                          key={detail}
-                          className="flex items-start gap-2 text-xs text-gray-300 font-sans"
-                        >
-                          <span
-                            aria-hidden="true"
-                            className="w-1.5 h-1.5 rounded-full bg-primary-gold/80 shrink-0 mt-1.5"
-                          />
-                          <span>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
-                </div>
-
-                {/* Card Footer Pathway */}
-                <div className="px-6 py-4 bg-[#181512]/60 flex items-center justify-between gap-3 border-t border-bronze/20">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedStudy(study)}
-                    className="text-xs font-sans text-gray-400 hover:text-brand-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold rounded px-1 py-1"
-                  >
-                    View Specifications
-                  </button>
 
                   <Link
                     to={`/decorations/enquire?style=${encodeURIComponent(study.title)}&occasion=${encodeURIComponent(study.occasionParam)}`}
-                    className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold uppercase tracking-[0.15em] text-primary-gold hover:text-gold-highlight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold py-1"
+                    className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold uppercase tracking-[0.16em] text-primary-gold hover:text-gold-highlight shrink-0"
                   >
                     <span>Enquire</span>
-                    <span
-                      aria-hidden="true"
-                      className="inline-block transition-transform duration-200 group-hover:translate-x-1"
-                    >
-                      &rarr;
-                    </span>
+                    <span aria-hidden="true">&rarr;</span>
                   </Link>
                 </div>
               </article>
@@ -976,147 +775,19 @@ export default function DecorationsPage() {
       </section>
 
       {/* ===================================================================
-          SCENE 4 — Interactive Cake & Venue Harmony Studio
-          (Showcases Equal Prominence of Cakes & Event Styling Under One Roof)
+          SCENE 5 — Inside the Craft: Where Cake & Stage Share One Story
           =================================================================== */}
       <section
-        aria-label="Scene 4 — Cake and Venue Harmony Studio"
-        className="relative w-full bg-dark-canvas text-brand-white border-t border-bronze/25 py-20 sm:py-24 lg:py-28 overflow-hidden"
+        aria-label="Scene 5 — Inside the Styling Craft: Where Cake and Stage Share One Story"
+        className="relative w-full md:min-h-[860px] lg:min-h-[920px] flex flex-col justify-between overflow-hidden bg-dark-canvas"
       >
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            {/* Left Column (Cols 1-5): Harmony Controls & Narrative */}
-            <div data-aos="fade-right" className="lg:col-span-5">
-              <span className="text-[11px] font-sans uppercase tracking-[0.22em] text-primary-gold font-semibold block mb-2">
-                The Zuena Distinction &bull; Paired Curation
-              </span>
-              <h2 className="font-serif font-normal text-3xl sm:text-4xl lg:text-[2.75rem] text-brand-white leading-[1.14] tracking-tight">
-                When Cake &amp; Room Speak the <span className="text-primary-gold">Same Language.</span>
-              </h2>
-              <p className="font-sans text-sm text-gray-300 leading-relaxed mt-3.5 mb-7">
-                Because our bakers and event stylists work side by side in our Kampala atelier, your centerpiece cake is never an afterthought—its sugar florals, textures, and pedestal staging are designed to echo the surrounding room.
-              </p>
-
-              {/* Interactive Pairing Selector Buttons */}
-              <div
-                role="tablist"
-                aria-label="Select Cake and Venue Pairing Theme"
-                className="space-y-3 mb-7"
-              >
-                {cakeAndDecorPairings.map((pair, idx) => {
-                  const isSelected = activePairingIdx === idx
-                  return (
-                    <button
-                      key={pair.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isSelected}
-                      onClick={() => setActivePairingIdx(idx)}
-                      className={`w-full text-left p-4 rounded-sm border transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold ${
-                        isSelected
-                          ? 'bg-[#1B1815] border-l-2 border-l-primary-gold border-t-bronze/40 border-r-bronze/40 border-b-bronze/40 shadow-xl'
-                          : 'bg-[#161311] border-bronze/20 text-gray-400 hover:border-bronze/45 hover:text-gray-200'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-serif font-semibold text-base text-primary-gold">
-                          {pair.label}
-                        </span>
-                        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-champagne-gold px-2 py-0.5 bg-bronze/15 rounded-xs">
-                          {pair.occasion}
-                        </span>
-                      </div>
-                      <p className="font-sans text-xs text-gray-300 mt-1.5 leading-relaxed">
-                        {pair.harmonyNote}
-                      </p>
-                    </button>
-                  )
-                })}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-4">
-                <Link
-                  to={`/decorations/enquire?style=${encodeURIComponent(currentPairing.label)}&occasion=${encodeURIComponent(currentPairing.occasion)}`}
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-sans font-semibold tracking-[0.16em] uppercase text-primary-gold hover:text-gold-highlight border-b border-primary-gold/40 hover:border-gold-highlight pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold min-h-[44px]"
-                >
-                  <span>Enquire About This Pairing</span>
-                  <span aria-hidden="true">&rarr;</span>
-                </Link>
-              </div>
-            </div>
-
-            {/* Right Column (Cols 6-12): Dual Framed Venue + Cake Diptych */}
-            <div data-aos="fade-left" data-aos-delay="120" className="lg:col-span-7">
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center bg-[#181512] border border-bronze/35 p-4 sm:p-6 rounded-sm shadow-2xl">
-                {/* Venue Card (Cols 1-7) */}
-                <div className="sm:col-span-7 flex flex-col">
-                  <div className="relative overflow-hidden rounded-xs border border-bronze/30">
-                    <img
-                      key={`${currentPairing.id}-venue`}
-                      src={currentPairing.venueImage}
-                      alt={currentPairing.venueAlt}
-                      className="w-full aspect-4/5 object-cover object-center block select-none"
-                    />
-                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#141210]/85 backdrop-blur-xs border border-primary-gold/40 text-[10px] font-mono uppercase tracking-[0.18em] text-champagne-gold">
-                      01 &bull; Venue Styling
-                    </span>
-                  </div>
-                  <h3 className="font-serif text-base text-brand-white mt-3">
-                    {currentPairing.venueTitle}
-                  </h3>
-                </div>
-
-                {/* Matched Centerpiece Cake Card (Cols 8-12) */}
-                <div className="sm:col-span-5 flex flex-col">
-                  <div className="relative overflow-hidden rounded-xs border border-primary-gold/40">
-                    <img
-                      key={`${currentPairing.id}-cake`}
-                      src={currentPairing.cakeImage}
-                      alt={currentPairing.cakeAlt}
-                      className="w-full aspect-4/5 object-cover object-top block select-none"
-                    />
-                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#141210]/85 backdrop-blur-xs border border-primary-gold/40 text-[10px] font-mono uppercase tracking-[0.18em] text-primary-gold">
-                      02 &bull; Paired Cake
-                    </span>
-                  </div>
-                  <h3 className="font-serif text-base text-primary-gold mt-3">
-                    {currentPairing.cakeTitle}
-                  </h3>
-
-                  {/* Shared Harmony Tags */}
-                  <div className="mt-4 pt-3 border-t border-bronze/25 space-y-1.5">
-                    <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-gray-400">
-                      Coordinated Elements:
-                    </span>
-                    {currentPairing.sharedElements.map((el) => (
-                      <div key={el} className="flex items-center gap-2 text-xs text-gray-300">
-                        <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-primary-gold" />
-                        <span>{el}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===================================================================
-          SCENE 5 — Inside the Styling Craft: Composed in Every Layer
-          (Directly inspired by HomePage Scene 3 Specimen Callouts & Plaque)
-          =================================================================== */}
-      <section
-        aria-label="Scene 5 — Inside the Styling Craft: Composed in Every Layer"
-        className="relative w-full md:min-h-[860px] lg:min-h-[920px] flex flex-col justify-between overflow-hidden bg-dark-canvas border-t border-bronze/25"
-      >
-        {/* MOBILE LAYOUT (< 768px) — Tall Open Photo + Minimal Glass Card */}
+        {/* MOBILE LAYOUT (< 768px) */}
         <div className="md:hidden relative w-full min-h-[620px] flex flex-col justify-between overflow-hidden">
           <div className="relative w-full h-[380px] overflow-hidden">
             <img
-              src="/scene2_celebration_bg.jpg"
-              alt="Tiered white celebration cake on a gold pedestal surrounded by white roses and candlelit ballroom floral arches"
-              className="w-full h-full object-cover object-[72%_center] block select-none"
+              src={decoration4Img}
+              alt="Outdoor Kukyala and Kwanjula multi-arch stage in blush and burgundy with coordinated two-tier cake on a gold pedestal"
+              className="w-full h-full object-cover object-center block select-none"
             />
             <div
               aria-hidden="true"
@@ -1134,43 +805,29 @@ export default function DecorationsPage() {
           >
             <div className="bg-[#141210]/85 backdrop-blur-xs p-5 rounded-lg border border-primary-gold/40 shadow-2xl">
               <span className="text-[10px] font-sans uppercase tracking-[0.22em] text-primary-gold font-semibold mb-1.5 block">
-                Inside the Styling Craft
+                Inside the Craft
               </span>
               <h2 className="font-serif font-normal text-2xl text-brand-white leading-tight">
-                Unified Cake &amp; Venue Harmony.
+                Cake &amp; Stage Styled as One.
               </h2>
               <p className="font-sans text-xs text-gray-300 leading-relaxed mt-2 mb-4">
-                Stage drapery, floral palettes, and centerpiece cake staging designed together under one roof in Kampala.
+                Multi-arch backdrops, cascading florals, and on-stage cake pedestals crafted under one roof in Kampala.
               </p>
-              <div className="grid grid-cols-3 gap-2 py-3 border-y border-bronze/30 text-center mb-4">
-                <div>
-                  <span className="block font-serif text-xs text-champagne-gold font-semibold">Full-Venue</span>
-                  <span className="block font-sans text-[10px] text-gray-400">Stage &amp; tables</span>
-                </div>
-                <div className="border-x border-bronze/25 px-1">
-                  <span className="block font-serif text-xs text-champagne-gold font-semibold">Cake + Decor</span>
-                  <span className="block font-sans text-[10px] text-gray-400">Matched palette</span>
-                </div>
-                <div>
-                  <span className="block font-serif text-xs text-champagne-gold font-semibold">Consultative</span>
-                  <span className="block font-sans text-[10px] text-gray-400">Tailored quote</span>
-                </div>
-              </div>
               <Link
                 to="/decorations/enquire"
                 className="inline-flex items-center justify-center gap-2 text-xs font-semibold tracking-widest uppercase text-primary-gold hover:text-gold-highlight"
               >
-                <span>Start a Decoration Enquiry</span>
+                <span>Start Your Consultation</span>
                 <span aria-hidden="true">&rarr;</span>
               </Link>
             </div>
           </div>
         </div>
 
-        {/* DESKTOP LAYOUT (md and up) — Specimen Callouts + Editorial Plaque */}
+        {/* DESKTOP LAYOUT (md and up) */}
         <img
-          src="/scene2_celebration_bg.jpg"
-          alt="Tiered white celebration cake on a gold pedestal surrounded by white roses and candlelit ballroom floral arches"
+          src={decoration4Img}
+          alt="Outdoor Kukyala and Kwanjula multi-arch stage in blush and burgundy with coordinated two-tier cake on a gold pedestal"
           className="hidden md:block absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
         />
 
@@ -1180,7 +837,7 @@ export default function DecorationsPage() {
         />
         <div
           aria-hidden="true"
-          className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#141210]/92 via-[#141210]/60 to-transparent md:w-[66%] pointer-events-none"
+          className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#141210]/90 via-[#141210]/55 to-transparent md:w-[64%] pointer-events-none"
         />
         <div
           aria-hidden="true"
@@ -1188,25 +845,18 @@ export default function DecorationsPage() {
         />
 
         <div className="hidden md:flex relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-24 flex-1 flex-col justify-between gap-8">
-          {/* Upper/Middle Field: Tactile Styling Specimen Callouts Pointing Toward the Ballroom & Cake */}
           <div className="grid grid-cols-12 gap-5 pt-8">
             <div
               data-aos="fade-right"
               data-aos-delay="80"
-              className="md:col-start-1 md:col-span-6 lg:col-start-2 lg:col-span-5 flex items-center gap-3"
+              className="md:col-start-1 md:col-span-6 lg:col-start-2 lg:col-span-4 flex items-center gap-3"
             >
               <div className="flex-1 bg-[#141210]/75 backdrop-blur-xs border border-primary-gold/40 px-4 py-3.5 rounded-md shadow-xl">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary-gold font-semibold">
-                    Layer I
-                  </span>
-                  <span aria-hidden="true" className="w-4 h-[1px] bg-primary-gold/50" />
-                  <h3 className="font-serif font-semibold text-base text-brand-white">
-                    Architectural Drapery &amp; Canopy Lighting
-                  </h3>
-                </div>
+                <h3 className="font-serif font-semibold text-base text-primary-gold mb-1">
+                  Recessed Multi-Arch Architecture
+                </h3>
                 <p className="font-sans text-xs text-gray-300 leading-relaxed">
-                  Ceiling voile swags, chandelier framing &amp; warm fairy-light backdrops tailored to your venue proportions.
+                  Custom-built colonnades, pleated velvet drapery &amp; mirror-gold couple calligraphy tailored to your palette.
                 </p>
               </div>
               <div aria-hidden="true" className="flex items-center shrink-0">
@@ -1218,20 +868,14 @@ export default function DecorationsPage() {
             <div
               data-aos="fade-right"
               data-aos-delay="180"
-              className="md:col-start-1 md:col-span-6 lg:col-start-1 lg:col-span-5 flex items-center gap-3"
+              className="md:col-start-1 md:col-span-6 lg:col-start-1 lg:col-span-4 flex items-center gap-3"
             >
               <div className="flex-1 bg-[#141210]/75 backdrop-blur-xs border border-primary-gold/40 px-4 py-3.5 rounded-md shadow-xl">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary-gold font-semibold">
-                    Layer II
-                  </span>
-                  <span aria-hidden="true" className="w-4 h-[1px] bg-primary-gold/50" />
-                  <h3 className="font-serif font-semibold text-base text-brand-white">
-                    Botanical &amp; Candlelit Tablescapes
-                  </h3>
-                </div>
+                <h3 className="font-serif font-semibold text-base text-primary-gold mb-1">
+                  Cascading Botanical Pillars
+                </h3>
                 <p className="font-sans text-xs text-gray-300 leading-relaxed">
-                  Gold-rimmed chargers, linen napkins, bronze lanterns &amp; floral arrangements curated for guest tables.
+                  Layered roses, hydrangeas, orchids &amp; tropical foliage sculpted around the couple’s lounge seating.
                 </p>
               </div>
               <div aria-hidden="true" className="flex items-center shrink-0">
@@ -1241,58 +885,26 @@ export default function DecorationsPage() {
             </div>
           </div>
 
-          {/* Lower Field: Bottom-Left Editorial Plaque + Right Cake Pedestal Callout */}
           <div className="grid grid-cols-12 gap-6 items-end">
             <div
               data-aos="fade-up"
               data-aos-delay="120"
               className="md:col-span-7 lg:col-span-6 bg-[#141210]/70 backdrop-blur-xs p-8 rounded-lg border-l-2 border-primary-gold/80 border-t border-r border-b border-white/10 shadow-2xl"
             >
-              <span className="text-xs font-sans uppercase tracking-[0.22em] text-primary-gold font-semibold mb-2 block">
-                Inside the Styling Craft &bull; The Zuena Standard
-              </span>
-
               <h2 className="font-serif font-normal text-3xl md:text-4xl text-brand-white leading-tight tracking-tight break-words">
-                Composed as One Unified Celebration.
+                Where Cake &amp; Stage Share One Story.
               </h2>
 
               <p className="font-sans text-sm text-gray-300 leading-relaxed mt-3 mb-5 font-normal break-words">
-                When your celebration cake and event decoration are imagined under the same roof, the colour palette, floral varieties, and pedestal staging harmonize effortlessly across the entire room.
+                Notice how the two-tier celebration cake sits on its sculpted gold pedestal right inside the blush and burgundy arch composition. Because our bakers and event stylists work under one roof, your cake and venue are designed as a single work of art.
               </p>
 
-              <div className="grid grid-cols-3 gap-3 pt-4 pb-5 border-y border-bronze/30 text-left">
-                <div>
-                  <span className="block font-serif text-base text-champagne-gold font-semibold">
-                    Bespoke Themes
-                  </span>
-                  <span className="block font-sans text-[11px] text-gray-400 mt-0.5">
-                    Tailored colour palettes
-                  </span>
-                </div>
-                <div className="border-l border-bronze/25 pl-3">
-                  <span className="block font-serif text-base text-champagne-gold font-semibold">
-                    Cake + Venue
-                  </span>
-                  <span className="block font-sans text-[11px] text-gray-400 mt-0.5">
-                    Coordinated florals
-                  </span>
-                </div>
-                <div className="border-l border-bronze/25 pl-3">
-                  <span className="block font-serif text-base text-champagne-gold font-semibold">
-                    On-Site Setup
-                  </span>
-                  <span className="block font-sans text-[11px] text-gray-400 mt-0.5">
-                    Kampala &amp; surrounds
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-5 flex flex-wrap items-center gap-6">
+              <div className="mt-5">
                 <Link
                   to="/decorations/enquire"
                   className="inline-flex items-center gap-2 text-sm font-semibold tracking-widest uppercase text-primary-gold hover:text-gold-highlight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold rounded px-1 py-2 min-h-[44px] group"
                 >
-                  <span>Enquire About Event Decor</span>
+                  <span>Begin Your Styling Consultation</span>
                   <span
                     aria-hidden="true"
                     className="inline-block transition-transform duration-200 group-hover:translate-x-1.5"
@@ -1309,17 +921,11 @@ export default function DecorationsPage() {
               className="md:col-span-5 lg:col-span-5 lg:col-start-8"
             >
               <div className="bg-[#141210]/80 backdrop-blur-xs border border-bronze/40 p-5 rounded-md shadow-xl">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary-gold font-semibold">
-                    Layer III
-                  </span>
-                  <span aria-hidden="true" className="w-4 h-[1px] bg-primary-gold/50" />
-                  <h3 className="font-serif font-semibold text-base text-brand-white">
-                    Dedicated Cake-Stage &amp; Pedestal Styling
-                  </h3>
-                </div>
+                <h3 className="font-serif font-semibold text-base text-primary-gold mb-1">
+                  On-Stage Cake Pedestal Integration
+                </h3>
                 <p className="font-sans text-xs text-gray-300 leading-relaxed">
-                  We frame your centerpiece cake with matching meadow florals, linen skirting, and warm pin-spotting for unforgettable cake-cutting moments.
+                  Positioned on a geometric gold pedestal and colour-matched to the stage arches so the cake-cutting moment is effortlessly photogenic.
                 </p>
               </div>
             </div>
@@ -1328,282 +934,256 @@ export default function DecorationsPage() {
       </section>
 
       {/* ===================================================================
-          SCENE 6 — The Quiet Coda: Consultative Journey
-          (Directly inspired by HomePage Scene 5 Three-Row Atelier Layout)
+          SCENE 6 — The Quiet Coda (Three-Row Alternating Atelier Layout)
           =================================================================== */}
       <section
-        aria-label="Scene 6 — Every Memorable Setting Starts With a Conversation"
-        className="relative w-full bg-dark-canvas text-brand-white border-t border-bronze/25 pb-12 sm:pb-16 lg:pb-20 overflow-hidden"
+        aria-label="Scene 6 — Every Memorable Setting Starts With an Idea"
+        className="relative w-full bg-dark-canvas text-brand-white py-16 sm:py-20 lg:py-24 overflow-hidden"
       >
-        {/* Top Ornamental Seam & Center Crest Badge (Matching HomePage Scene 5) */}
-        <div className="w-full flex flex-col items-center">
-          <div className="w-10 h-12 sm:w-11 sm:h-14 rounded-b-full bg-[#1B1815] border-x border-b border-primary-gold/40 flex items-center justify-center shadow-md">
-            <span
-              aria-hidden="true"
-              className="font-mono text-[9px] uppercase tracking-[0.22em] text-champagne-gold [writing-mode:vertical-rl] rotate-180 select-none"
-            >
-              ZUENA
-            </span>
-          </div>
-        </div>
-
-        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 lg:pt-12">
-          {/* Top Centered Two-Line Editorial Headline */}
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div data-aos="fade-up" className="text-center max-w-2xl mx-auto mb-14 sm:mb-18 lg:mb-22">
-            <span className="text-[11px] font-sans uppercase tracking-[0.22em] text-champagne-gold font-semibold block mb-2">
-              The Consultative Process
-            </span>
             <h2 className="font-serif font-normal text-3xl sm:text-4xl lg:text-5xl text-primary-gold leading-[1.15] tracking-tight">
-              <span className="block">Every Memorable Setting Starts</span>
+              <span className="block">Every Memorable Space Starts</span>
               <span className="block mt-1 text-brand-white">With a Conversation.</span>
             </h2>
           </div>
 
-          {/* Three Alternating Editorial Rows */}
           <div className="space-y-14 sm:space-y-16 lg:space-y-20">
             {/* Row 1: Text Left (Cols 1-5) | Paired Images Right (Cols 6-12) */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 lg:gap-10 items-center">
               <div data-aos="fade-right" className="md:col-span-5">
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-champagne-gold block mb-1.5">
-                  Step 01 &bull; Enquiry &amp; Date Review
-                </span>
                 <h3 className="font-serif font-semibold text-xl sm:text-2xl text-primary-gold leading-snug mb-3">
-                  Share Your Occasion, Date &amp; Venue
+                  Share Your Occasion &amp; Venue Vision
                 </h3>
                 <p className="font-sans text-xs sm:text-sm text-gray-300/90 leading-relaxed max-w-md font-normal">
-                  Tell us about your upcoming event, expected guest count, and venue location. Submitting an enquiry is obligation-free and allows our team to check calendar availability and understand your celebration vision.
+                  Tell us what you&apos;re celebrating, your venue location, and the atmosphere you have in mind. Whether a traditional Kwanjula introduction at home or a sunlit waterfront ceremony, every bespoke setting begins with your story.
                 </p>
               </div>
 
               <div data-aos="fade-left" data-aos-delay="120" className="md:col-span-7 grid grid-cols-2 gap-3.5 sm:gap-5 lg:gap-6 items-center">
-                <div className="border border-bronze/30 bg-[#181512] p-1.5 sm:p-2 rounded-sm shadow-xl">
-                  <img
-                    src={sweetheartStageImg}
-                    alt="Sweetheart stage backdrop with olive drapery, glowing fairy lights, and white roses"
-                    className="w-full aspect-4/5 object-cover object-center block select-none"
-                  />
-                </div>
-                <div className="border border-bronze/30 bg-[#181512] p-1.5 sm:p-2 rounded-sm shadow-xl">
-                  <img
-                    src={goldTableSettingImg}
-                    alt="Banquet table place settings with gold-rimmed glass chargers, coral napkins, and floral arch backdrop"
-                    className="w-full aspect-4/5 object-cover object-center block select-none"
-                  />
-                </div>
+                <img
+                  src={decoration9Img}
+                  onClick={() => openStudyById('decoration-9')}
+                  alt="Seven white architectural pillars spelling Welcome To Our Wedding with couple photos and peach roses"
+                  className="w-full aspect-4/5 object-cover object-center rounded-sm shadow-xl block cursor-zoom-in hover:opacity-95 transition-opacity"
+                />
+                <img
+                  src={decoration8Img}
+                  onClick={() => openStudyById('decoration-8')}
+                  alt="Lakeside wedding ceremony pavilion with sheer white drapery and double-arch white floral altar"
+                  className="w-full aspect-4/5 object-cover object-center rounded-sm shadow-xl block cursor-zoom-in hover:opacity-95 transition-opacity"
+                />
               </div>
             </div>
 
             {/* Row 2: Image Left (Cols 1-4) | Text Center (Cols 5-8) | Image Right (Cols 9-12) */}
             <div className="grid grid-cols-2 md:grid-cols-12 gap-3.5 sm:gap-5 md:gap-6 lg:gap-8 items-center">
               <div data-aos="fade-right" data-aos-delay="100" className="col-span-1 md:col-span-4 order-2 md:order-1">
-                <div className="border border-bronze/30 bg-[#181512] p-1.5 sm:p-2 rounded-sm shadow-xl">
-                  <img
-                    src={weddingCakeImg}
-                    alt="Three-tier white wedding cake with champagne drapery swags, gold pearl borders, and deep-red roses"
-                    className="w-full aspect-4/5 object-cover object-top block select-none"
-                  />
-                </div>
+                <img
+                  src={decoration6Img}
+                  onClick={() => openStudyById('decoration-6')}
+                  alt="Garden Introduction ceremony stage reading Sheila Introduces Brian with emerald ombre backdrop, gold arches, and sunflowers"
+                  className="w-full aspect-4/3 object-cover object-center rounded-sm shadow-xl block cursor-zoom-in hover:opacity-95 transition-opacity"
+                />
               </div>
 
               <div data-aos="fade-up" className="col-span-2 md:col-span-4 order-1 md:order-2 md:px-2 lg:px-4 mb-2.5 md:mb-0">
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-champagne-gold block mb-1.5">
-                  Step 02 &bull; Bespoke Styling Proposal
-                </span>
                 <h3 className="font-serif font-semibold text-xl sm:text-2xl text-primary-gold leading-snug mb-3">
-                  Harmonize Palettes, Florals &amp; Cake
+                  Explore Custom Arches, Drapery &amp; Florals
                 </h3>
                 <p className="font-sans text-xs sm:text-sm text-gray-300/90 leading-relaxed font-normal">
-                  Our stylists work with you to select drapery textures, floral arrangements, table settings, and stage backdrops—optionally paired with a custom centerpiece cake so every detail matches.
+                  We&apos;ll guide you through stage proportions, velvet and voile drapery, suspended chandeliers, couples’ lounge seating, and colour-matched floral installations tailored to your guest count.
                 </p>
               </div>
 
               <div data-aos="fade-left" data-aos-delay="180" className="col-span-1 md:col-span-4 order-3">
-                <div className="border border-bronze/30 bg-[#181512] p-1.5 sm:p-2 rounded-sm shadow-xl">
-                  <img
-                    src={crystalWeddingCakeImg}
-                    alt="Four-tier ivory wedding cake adorned with handcrafted white sugar magnolias and crystal accents"
-                    className="w-full aspect-4/5 object-cover object-top block select-none"
-                  />
-                </div>
+                <img
+                  src={decoration3Img}
+                  onClick={() => openStudyById('decoration-3')}
+                  alt="Five-arch stage backdrop with lavender and blush rose clusters, crystal chandeliers, and cream velvet settee"
+                  className="w-full aspect-4/3 object-cover object-center rounded-sm shadow-xl block cursor-zoom-in hover:opacity-95 transition-opacity"
+                />
               </div>
             </div>
 
             {/* Row 3: Paired Images Left (Cols 1-7) | Text Right (Cols 8-12) */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 lg:gap-10 items-center">
               <div data-aos="fade-right" data-aos-delay="100" className="md:col-span-7 order-2 md:order-1 grid grid-cols-2 gap-3.5 sm:gap-5 lg:gap-6 items-center">
-                <div className="border border-bronze/30 bg-[#181512] p-1.5 sm:p-2 rounded-sm shadow-xl">
-                  <img
-                    src={candlelitHallImg}
-                    alt="Candlelit reception hall styled with ceiling drapery, warm fairy lights, and olive-draped banquet tables"
-                    className="w-full aspect-4/3 object-cover object-center block select-none"
-                  />
-                </div>
-                <div className="border border-bronze/30 bg-[#181512] p-1.5 sm:p-2 rounded-sm shadow-xl">
-                  <img
-                    src={lanternTableImg}
-                    alt="Reception banquet table set with bronze lantern centerpiece, white roses, and votive candles"
-                    className="w-full aspect-4/3 object-cover object-center block select-none"
-                  />
-                </div>
+                <img
+                  src={decoration2Img}
+                  onClick={() => openStudyById('decoration-2')}
+                  alt="Sculptural wave-paneled bridal stage with soft blue backlighting and mirrored sweetheart table"
+                  className="w-full aspect-4/3 object-cover object-center rounded-sm shadow-xl block cursor-zoom-in hover:opacity-95 transition-opacity"
+                />
+                <img
+                  src={decoration0Img}
+                  onClick={() => openStudyById('decoration-0')}
+                  alt="Outdoor architectural wedding stage with angled white and marble panels, gold frames, and teak lounge seating"
+                  className="w-full aspect-4/3 object-cover object-center rounded-sm shadow-xl block cursor-zoom-in hover:opacity-95 transition-opacity"
+                />
               </div>
 
               <div data-aos="fade-left" className="md:col-span-5 order-1 md:order-2">
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-champagne-gold block mb-1.5">
-                  Step 03 &bull; White-Glove Installation
-                </span>
                 <h3 className="font-serif font-semibold text-xl sm:text-2xl text-primary-gold leading-snug mb-3">
-                  Delivered &amp; Styled Ahead of Time
+                  Composed for the Whole Room
                 </h3>
                 <p className="font-sans text-xs sm:text-sm text-gray-300/90 leading-relaxed max-w-md font-normal">
-                  Once you approve the tailored styling plan and final quotation, our team handles full venue dressing, lighting checks, and centerpiece placement so you can step into your celebration with peace of mind.
+                  From the bridal stage and VIP lounge to guest table settings and your centerpiece cake, every detail is personally reviewed and installed on schedule so the entire celebration feels unified.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Understated Closing Invitation Coda & Deliberate Transition Into Footer */}
           <div data-aos="fade-up" data-aos-delay="120" className="mt-14 sm:mt-18 lg:mt-20 flex flex-col items-center text-center">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-              <Link
-                to="/decorations/enquire"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-primary-gold text-[#141210] hover:bg-gold-highlight transition-colors duration-200 font-sans text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] rounded-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] min-h-[44px] text-center"
-              >
-                <span>Enquire About Event Decor</span>
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
-              <Link
-                to="/custom-cake"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 border border-primary-gold/70 text-champagne-gold hover:border-primary-gold hover:bg-primary-gold hover:text-[#141210] transition-colors duration-200 font-sans text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] rounded-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] min-h-[44px] text-center"
-              >
-                <span>Pair With a Custom Cake</span>
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </div>
-
-            <p className="font-sans text-xs text-gray-400 mt-4 max-w-md">
-              Decoration enquiries are obligation-free consultations. Final pricing and date confirmation are arranged directly with our staff.
-            </p>
-
-            <div aria-hidden="true" className="w-[1px] h-12 sm:h-16 bg-bronze/30 mt-10 sm:mt-12" />
+            <Link
+              to="/decorations/enquire"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 border border-primary-gold/70 text-champagne-gold hover:border-primary-gold hover:bg-primary-gold hover:text-[#141210] transition-colors duration-200 font-sans text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] min-h-[44px] text-center"
+            >
+              <span>Let&apos;s Style Your Celebration</span>
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ===================================================================
-          INTERACTIVE PORTFOLIO STUDY LIGHTBOX MODAL
+          FULL-SCREEN GALLERY LIGHTBOX VIEWER (With Prev/Next, Zoom & Filmstrip)
           =================================================================== */}
-      {selectedStudy && (
+      {activeLightboxStudy && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="study-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-xs"
-          onClick={() => setSelectedStudy(null)}
+          aria-label={activeLightboxStudy.title}
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col justify-between select-none"
+          onClick={closeLightbox}
         >
+          {/* Top Bar: Counter, Title, Zoom Toggle & Close */}
           <div
-            className="relative w-full max-w-4xl bg-[#161311] border border-primary-gold/50 rounded-sm shadow-2xl overflow-hidden max-h-[90vh] flex flex-col md:flex-row"
+            className="w-full px-4 sm:px-8 py-4 flex items-center justify-between gap-4 bg-gradient-to-b from-black/80 to-transparent z-20"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
-            <button
-              type="button"
-              onClick={() => setSelectedStudy(null)}
-              aria-label="Close styling study details"
-              className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-[#141210]/90 border border-primary-gold/50 text-primary-gold hover:bg-primary-gold hover:text-[#141210] flex items-center justify-center transition-colors cursor-pointer"
-            >
-              &times;
-            </button>
-
-            {/* Modal Image Column */}
-            <div className="md:w-1/2 bg-[#141210] flex items-center justify-center overflow-hidden">
-              <img
-                src={selectedStudy.image}
-                alt={selectedStudy.alt}
-                className="w-full h-full max-h-[360px] md:max-h-[540px] object-cover block"
-              />
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="font-mono text-xs text-primary-gold shrink-0">
+                {String(lightboxIndex + 1).padStart(2, '0')} / {String(portfolioStudies.length).padStart(2, '0')}
+              </span>
+              <span aria-hidden="true" className="w-4 h-[1px] bg-white/25 shrink-0" />
+              <h2 className="font-serif text-base sm:text-xl text-brand-white truncate">
+                {activeLightboxStudy.title}
+              </h2>
             </div>
 
-            {/* Modal Specification Column */}
-            <div className="md:w-1/2 p-6 sm:p-8 overflow-y-auto flex flex-col justify-between">
-              <div>
-                <span className="inline-block px-2.5 py-1 bg-bronze/20 border border-primary-gold/40 text-[10px] font-mono uppercase tracking-[0.18em] text-champagne-gold mb-3">
-                  {selectedStudy.tag}
-                </span>
-                <h2
-                  id="study-modal-title"
-                  className="font-serif font-semibold text-2xl sm:text-3xl text-primary-gold leading-tight mb-3"
-                >
-                  {selectedStudy.title}
-                </h2>
-                <p className="font-sans text-xs sm:text-sm text-gray-300 leading-relaxed mb-5">
-                  {selectedStudy.description}
+            <div className="flex items-center gap-2.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsZoomed((z) => !z)}
+                className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-sans text-gray-200 cursor-pointer transition-colors"
+              >
+                {isZoomed ? 'Reset Zoom' : 'Zoom +'}
+              </button>
+              <button
+                type="button"
+                onClick={closeLightbox}
+                aria-label="Close full-screen viewer"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-primary-gold text-brand-white hover:text-[#141210] flex items-center justify-center text-lg transition-colors cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+          </div>
+
+          {/* Center Stage: Large Full-Screen Image + Prev / Next Arrows */}
+          <div
+            className="relative flex-1 w-full flex items-center justify-center overflow-auto px-4 sm:px-16 py-2"
+            onClick={closeLightbox}
+          >
+            {/* Previous Button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                showPrevImage()
+              }}
+              aria-label="Previous image"
+              className="fixed left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#141210]/85 hover:bg-primary-gold text-primary-gold hover:text-[#141210] flex items-center justify-center shadow-2xl transition-colors cursor-pointer"
+            >
+              &#8592;
+            </button>
+
+            {/* Full-Resolution Image */}
+            <img
+              src={activeLightboxStudy.image}
+              alt={activeLightboxStudy.alt}
+              onClick={(e) => {
+                e.stopPropagation()
+                setIsZoomed((z) => !z)
+              }}
+              className={`transition-transform duration-300 rounded-xs shadow-[0_20px_70px_rgba(0,0,0,0.9)] ${
+                isZoomed
+                  ? 'max-w-none w-[135vw] sm:w-[115vw] max-h-none cursor-zoom-out'
+                  : 'max-h-[70vh] sm:max-h-[74vh] max-w-[92vw] sm:max-w-[82vw] w-auto h-auto object-contain cursor-zoom-in'
+              }`}
+            />
+
+            {/* Next Button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                showNextImage()
+              }}
+              aria-label="Next image"
+              className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#141210]/85 hover:bg-primary-gold text-primary-gold hover:text-[#141210] flex items-center justify-center shadow-2xl transition-colors cursor-pointer"
+            >
+              &#8594;
+            </button>
+          </div>
+
+          {/* Bottom Bar: Description, Enquire CTA & Thumbnail Filmstrip */}
+          <div
+            className="w-full px-4 sm:px-8 pt-3 pb-4 bg-gradient-to-t from-black via-black/90 to-transparent z-20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="max-w-6xl mx-auto flex flex-col gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <p className="font-sans text-xs sm:text-sm text-gray-300 max-w-2xl line-clamp-2">
+                  {activeLightboxStudy.description}
                 </p>
-
-                {/* Venue & Scale Ledger */}
-                <dl className="border-y border-bronze/25 py-3 mb-5 space-y-2 text-xs">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <dt className="text-gray-400">Recommended Setting</dt>
-                    <dd className="text-brand-white font-medium text-right">{selectedStudy.venueType}</dd>
-                  </div>
-                  <div className="flex items-baseline justify-between gap-2">
-                    <dt className="text-gray-400">Typical Scale</dt>
-                    <dd className="text-brand-white font-medium text-right">{selectedStudy.guestScale}</dd>
-                  </div>
-                </dl>
-
-                {/* Palette Swatches */}
-                <div className="mb-5">
-                  <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-champagne-gold mb-2">
-                    Signature Colour Palette
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedStudy.palette.map((swatch) => (
-                      <div
-                        key={swatch.name}
-                        className="flex items-center gap-2 px-2.5 py-1 bg-[#141210] border border-bronze/30 rounded-xs"
-                      >
-                        <span
-                          aria-hidden="true"
-                          className="w-3 h-3 rounded-full border border-white/25"
-                          style={{ backgroundColor: swatch.hex }}
-                        />
-                        <span className="text-xs text-gray-200">{swatch.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Included Architectural Elements */}
-                <div className="mb-6">
-                  <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-champagne-gold mb-2">
-                    Styling Highlights
-                  </span>
-                  <ul className="space-y-1.5">
-                    {selectedStudy.highlights.map((item) => (
-                      <li key={item} className="flex items-start gap-2 text-xs text-gray-300">
-                        <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-primary-gold mt-1.5 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-bronze/25 flex flex-col sm:flex-row items-center gap-3">
                 <Link
-                  to={`/decorations/enquire?style=${encodeURIComponent(selectedStudy.title)}&occasion=${encodeURIComponent(selectedStudy.occasionParam)}`}
-                  className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary-gold text-[#141210] hover:bg-gold-highlight font-sans text-xs font-semibold uppercase tracking-[0.16em] rounded-xs transition-colors text-center"
+                  to={`/decorations/enquire?style=${encodeURIComponent(activeLightboxStudy.title)}&occasion=${encodeURIComponent(activeLightboxStudy.occasionParam)}`}
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-gold text-[#141210] hover:bg-gold-highlight font-sans text-xs font-semibold uppercase tracking-[0.16em] rounded-xs transition-colors shrink-0"
                 >
-                  <span>Enquire With This Style</span>
+                  <span>Enquire About This Style</span>
                   <span aria-hidden="true">&rarr;</span>
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => setSelectedStudy(null)}
-                  className="w-full sm:w-auto px-4 py-3 border border-bronze/40 text-gray-300 hover:text-white text-xs font-sans uppercase tracking-[0.14em] rounded-xs cursor-pointer"
-                >
-                  Close
-                </button>
+              </div>
+
+              {/* Thumbnail Filmstrip of All 11 Works */}
+              <div className="flex items-center gap-2 overflow-x-auto py-1">
+                {portfolioStudies.map((item, idx) => {
+                  const isCurrent = idx === lightboxIndex
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        setIsZoomed(false)
+                        setLightboxIndex(idx)
+                      }}
+                      aria-label={`View ${item.title}`}
+                      className={`relative shrink-0 w-14 h-10 sm:w-16 sm:h-12 rounded-xs overflow-hidden transition-all cursor-pointer ${
+                        isCurrent
+                          ? 'ring-2 ring-primary-gold opacity-100 scale-105'
+                          : 'opacity-45 hover:opacity-80'
+                      }`}
+                    >
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="w-full h-full object-cover block"
+                      />
+                    </button>
+                  )
+                })}
               </div>
             </div>
           </div>
