@@ -78,10 +78,10 @@ export default function PublicLayout() {
   }, [isMobileMenuOpen])
 
   const mobileNavLinkClass = ({ isActive }) =>
-    `block px-4 py-3 font-serif text-sm tracking-wide border-l-2 transition-colors ${
+    `flex items-center px-4 py-3 font-serif text-sm tracking-wide transition-colors ${
       isActive
-        ? 'text-primary-gold border-primary-gold bg-bronze/10'
-        : 'text-gray-300 border-transparent hover:text-gold-highlight hover:bg-white/5'
+        ? 'text-primary-gold'
+        : 'text-gray-300 hover:text-gold-highlight'
     }`
 
   return (
@@ -195,7 +195,14 @@ export default function PublicLayout() {
                 onClick={closeMobileMenu}
                 className={mobileNavLinkClass}
               >
-                {link.label}
+                {({ isActive }) => (
+                  <span className="inline-flex items-center gap-2.5">
+                    {isActive && (
+                      <span aria-hidden="true" className="w-3.5 h-[1.5px] bg-primary-gold inline-block" />
+                    )}
+                    <span>{link.label}</span>
+                  </span>
+                )}
               </NavLink>
             ))}
             <NavLink
@@ -203,7 +210,14 @@ export default function PublicLayout() {
               onClick={closeMobileMenu}
               className={mobileNavLinkClass}
             >
-              Cart (0)
+              {({ isActive }) => (
+                <span className="inline-flex items-center gap-2.5">
+                  {isActive && (
+                    <span aria-hidden="true" className="w-3.5 h-[1.5px] bg-primary-gold inline-block" />
+                  )}
+                  <span>Cart (0)</span>
+                </span>
+              )}
             </NavLink>
           </nav>
         )}

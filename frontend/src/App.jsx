@@ -8,6 +8,7 @@ import CustomCakePage from './pages/public/CustomCakePage.jsx'
 import DecorationsPage from './pages/public/DecorationsPage.jsx'
 import DecorationEnquiryPage from './pages/public/DecorationEnquiryPage.jsx'
 import CartPage from './pages/public/CartPage.jsx'
+import Scene2TestPage from './pages/public/Scene2TestPage.jsx'
 
 function AdminLoginPlaceholder() {
   return (
@@ -71,6 +72,7 @@ function App() {
         <Route path="/decorations" element={<DecorationsPage />} />
         <Route path="/decorations/enquire" element={<DecorationEnquiryPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/scene2-test" element={<Scene2TestPage />} />
         <Route path="*" element={<PublicNotFoundPlaceholder />} />
       </Route>
     </Routes>
