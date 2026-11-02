@@ -79,7 +79,6 @@ export default function CreationsPage() {
   // Scroll and animation states
   const [isScrolled, setIsScrolled] = useState(false)
   const [appearedCircles, setAppearedCircles] = useState(new Set())
-  const [allCirclesAppeared, setAllCirclesAppeared] = useState(false)
   const [deltasReady, setDeltasReady] = useState(false)
   const [deltas, setDeltas] = useState({
     birthdays: { x: 0, y: 0 },
@@ -204,14 +203,7 @@ export default function CreationsPage() {
         }, item.initialDelay)
       )
 
-    const finishTimer = setTimeout(() => {
-      setAllCirclesAppeared(true)
-    }, 3600)
-
-    return () => {
-      timeouts.forEach(clearTimeout)
-      clearTimeout(finishTimer)
-    }
+    return () => timeouts.forEach(clearTimeout)
   }, [])
 
   // Scroll listener to trigger flight from hero constellation into sticky filter bar
@@ -227,7 +219,6 @@ export default function CreationsPage() {
             setAppearedCircles(
               new Set(['birthdays', 'weddings', 'traditional', 'graduation', 'custom'])
             )
-            setAllCirclesAppeared(true)
           }
           setIsScrolled(scrolled)
           if (sy < 15) {
@@ -443,44 +434,15 @@ export default function CreationsPage() {
         <div className="relative w-full max-w-4xl h-[520px] sm:h-[560px] md:h-[600px] flex items-center justify-center">
           {/* CENTER: "OUR CREATIONS" TITLE (Gently dims when circles take off into filter bar) */}
           <div
-            className={`z-10 text-center max-w-[280px] sm:max-w-md md:max-w-lg mx-auto px-2 select-none transition-all duration-700 ease-out ${
+            className={`z-10 text-center max-w-[280px] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-2 select-none transition-all duration-700 ease-out ${
               isScrolled ? 'opacity-35 scale-95 pointer-events-none' : 'opacity-100 scale-100'
             }`}
           >
-            {/* Atelier Crest Pill */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1B1815]/90 border border-primary-gold/40 shadow-md mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary-gold animate-pulse" />
-              <span className="font-mono text-[9px] sm:text-[11px] uppercase tracking-[0.22em] text-champagne-gold font-medium">
-                Atelier Portfolio &bull; Kampala
-              </span>
-            </div>
-
-              {/* Main Monumental Serif Title */}
-              <h1 className="font-serif font-normal text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-primary-gold uppercase tracking-tight leading-[1.05] drop-shadow-[0_2px_12px_rgba(20,18,16,0.95)]">
-                Our Creations
-              </h1>
-
-              {/* Delicate Gold Hairline Divider */}
-              <div
-                aria-hidden="true"
-                className="w-12 sm:w-16 h-[1px] bg-primary-gold/60 mx-auto my-3 sm:my-4"
-              />
-
-              {/* Subtitle */}
-              <p className="font-sans text-xs sm:text-sm text-gray-300 leading-relaxed font-normal max-w-sm sm:max-w-md mx-auto">
-                Artisanal celebration cakes handcrafted from scratch.
-              </p>
-
-              {/* Scroll Indicator Link */}
-              <button
-                type="button"
-                onClick={() => handleFilterSelect('all')}
-                className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-[0.18em] text-champagne-gold hover:text-gold-highlight cursor-pointer transition-colors"
-              >
-                <span>{allCirclesAppeared ? 'Scroll to watch creations assemble into filters' : 'Crafted with passion in Kampala'}</span>
-                <span aria-hidden="true">&darr;</span>
-              </button>
-            </div>
+            {/* Main Monumental Serif Title */}
+            <h1 className="font-serif font-normal text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-primary-gold uppercase tracking-tight leading-[1.05] drop-shadow-[0_2px_12px_rgba(20,18,16,0.95)]">
+              Our Creations
+            </h1>
+          </div>
 
             {/* -------------------------------------------------------------
                 HERO CONSTELLATION ANCHOR SLOTS (Invisible Reference Coordinates)
