@@ -79,6 +79,8 @@ export default function CreationsPage() {
   // Scroll and animation states
   const [isScrolled, setIsScrolled] = useState(false)
   const [scrollYPos, setScrollYPos] = useState(0)
+  const [scrollDirection, setScrollDirection] = useState('down')
+  const lastScrollYRef = useRef(0)
   const [appearedCircles, setAppearedCircles] = useState(new Set())
   const [deltasReady, setDeltasReady] = useState(false)
   const [deltas, setDeltas] = useState({
@@ -222,6 +224,18 @@ export default function CreationsPage() {
           const sy = window.scrollY
           setScrollYPos(sy)
 
+          // Detect scroll direction for mobile show/hide filter bar
+          const prevY = lastScrollYRef.current
+          const diff = sy - prevY
+          if (Math.abs(diff) > 6) {
+            if (diff > 0) {
+              setScrollDirection('down')
+            } else {
+              setScrollDirection('up')
+            }
+            lastScrollYRef.current = sy
+          }
+
           const heroEl = heroRef.current
           const heroHeight = heroEl ? heroEl.offsetHeight : 600
           // Trigger when hero scene is 3/4 off the viewport (~450px, ~3 scrolls)
@@ -235,6 +249,7 @@ export default function CreationsPage() {
               )
               return true
             } else if (prev && sy < resetThreshold) {
+              setScrollDirection('down')
               return false
             }
             return prev
@@ -252,6 +267,7 @@ export default function CreationsPage() {
           }
 
           if (sy < 15) {
+            setScrollDirection('down')
             measureDeltas()
           }
           ticking = false
@@ -321,21 +337,30 @@ export default function CreationsPage() {
       <div
         ref={filterBarRef}
         style={{
-          transform: filterOffsetY < 0 ? `translate3d(0, ${filterOffsetY}px, 0)` : undefined,
+          transform:
+            isScrolled && scrollDirection === 'up' && typeof window !== 'undefined' && window.innerWidth < 640
+              ? 'translate3d(0, -150%, 0)'
+              : filterOffsetY < 0
+              ? `translate3d(0, ${filterOffsetY}px, 0)`
+              : undefined,
         }}
-        className={`fixed top-20 left-0 right-0 z-30 w-full overflow-visible transition-colors duration-500 ${
+        className={`fixed top-20 left-0 right-0 z-30 w-full overflow-visible transition-all duration-300 ${
           isScrolled
-            ? 'bg-[#141210]/95 backdrop-blur-md border-b border-bronze/35 shadow-2xl py-2.5 pointer-events-auto'
+            ? 'bg-[#141210]/95 backdrop-blur-md border-b border-bronze/35 shadow-2xl py-1.5 sm:py-2.5 pointer-events-auto'
             : 'bg-transparent border-transparent pointer-events-none py-2.5'
+        } ${
+          isScrolled && scrollDirection === 'up'
+            ? '-translate-y-full opacity-0 pointer-events-none sm:translate-y-0 sm:opacity-100 sm:pointer-events-auto'
+            : 'translate-y-0 opacity-100'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 overflow-visible">
-          <div className="flex items-center justify-center gap-1.5 sm:gap-3 flex-wrap sm:flex-nowrap overflow-visible py-1">
+        <div className="max-w-[340px] sm:max-w-7xl mx-auto px-1 sm:px-6 lg:px-8 overflow-visible">
+          <div className="flex items-center justify-center gap-1 sm:gap-2.5 flex-wrap sm:flex-nowrap overflow-visible py-0.5 sm:py-1">
             {/* Slot 0: "All Creations" Button (Reveals when scrolled) */}
             <button
               type="button"
               onClick={() => handleFilterSelect('all')}
-              className={`shrink-0 flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-[5px] text-[11px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-500 cursor-pointer ${
+              className={`shrink-0 flex items-center gap-1 sm:gap-2 px-1.5 sm:px-3 py-0.5 sm:py-1.5 rounded-[5px] text-[10px] sm:text-xs font-semibold tracking-tight sm:tracking-wider uppercase transition-all duration-500 cursor-pointer ${
                 isScrolled
                   ? 'opacity-100 scale-100 pointer-events-auto'
                   : 'opacity-0 scale-75 pointer-events-none'
@@ -345,14 +370,14 @@ export default function CreationsPage() {
                   : 'bg-[#1A1815] text-gray-300 hover:text-white hover:bg-[#221F1B] border border-bronze/30 hover:border-primary-gold/60'
               }`}
             >
-              <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-[3px] bg-primary-gold/20 border border-primary-gold flex items-center justify-center text-primary-gold text-[9px] sm:text-[10px]">
+              <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 rounded-[3px] bg-primary-gold/20 border border-primary-gold flex items-center justify-center text-primary-gold text-[8px] sm:text-[10px]">
                 ✦
               </span>
               <span>
                 <span className="sm:hidden">All</span>
                 <span className="hidden sm:inline">All Creations</span>
               </span>
-              <span className="text-[10px] opacity-75 font-mono">(12)</span>
+              <span className="text-[8.5px] sm:text-[10px] opacity-75 font-mono">(12)</span>
             </button>
 
             {/* Slots 1-5: The 5 Morphing Cake Circles (Birthday, Wedding, Kwanjula, Graduation, Custom) */}
@@ -405,7 +430,7 @@ export default function CreationsPage() {
                       }}
                       className={`cursor-pointer focus:outline-none pointer-events-auto transition-all ${
                         isScrolled
-                          ? `flex items-center gap-1.5 sm:gap-2.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-[5px] text-[11px] sm:text-xs font-semibold tracking-wider uppercase border ${
+                          ? `flex items-center gap-1 sm:gap-2 px-1.5 sm:px-3 py-0.5 sm:py-1.5 rounded-[5px] text-[10px] sm:text-xs font-semibold tracking-tight sm:tracking-wider uppercase border ${
                               isActive
                                 ? 'bg-primary-gold text-dark-canvas border-primary-gold shadow-[0_2px_14px_rgba(222,172,75,0.35)]'
                                 : 'bg-[#1A1815] text-gray-300 hover:text-white hover:bg-[#221F1B] border-bronze/30 hover:border-primary-gold/60'
@@ -418,7 +443,7 @@ export default function CreationsPage() {
                       <div
                         className={`p-0.5 border-2 transition-all duration-700 ease-out overflow-hidden shadow-xl ${
                           isScrolled
-                            ? 'w-6 h-6 sm:w-8 sm:h-8 rounded-[3px] border-primary-gold/60 bg-[#141210]'
+                            ? 'w-4 h-4 sm:w-8 sm:h-8 rounded-[3px] border-primary-gold/60 bg-[#141210]'
                             : 'w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 rounded-full border-primary-gold/70 hover:border-primary-gold bg-[#1A1613] hover:scale-105 hover:shadow-[0_0_28px_rgba(222,172,75,0.45)]'
                         }`}
                       >
@@ -435,7 +460,7 @@ export default function CreationsPage() {
                       <div
                         className={`transition-all duration-500 ${
                           isScrolled
-                            ? 'flex items-center gap-1'
+                            ? 'flex items-center gap-0.5 sm:gap-1'
                             : 'mt-1 px-1.5 sm:px-2.5 py-0.5 rounded-[5px] bg-[#1A1613]/95 border border-primary-gold/40 text-[9px] sm:text-[11px] font-sans font-semibold tracking-tight sm:tracking-wider uppercase text-champagne-gold shadow-md whitespace-nowrap'
                         }`}
                       >
@@ -449,7 +474,7 @@ export default function CreationsPage() {
                         )}
                         {isScrolled && (
                           <span
-                            className={`text-[9px] sm:text-[10px] font-mono ${
+                            className={`text-[8.5px] sm:text-[10px] font-mono ${
                               isActive ? 'opacity-85' : 'text-gray-400'
                             }`}
                           >
@@ -507,9 +532,9 @@ export default function CreationsPage() {
                 )}
               </div>
 
-              {/* Results Count & Sort Dropdown */}
-              <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-2 text-xs text-gray-400">
-                <span className="text-[10px] sm:text-[11px] font-sans">
+              {/* Results Count & Sort Dropdown (Hidden on mobile) */}
+              <div className="hidden sm:flex sm:w-auto items-center justify-end gap-3 text-xs text-gray-400">
+                <span className="text-[11px] font-sans">
                   Showing <strong className="text-champagne-gold font-mono">{filteredProducts.length}</strong> of{' '}
                   {cakeProducts.length} creations
                 </span>
@@ -585,14 +610,14 @@ export default function CreationsPage() {
           {/* Anchor 2: Birthday Cakes (Mid Left) */}
           <div
             ref={heroAnchorRefs.birthdays}
-            className="absolute top-[16%] sm:top-1/2 -translate-y-1/2 left-2 sm:left-4 md:left-8 lg:left-12 w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            className="absolute top-[26%] sm:top-1/2 -translate-y-1/2 left-2 sm:left-4 md:left-8 lg:left-12 w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
             aria-hidden="true"
           />
 
           {/* Anchor 3: Graduation Cakes (Mid Right) */}
           <div
             ref={heroAnchorRefs.graduation}
-            className="absolute top-[16%] sm:top-1/2 -translate-y-1/2 right-2 sm:right-4 md:right-8 lg:right-12 w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            className="absolute top-[26%] sm:top-1/2 -translate-y-1/2 right-2 sm:right-4 md:right-8 lg:right-12 w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
             aria-hidden="true"
           />
 
