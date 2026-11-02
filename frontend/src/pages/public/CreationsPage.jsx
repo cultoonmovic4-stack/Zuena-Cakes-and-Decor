@@ -305,10 +305,10 @@ export default function CreationsPage() {
             1. All creations, 2. Birthday cakes, 3. Wedding cakes, 4. Kwanjula cakes, 5. Graduation cakes, 6. Custom cakes
           =================================================================== */}
       <div
-        className={`fixed top-20 left-0 right-0 z-40 w-full overflow-visible transition-colors duration-500 ${
+        className={`fixed top-20 left-0 right-0 z-30 w-full overflow-visible transition-colors duration-500 ${
           isScrolled
-            ? 'bg-[#141210]/95 backdrop-blur-md border-b border-bronze/35 shadow-2xl py-3 pointer-events-auto'
-            : 'bg-transparent border-transparent pointer-events-none py-3'
+            ? 'bg-[#141210]/95 backdrop-blur-md border-b border-bronze/35 shadow-2xl py-2.5 pointer-events-auto'
+            : 'bg-transparent border-transparent pointer-events-none py-2.5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
@@ -432,6 +432,77 @@ export default function CreationsPage() {
                 )
               })}
           </div>
+
+          {/* Row 2: Search Bar & Sort Toolbar (Appears ONLY when creation circles change into filters) */}
+          <div
+            className={`transition-all duration-500 ease-out overflow-hidden ${
+              isScrolled
+                ? 'max-h-28 opacity-100 pt-2 pb-0.5 border-t border-bronze/25 mt-2 pointer-events-auto'
+                : 'max-h-0 opacity-0 py-0 border-transparent m-0 pointer-events-none'
+            }`}
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
+              {/* Search Input */}
+              <div className="relative w-full sm:w-80 md:w-96">
+                <input
+                  type="text"
+                  placeholder="Search by occasion, design, flavor..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-[#181512] border border-bronze/40 focus:border-primary-gold rounded-full px-3.5 py-1.5 pl-9 text-xs sm:text-sm text-brand-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-gold transition-colors min-h-[34px]"
+                />
+                <svg
+                  aria-hidden="true"
+                  className="w-3.5 h-3.5 text-primary-gold absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs cursor-pointer"
+                    aria-label="Clear search query"
+                  >
+                    &times;
+                  </button>
+                )}
+              </div>
+
+              {/* Results Count & Sort Dropdown */}
+              <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-3 text-xs text-gray-400">
+                <span className="text-[11px] font-sans">
+                  Showing <strong className="text-champagne-gold font-mono">{filteredProducts.length}</strong> of{' '}
+                  {cakeProducts.length} creations
+                </span>
+
+                <div className="flex items-center gap-1.5">
+                  <label htmlFor="sort-select" className="text-gray-400 font-mono text-[10px] uppercase">
+                    Sort:
+                  </label>
+                  <select
+                    id="sort-select"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="bg-[#181512] border border-bronze/40 text-champagne-gold text-xs rounded-md px-2.5 py-1 focus:outline-none focus:border-primary-gold cursor-pointer min-h-[30px]"
+                  >
+                    <option value="featured">Featured Atelier Order</option>
+                    <option value="price-low">Estimate: Low to High</option>
+                    <option value="price-high">Estimate: High to Low</option>
+                    <option value="tiers">Most Tiers First</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -511,74 +582,9 @@ export default function CreationsPage() {
       {/* ===================================================================
           SCENE 2: INTERACTIVE PRODUCT SHOWCASE
           =================================================================== */}
-      <section id="scene-showcase" aria-label="Scene 2 — Product Showcase" className="w-full pt-16 scroll-mt-36">
-        {/* Search, Sort and Results Count Toolbar */}
-        <div className="bg-[#161310] border-b border-bronze/25 py-3">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-            {/* Search Input */}
-            <div className="relative w-full sm:w-80">
-              <input
-                type="text"
-                placeholder="Search by occasion, design, flavor..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#181512] border border-bronze/40 focus:border-primary-gold rounded-md px-3.5 py-2 pl-9 text-xs sm:text-sm text-brand-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-gold transition-colors min-h-[38px]"
-              />
-              <svg
-                aria-hidden="true"
-                className="w-4 h-4 text-primary-gold absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs cursor-pointer"
-                  aria-label="Clear search query"
-                >
-                  &times;
-                </button>
-              )}
-            </div>
-
-            {/* Results Count & Sort Dropdown */}
-            <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-3 text-xs text-gray-400">
-              <span>
-                Showing <strong className="text-champagne-gold">{filteredProducts.length}</strong> of{' '}
-                {cakeProducts.length} works
-              </span>
-
-              <div className="flex items-center gap-1.5">
-                <label htmlFor="sort-select" className="text-gray-400 font-mono text-[11px] uppercase">
-                  Sort:
-                </label>
-                <select
-                  id="sort-select"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-[#181512] border border-bronze/40 text-champagne-gold text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-primary-gold cursor-pointer min-h-[36px]"
-                >
-                  <option value="featured">Featured Atelier Order</option>
-                  <option value="price-low">Estimate: Low to High</option>
-                  <option value="price-high">Estimate: High to Low</option>
-                  <option value="tiers">Most Tiers First</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <section id="scene-showcase" aria-label="Scene 2 — Product Showcase" className="w-full pt-28 sm:pt-32 scroll-mt-48">
         {/* Product Cards Grid */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {filteredProducts.length === 0 ? (
             <div className="text-center py-20 px-4 bg-[#181512] border border-bronze/30 rounded-xl max-w-xl mx-auto">
               <span className="text-3xl block mb-3">&bull; &#10022; &bull;</span>
@@ -859,7 +865,7 @@ export default function CreationsPage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="quickview-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-canvas/85 backdrop-blur-md animate-fadeIn"
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-dark-canvas/85 backdrop-blur-md animate-fadeIn"
           onClick={() => setQuickViewCake(null)}
         >
           <div
