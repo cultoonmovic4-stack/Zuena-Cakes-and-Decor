@@ -89,7 +89,10 @@ export default function CreationsPage() {
     custom: { x: 0, y: 0 },
   })
 
+  const [filterOffsetY, setFilterOffsetY] = useState(0)
   const heroRef = useRef(null)
+  const showcaseRef = useRef(null)
+  const filterBarRef = useRef(null)
 
   // Anchor and slot refs for FLIP coordinate calculation
   const heroAnchorRefs = {
@@ -237,6 +240,17 @@ export default function CreationsPage() {
             return prev
           })
 
+          // Stop being sticky where the product showcase ends
+          const showcaseEl = showcaseRef.current
+          const filterBarEl = filterBarRef.current
+          if (showcaseEl && filterBarEl) {
+            const showcaseRect = showcaseEl.getBoundingClientRect()
+            const filterBarHeight = filterBarEl.offsetHeight || 110
+            const navbarHeight = 80 // top-20 (80px)
+            const remaining = showcaseRect.bottom - (navbarHeight + filterBarHeight)
+            setFilterOffsetY(Math.min(0, Math.round(remaining)))
+          }
+
           if (sy < 15) {
             measureDeltas()
           }
@@ -305,6 +319,10 @@ export default function CreationsPage() {
             1. All creations, 2. Birthday cakes, 3. Wedding cakes, 4. Kwanjula cakes, 5. Graduation cakes, 6. Custom cakes
           =================================================================== */}
       <div
+        ref={filterBarRef}
+        style={{
+          transform: filterOffsetY < 0 ? `translate3d(0, ${filterOffsetY}px, 0)` : undefined,
+        }}
         className={`fixed top-20 left-0 right-0 z-30 w-full overflow-visible transition-colors duration-500 ${
           isScrolled
             ? 'bg-[#141210]/95 backdrop-blur-md border-b border-bronze/35 shadow-2xl py-2.5 pointer-events-auto'
@@ -317,7 +335,7 @@ export default function CreationsPage() {
             <button
               type="button"
               onClick={() => handleFilterSelect('all')}
-              className={`shrink-0 flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-500 cursor-pointer ${
+              className={`shrink-0 flex items-center gap-2.5 px-3.5 py-1.5 rounded-[5px] text-xs font-semibold tracking-wider uppercase transition-all duration-500 cursor-pointer ${
                 isScrolled
                   ? 'opacity-100 scale-100 pointer-events-auto'
                   : 'opacity-0 scale-75 pointer-events-none'
@@ -327,7 +345,7 @@ export default function CreationsPage() {
                   : 'bg-[#1A1815] text-gray-300 hover:text-white hover:bg-[#221F1B] border border-bronze/30 hover:border-primary-gold/60'
               }`}
             >
-              <span className="w-6 h-6 rounded-full bg-primary-gold/20 border border-primary-gold flex items-center justify-center text-primary-gold text-[10px]">
+              <span className="w-5 h-5 rounded-[3px] bg-primary-gold/20 border border-primary-gold flex items-center justify-center text-primary-gold text-[10px]">
                 ✦
               </span>
               <span>All Creations</span>
@@ -384,7 +402,7 @@ export default function CreationsPage() {
                       }}
                       className={`cursor-pointer focus:outline-none pointer-events-auto transition-all ${
                         isScrolled
-                          ? `flex items-center gap-2.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border ${
+                          ? `flex items-center gap-2.5 px-3 py-1.5 rounded-[5px] text-xs font-semibold tracking-wider uppercase border ${
                               isActive
                                 ? 'bg-primary-gold text-dark-canvas border-primary-gold shadow-[0_2px_14px_rgba(222,172,75,0.35)]'
                                 : 'bg-[#1A1815] text-gray-300 hover:text-white hover:bg-[#221F1B] border-bronze/30 hover:border-primary-gold/60'
@@ -395,16 +413,18 @@ export default function CreationsPage() {
                     >
                       {/* Cake Image Circle (Scales from hero size down to filter badge) */}
                       <div
-                        className={`rounded-full p-0.5 border-2 transition-all duration-700 ease-out overflow-hidden shadow-xl ${
+                        className={`p-0.5 border-2 transition-all duration-700 ease-out overflow-hidden shadow-xl ${
                           isScrolled
-                            ? 'w-7 h-7 sm:w-8 sm:h-8 border-primary-gold/60 bg-[#141210]'
-                            : 'w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 border-primary-gold/70 hover:border-primary-gold bg-[#1A1613] hover:scale-105 hover:shadow-[0_0_28px_rgba(222,172,75,0.45)]'
+                            ? 'w-7 h-7 sm:w-8 sm:h-8 rounded-[3px] border-primary-gold/60 bg-[#141210]'
+                            : 'w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 rounded-full border-primary-gold/70 hover:border-primary-gold bg-[#1A1613] hover:scale-105 hover:shadow-[0_0_28px_rgba(222,172,75,0.45)]'
                         }`}
                       >
                         <img
                           src={circle.image}
                           alt={circle.alt}
-                          className="w-full h-full rounded-full object-cover pointer-events-none"
+                          className={`w-full h-full object-cover pointer-events-none transition-all duration-700 ${
+                            isScrolled ? 'rounded-[2px]' : 'rounded-full'
+                          }`}
                         />
                       </div>
 
@@ -413,7 +433,7 @@ export default function CreationsPage() {
                         className={`transition-all duration-500 ${
                           isScrolled
                             ? 'flex items-center gap-1.5'
-                            : 'mt-1 px-2.5 py-0.5 rounded-full bg-[#1A1613]/95 border border-primary-gold/40 text-[10px] sm:text-[11px] font-sans font-semibold tracking-wider uppercase text-champagne-gold shadow-md whitespace-nowrap'
+                            : 'mt-1 px-2.5 py-0.5 rounded-[5px] bg-[#1A1613]/95 border border-primary-gold/40 text-[10px] sm:text-[11px] font-sans font-semibold tracking-wider uppercase text-champagne-gold shadow-md whitespace-nowrap'
                         }`}
                       >
                         <span>{circle.label}</span>
@@ -449,7 +469,7 @@ export default function CreationsPage() {
                   placeholder="Search by occasion, design, flavor..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-[#181512] border border-bronze/40 focus:border-primary-gold rounded-full px-3.5 py-1.5 pl-9 text-xs sm:text-sm text-brand-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-gold transition-colors min-h-[34px]"
+                  className="w-full bg-[#181512] border border-bronze/40 focus:border-primary-gold rounded-[5px] px-3.5 py-1.5 pl-9 text-xs sm:text-sm text-brand-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-gold transition-colors min-h-[34px]"
                 />
                 <svg
                   aria-hidden="true"
@@ -492,7 +512,7 @@ export default function CreationsPage() {
                     id="sort-select"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-[#181512] border border-bronze/40 text-champagne-gold text-xs rounded-md px-2.5 py-1 focus:outline-none focus:border-primary-gold cursor-pointer min-h-[30px]"
+                    className="bg-[#181512] border border-bronze/40 text-champagne-gold text-xs rounded-[5px] px-2.5 py-1 focus:outline-none focus:border-primary-gold cursor-pointer min-h-[30px]"
                   >
                     <option value="featured">Featured Atelier Order</option>
                     <option value="price-low">Estimate: Low to High</option>
@@ -582,7 +602,7 @@ export default function CreationsPage() {
       {/* ===================================================================
           SCENE 2: INTERACTIVE PRODUCT SHOWCASE
           =================================================================== */}
-      <section id="scene-showcase" aria-label="Scene 2 — Product Showcase" className="w-full pt-28 sm:pt-32 scroll-mt-48">
+      <section id="scene-showcase" ref={showcaseRef} aria-label="Scene 2 — Product Showcase" className="w-full pt-28 sm:pt-32 scroll-mt-48">
         {/* Product Cards Grid */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {filteredProducts.length === 0 ? (
