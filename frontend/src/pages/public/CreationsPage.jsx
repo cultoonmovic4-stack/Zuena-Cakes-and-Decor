@@ -329,13 +329,13 @@ export default function CreationsPage() {
             : 'bg-transparent border-transparent pointer-events-none py-2.5'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
-          <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap overflow-visible py-1">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 overflow-visible">
+          <div className="flex items-center justify-center gap-1.5 sm:gap-3 flex-wrap sm:flex-nowrap overflow-visible py-1">
             {/* Slot 0: "All Creations" Button (Reveals when scrolled) */}
             <button
               type="button"
               onClick={() => handleFilterSelect('all')}
-              className={`shrink-0 flex items-center gap-2.5 px-3.5 py-1.5 rounded-[5px] text-xs font-semibold tracking-wider uppercase transition-all duration-500 cursor-pointer ${
+              className={`shrink-0 flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-[5px] text-[11px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-500 cursor-pointer ${
                 isScrolled
                   ? 'opacity-100 scale-100 pointer-events-auto'
                   : 'opacity-0 scale-75 pointer-events-none'
@@ -345,10 +345,13 @@ export default function CreationsPage() {
                   : 'bg-[#1A1815] text-gray-300 hover:text-white hover:bg-[#221F1B] border border-bronze/30 hover:border-primary-gold/60'
               }`}
             >
-              <span className="w-5 h-5 rounded-[3px] bg-primary-gold/20 border border-primary-gold flex items-center justify-center text-primary-gold text-[10px]">
+              <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-[3px] bg-primary-gold/20 border border-primary-gold flex items-center justify-center text-primary-gold text-[9px] sm:text-[10px]">
                 ✦
               </span>
-              <span>All Creations</span>
+              <span>
+                <span className="sm:hidden">All</span>
+                <span className="hidden sm:inline">All Creations</span>
+              </span>
               <span className="text-[10px] opacity-75 font-mono">(12)</span>
             </button>
 
@@ -402,7 +405,7 @@ export default function CreationsPage() {
                       }}
                       className={`cursor-pointer focus:outline-none pointer-events-auto transition-all ${
                         isScrolled
-                          ? `flex items-center gap-2.5 px-3 py-1.5 rounded-[5px] text-xs font-semibold tracking-wider uppercase border ${
+                          ? `flex items-center gap-1.5 sm:gap-2.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-[5px] text-[11px] sm:text-xs font-semibold tracking-wider uppercase border ${
                               isActive
                                 ? 'bg-primary-gold text-dark-canvas border-primary-gold shadow-[0_2px_14px_rgba(222,172,75,0.35)]'
                                 : 'bg-[#1A1815] text-gray-300 hover:text-white hover:bg-[#221F1B] border-bronze/30 hover:border-primary-gold/60'
@@ -415,8 +418,8 @@ export default function CreationsPage() {
                       <div
                         className={`p-0.5 border-2 transition-all duration-700 ease-out overflow-hidden shadow-xl ${
                           isScrolled
-                            ? 'w-7 h-7 sm:w-8 sm:h-8 rounded-[3px] border-primary-gold/60 bg-[#141210]'
-                            : 'w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 rounded-full border-primary-gold/70 hover:border-primary-gold bg-[#1A1613] hover:scale-105 hover:shadow-[0_0_28px_rgba(222,172,75,0.45)]'
+                            ? 'w-6 h-6 sm:w-8 sm:h-8 rounded-[3px] border-primary-gold/60 bg-[#141210]'
+                            : 'w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 rounded-full border-primary-gold/70 hover:border-primary-gold bg-[#1A1613] hover:scale-105 hover:shadow-[0_0_28px_rgba(222,172,75,0.45)]'
                         }`}
                       >
                         <img
@@ -432,14 +435,21 @@ export default function CreationsPage() {
                       <div
                         className={`transition-all duration-500 ${
                           isScrolled
-                            ? 'flex items-center gap-1.5'
-                            : 'mt-1 px-2.5 py-0.5 rounded-[5px] bg-[#1A1613]/95 border border-primary-gold/40 text-[10px] sm:text-[11px] font-sans font-semibold tracking-wider uppercase text-champagne-gold shadow-md whitespace-nowrap'
+                            ? 'flex items-center gap-1'
+                            : 'mt-1 px-1.5 sm:px-2.5 py-0.5 rounded-[5px] bg-[#1A1613]/95 border border-primary-gold/40 text-[9px] sm:text-[11px] font-sans font-semibold tracking-tight sm:tracking-wider uppercase text-champagne-gold shadow-md whitespace-nowrap'
                         }`}
                       >
-                        <span>{circle.label}</span>
+                        {isScrolled ? (
+                          <>
+                            <span className="sm:hidden">{circle.label.replace(' Cakes', '')}</span>
+                            <span className="hidden sm:inline">{circle.label}</span>
+                          </>
+                        ) : (
+                          <span>{circle.label}</span>
+                        )}
                         {isScrolled && (
                           <span
-                            className={`text-[10px] font-mono ${
+                            className={`text-[9px] sm:text-[10px] font-mono ${
                               isActive ? 'opacity-85' : 'text-gray-400'
                             }`}
                           >
@@ -457,11 +467,11 @@ export default function CreationsPage() {
           <div
             className={`transition-all duration-500 ease-out overflow-hidden ${
               isScrolled
-                ? 'max-h-28 opacity-100 pt-2 pb-0.5 border-t border-bronze/25 mt-2 pointer-events-auto'
+                ? 'max-h-48 sm:max-h-28 opacity-100 pt-2 pb-0.5 border-t border-bronze/25 mt-2 pointer-events-auto'
                 : 'max-h-0 opacity-0 py-0 border-transparent m-0 pointer-events-none'
             }`}
           >
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
               {/* Search Input */}
               <div className="relative w-full sm:w-80 md:w-96">
                 <input
@@ -469,7 +479,7 @@ export default function CreationsPage() {
                   placeholder="Search by occasion, design, flavor..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-[#181512] border border-bronze/40 focus:border-primary-gold rounded-[5px] px-3.5 py-1.5 pl-9 text-xs sm:text-sm text-brand-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-gold transition-colors min-h-[34px]"
+                  className="w-full bg-[#181512] border border-bronze/40 focus:border-primary-gold rounded-[5px] px-3.5 py-1.5 pl-9 text-xs sm:text-sm text-brand-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-gold transition-colors min-h-[36px]"
                 />
                 <svg
                   aria-hidden="true"
@@ -489,7 +499,7 @@ export default function CreationsPage() {
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs cursor-pointer p-1"
                     aria-label="Clear search query"
                   >
                     &times;
@@ -498,8 +508,8 @@ export default function CreationsPage() {
               </div>
 
               {/* Results Count & Sort Dropdown */}
-              <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-3 text-xs text-gray-400">
-                <span className="text-[11px] font-sans">
+              <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-2 text-xs text-gray-400">
+                <span className="text-[10px] sm:text-[11px] font-sans">
                   Showing <strong className="text-champagne-gold font-mono">{filteredProducts.length}</strong> of{' '}
                   {cakeProducts.length} creations
                 </span>
@@ -512,12 +522,12 @@ export default function CreationsPage() {
                     id="sort-select"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-[#181512] border border-bronze/40 text-champagne-gold text-xs rounded-[5px] px-2.5 py-1 focus:outline-none focus:border-primary-gold cursor-pointer min-h-[30px]"
+                    className="bg-[#181512] border border-bronze/40 text-champagne-gold text-xs rounded-[5px] px-2 py-1 focus:outline-none focus:border-primary-gold cursor-pointer min-h-[30px]"
                   >
-                    <option value="featured">Featured Atelier Order</option>
-                    <option value="price-low">Estimate: Low to High</option>
-                    <option value="price-high">Estimate: High to Low</option>
-                    <option value="tiers">Most Tiers First</option>
+                    <option value="featured">Featured Order</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="tiers">Most Tiers</option>
                   </select>
                 </div>
               </div>
@@ -536,7 +546,7 @@ export default function CreationsPage() {
       <section
         ref={heroRef}
         aria-label="Scene 1 — Creations Constellation Hero"
-        className="relative w-full h-[calc(100vh-5rem)] min-h-[480px] max-h-[660px] flex items-center justify-center overflow-hidden bg-[#1A1613] border-b border-bronze/20 px-4"
+        className="relative w-full h-[calc(100svh-5rem)] min-h-[460px] max-h-[660px] flex items-center justify-center overflow-hidden bg-[#1A1613] border-b border-bronze/20 px-3 sm:px-4"
       >
         {/* Warm Ambient Gold Radial Glow spanning the hero seamlessly */}
         <div
@@ -545,15 +555,15 @@ export default function CreationsPage() {
         />
 
         {/* Central Constellation Canvas */}
-        <div className="relative w-full max-w-4xl h-[420px] sm:h-[450px] md:h-[470px] flex items-center justify-center">
+        <div className="relative w-full max-w-4xl h-[400px] sm:h-[450px] md:h-[470px] flex items-center justify-center">
           {/* CENTER: "OUR CREATIONS" TITLE */}
           <div
-            className={`z-10 text-center max-w-[280px] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-2 select-none transition-all duration-700 ease-out ${
+            className={`z-10 text-center max-w-[260px] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-2 select-none transition-all duration-700 ease-out ${
               isScrolled ? 'opacity-35 scale-95 pointer-events-none' : 'opacity-100 scale-100'
             }`}
           >
             {/* Main Monumental Serif Title */}
-            <h1 className="font-serif font-normal text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-primary-gold uppercase tracking-tight leading-[1.05] drop-shadow-[0_2px_12px_rgba(20,18,16,0.95)]">
+            <h1 className="font-serif font-normal text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-primary-gold uppercase tracking-tight leading-[1.05] drop-shadow-[0_2px_12px_rgba(20,18,16,0.95)]">
               Our Creations
             </h1>
           </div>
@@ -561,39 +571,42 @@ export default function CreationsPage() {
           {/* -------------------------------------------------------------
               HERO CONSTELLATION ANCHOR SLOTS (Invisible Reference Coordinates)
               Fitted so top, middle, and bottom circles are 100% visible on load!
+              On mobile (<sm):
+              Birthday & Graduation anchors are positioned gracefully above the title (10 & 2 o'clock)
+              to guarantee zero overlap with the title and zero side edge overflow!
               ------------------------------------------------------------- */}
           {/* Anchor 1: Wedding Cakes (Top Center) */}
           <div
             ref={heroAnchorRefs.weddings}
-            className="absolute top-1 sm:top-2 md:top-3 left-1/2 -translate-x-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            className="absolute top-1 sm:top-2 md:top-3 left-1/2 -translate-x-1/2 w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
             aria-hidden="true"
           />
 
           {/* Anchor 2: Birthday Cakes (Mid Left) */}
           <div
             ref={heroAnchorRefs.birthdays}
-            className="absolute left-1 sm:left-4 md:left-8 lg:left-12 top-1/2 -translate-y-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            className="absolute top-[16%] sm:top-1/2 -translate-y-1/2 left-2 sm:left-4 md:left-8 lg:left-12 w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
             aria-hidden="true"
           />
 
           {/* Anchor 3: Graduation Cakes (Mid Right) */}
           <div
             ref={heroAnchorRefs.graduation}
-            className="absolute right-1 sm:right-4 md:right-8 lg:right-12 top-1/2 -translate-y-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            className="absolute top-[16%] sm:top-1/2 -translate-y-1/2 right-2 sm:right-4 md:right-8 lg:right-12 w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
             aria-hidden="true"
           />
 
           {/* Anchor 4: Kwanjula Cakes (Bottom Left) */}
           <div
             ref={heroAnchorRefs.traditional}
-            className="absolute bottom-1 sm:bottom-2 md:bottom-3 left-[22%] sm:left-[26%] -translate-x-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            className="absolute bottom-1 sm:bottom-2 md:bottom-3 left-[20%] sm:left-[26%] -translate-x-1/2 w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
             aria-hidden="true"
           />
 
           {/* Anchor 5: Custom Cakes (Bottom Right) */}
           <div
             ref={heroAnchorRefs.custom}
-            className="absolute bottom-1 sm:bottom-2 md:bottom-3 right-[22%] sm:right-[26%] translate-x-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            className="absolute bottom-1 sm:bottom-2 md:bottom-3 right-[20%] sm:right-[26%] translate-x-1/2 w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
             aria-hidden="true"
           />
         </div>
@@ -602,7 +615,7 @@ export default function CreationsPage() {
       {/* ===================================================================
           SCENE 2: INTERACTIVE PRODUCT SHOWCASE
           =================================================================== */}
-      <section id="scene-showcase" ref={showcaseRef} aria-label="Scene 2 — Product Showcase" className="w-full pt-28 sm:pt-32 scroll-mt-48">
+      <section id="scene-showcase" ref={showcaseRef} aria-label="Scene 2 — Product Showcase" className="w-full pt-20 sm:pt-32 scroll-mt-60 sm:scroll-mt-48">
         {/* Product Cards Grid */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {filteredProducts.length === 0 ? (
@@ -680,28 +693,28 @@ export default function CreationsPage() {
                   </div>
 
                   {/* Card Content & Narrative */}
-                  <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between">
                     <div>
                       {/* Cake Type & Guest Capacity */}
-                      <div className="flex items-center justify-between text-[11px] text-gray-400 font-sans mb-2">
+                      <div className="flex items-center justify-between text-[11px] text-gray-400 font-sans mb-1.5 sm:mb-2">
                         <span className="text-primary-gold font-medium">{cake.cakeType}</span>
                         <span>Serves: {cake.servings}</span>
                       </div>
 
                       {/* Cake Title */}
-                      <h2 className="font-serif font-semibold text-xl text-brand-white group-hover:text-primary-gold transition-colors leading-snug mb-2.5">
+                      <h2 className="font-serif font-semibold text-lg sm:text-xl text-brand-white group-hover:text-primary-gold transition-colors leading-snug mb-2 sm:mb-2.5">
                         <Link to={`/creations/${cake.slug}`} className="focus:outline-none focus-visible:underline">
                           {cake.name}
                         </Link>
                       </h2>
 
                       {/* Summary */}
-                      <p className="font-sans text-xs text-gray-300/90 leading-relaxed line-clamp-2 mb-4 font-normal">
+                      <p className="font-sans text-xs text-gray-300/90 leading-relaxed line-clamp-2 mb-3 sm:mb-4 font-normal">
                         {cake.summary}
                       </p>
 
                       {/* Key Craft Highlights Chips */}
-                      <div className="flex flex-wrap gap-1.5 mb-5">
+                      <div className="flex flex-wrap gap-1.5 mb-4 sm:mb-5">
                         {cake.highlights.slice(0, 2).map((hl, i) => (
                           <span
                             key={i}
@@ -714,19 +727,19 @@ export default function CreationsPage() {
                     </div>
 
                     {/* Price & Detailed Link Footer */}
-                    <div className="pt-4 border-t border-bronze/25 flex items-center justify-between gap-3">
+                    <div className="pt-3 sm:pt-4 border-t border-bronze/25 flex items-center justify-between gap-2 sm:gap-3">
                       <div>
-                        <span className="block text-[10px] font-mono uppercase tracking-wider text-gray-400">
+                        <span className="block text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-gray-400">
                           Starting Estimate
                         </span>
-                        <span className="block font-serif text-lg text-primary-gold font-semibold">
+                        <span className="block font-serif text-base sm:text-lg text-primary-gold font-semibold">
                           {cake.priceDisplay}
                         </span>
                       </div>
 
                       <Link
                         to={`/creations/${cake.slug}`}
-                        className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded bg-primary-gold/15 hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/40 hover:border-primary-gold text-xs font-semibold tracking-wider uppercase transition-all duration-200 min-h-[40px]"
+                        className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded bg-primary-gold/15 hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/40 hover:border-primary-gold text-xs font-semibold tracking-wider uppercase transition-all duration-200 min-h-[38px] sm:min-h-[40px]"
                       >
                         <span>View Details</span>
                         <span aria-hidden="true">&rarr;</span>
@@ -756,7 +769,7 @@ export default function CreationsPage() {
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Left: Asymmetrical Layered Photography */}
-            <div data-aos="fade-right" className="lg:col-span-6 relative">
+            <div data-aos="fade-right" className="lg:col-span-6 relative mb-12 sm:mb-16 lg:mb-0">
               {/* Primary Anchor Photograph */}
               <div className="relative w-[82%] sm:w-[78%] aspect-4/5 rounded-lg overflow-hidden border border-bronze/40 shadow-2xl bg-[#141210]">
                 <img
@@ -813,7 +826,7 @@ export default function CreationsPage() {
                 </span>
               </div>
 
-              <h2 className="font-serif font-normal text-3xl sm:text-4xl lg:text-5xl text-brand-white leading-[1.14] tracking-tight mb-4">
+              <h2 className="font-serif font-normal text-2xl sm:text-4xl lg:text-5xl text-brand-white leading-[1.14] tracking-tight mb-4">
                 Something Special Starts <span className="text-primary-gold italic">With an Idea.</span>
               </h2>
 
@@ -850,7 +863,7 @@ export default function CreationsPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
                 <Link
                   to="/custom-cake"
                   className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded text-xs sm:text-sm font-semibold tracking-wider uppercase bg-primary-gold text-dark-canvas hover:bg-gold-highlight hover:shadow-[0_4px_24px_rgba(222,172,75,0.35)] transition-all min-h-[46px] text-center"
@@ -867,8 +880,8 @@ export default function CreationsPage() {
                 </Link>
               </div>
 
-              <p className="font-sans text-xs text-gray-400 mt-6 flex items-center gap-2">
-                <span className="text-primary-gold font-serif text-sm">&diams;</span>
+              <p className="font-sans text-xs text-gray-400 mt-6 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                <span className="text-primary-gold font-serif text-sm hidden sm:inline">&diams;</span>
                 <span>Personal consultation &amp; tasting by appointment: <strong className="text-gray-200">+256 705 100 010</strong></span>
               </p>
             </div>
@@ -884,25 +897,25 @@ export default function CreationsPage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="quickview-title"
-          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-dark-canvas/85 backdrop-blur-md animate-fadeIn"
+          className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4 bg-dark-canvas/85 backdrop-blur-md animate-fadeIn"
           onClick={() => setQuickViewCake(null)}
         >
           <div
-            className="relative w-full max-w-3xl bg-[#181512] border border-primary-gold/50 rounded-lg shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
+            className="relative w-full max-w-3xl bg-[#181512] border border-primary-gold/50 rounded-lg shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh] sm:max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
               type="button"
               onClick={() => setQuickViewCake(null)}
-              className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-dark-canvas/80 text-gray-300 hover:text-white border border-white/20 flex items-center justify-center text-lg focus:outline-none focus:ring-2 focus:ring-primary-gold cursor-pointer"
+              className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-20 w-8 h-8 rounded-full bg-dark-canvas/90 text-gray-300 hover:text-white border border-white/20 flex items-center justify-center text-lg focus:outline-none focus:ring-2 focus:ring-primary-gold cursor-pointer shadow-lg"
               aria-label="Close preview modal"
             >
               &times;
             </button>
 
             {/* Modal Image */}
-            <div className="w-full md:w-1/2 aspect-4/5 md:aspect-auto relative bg-[#141210]">
+            <div className="w-full md:w-1/2 h-44 sm:h-56 md:h-auto md:aspect-auto shrink-0 relative bg-[#141210]">
               <img
                 src={quickViewCake.image}
                 alt={quickViewCake.alt}
@@ -916,26 +929,26 @@ export default function CreationsPage() {
             </div>
 
             {/* Modal Content */}
-            <div className="w-full md:w-1/2 p-6 sm:p-8 overflow-y-auto flex flex-col justify-between">
+            <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-8 overflow-y-auto flex flex-col justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary-gold font-semibold block mb-1">
                   {quickViewCake.categoryLabel}
                 </span>
-                <h3 id="quickview-title" className="font-serif font-semibold text-2xl text-brand-white leading-tight mb-2">
+                <h3 id="quickview-title" className="font-serif font-semibold text-xl sm:text-2xl text-brand-white leading-tight mb-2">
                   {quickViewCake.name}
                 </h3>
-                <div className="text-primary-gold font-serif text-xl font-semibold mb-4">
+                <div className="text-primary-gold font-serif text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
                   {quickViewCake.priceDisplay}{' '}
                   <span className="text-xs font-sans text-gray-400 font-normal">(Starting Estimate)</span>
                 </div>
-                <p className="font-sans text-xs text-gray-300 leading-relaxed mb-4">
+                <p className="font-sans text-xs text-gray-300 leading-relaxed mb-3 sm:mb-4">
                   {quickViewCake.description}
                 </p>
 
                 <h4 className="font-serif text-xs uppercase tracking-wider text-champagne-gold font-semibold mb-2">
                   Signature Highlights:
                 </h4>
-                <ul className="space-y-1.5 text-xs text-gray-300 mb-6">
+                <ul className="space-y-1.5 text-xs text-gray-300 mb-4 sm:mb-6">
                   {quickViewCake.highlights.map((item, idx) => (
                     <li key={idx} className="flex items-start gap-2">
                       <span className="text-primary-gold font-bold">&check;</span>
@@ -945,7 +958,7 @@ export default function CreationsPage() {
                 </ul>
               </div>
 
-              <div className="pt-4 border-t border-bronze/30 flex flex-col sm:flex-row gap-3">
+              <div className="pt-3 sm:pt-4 border-t border-bronze/30 flex flex-col sm:flex-row gap-2.5 sm:gap-3">
                 <Link
                   to={`/creations/${quickViewCake.slug}`}
                   onClick={() => setQuickViewCake(null)}
