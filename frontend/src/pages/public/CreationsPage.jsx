@@ -74,7 +74,7 @@ export default function CreationsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('featured')
-  const [quickViewCake, setQuickViewCake] = useState(null)
+  const [activeModalIndex, setActiveModalIndex] = useState(null)
 
   // Scroll and animation states
   const [isScrolled, setIsScrolled] = useState(false)
@@ -280,9 +280,48 @@ export default function CreationsPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Exhibition Lightbox helpers & navigation
+  const quickViewCake = activeModalIndex !== null ? filteredProducts[activeModalIndex] : null
+
+  const openLightbox = (cake) => {
+    const idx = filteredProducts.findIndex((c) => c.id === cake.id)
+    setActiveModalIndex(idx >= 0 ? idx : 0)
+  }
+
+  const closeLightbox = () => {
+    setActiveModalIndex(null)
+  }
+
+  const nextLightbox = () => {
+    if (filteredProducts.length === 0) return
+    setActiveModalIndex((prev) => (prev + 1) % filteredProducts.length)
+  }
+
+  const prevLightbox = () => {
+    if (filteredProducts.length === 0) return
+    setActiveModalIndex((prev) => (prev - 1 + filteredProducts.length) % filteredProducts.length)
+  }
+
+  // Keyboard navigation for Lightbox (ArrowLeft, ArrowRight, Escape)
+  useEffect(() => {
+    if (activeModalIndex === null) return
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox()
+      } else if (e.key === 'ArrowRight') {
+        nextLightbox()
+      } else if (e.key === 'ArrowLeft') {
+        prevLightbox()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [activeModalIndex, filteredProducts.length])
+
   // Handle clicking a circle filter item
   const handleFilterSelect = (categoryId) => {
     setSelectedCategory(categoryId)
+    setActiveModalIndex(null)
     // If clicked while in hero, smoothly scroll down into showcase
     if (!isScrolled) {
       setIsScrolled(true)
@@ -589,14 +628,28 @@ export default function CreationsPage() {
         <div className="relative w-full max-w-4xl h-[400px] sm:h-[450px] md:h-[470px] flex items-center justify-center">
           {/* CENTER: "OUR CREATIONS" TITLE */}
           <div
-            className={`z-10 text-center max-w-[260px] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-2 select-none transition-all duration-700 ease-out ${
+            className={`z-10 text-center max-w-[280px] sm:max-w-md md:max-w-xl mx-auto px-2 select-none transition-all duration-700 ease-out ${
               isScrolled ? 'opacity-35 scale-95 pointer-events-none' : 'opacity-100 scale-100'
             }`}
           >
+            {/* Atelier Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#181512]/90 border border-primary-gold/40 text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.24em] text-champagne-gold mb-2 sm:mb-2.5 shadow-lg">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary-gold animate-pulse" />
+              <span>Atelier Portfolio &bull; Kampala</span>
+            </div>
+
             {/* Main Monumental Serif Title */}
-            <h1 className="font-serif font-normal text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-primary-gold uppercase tracking-tight leading-[1.05] drop-shadow-[0_2px_12px_rgba(20,18,16,0.95)]">
+            <h1 className="font-serif font-normal text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-primary-gold uppercase tracking-tight leading-[1.05] drop-shadow-[0_4px_24px_rgba(20,18,16,0.95)]">
               Our Creations
             </h1>
+
+            {/* Delicate Gold Accent Rule */}
+            <div aria-hidden="true" className="w-14 sm:w-20 h-[1px] bg-gradient-to-r from-transparent via-primary-gold to-transparent mx-auto my-2 sm:my-2.5" />
+
+            {/* Editorial Subtitle */}
+            <p className="font-sans text-[10px] sm:text-xs text-gray-300/85 font-light tracking-wide max-w-sm mx-auto leading-relaxed">
+              Bespoke celebration centerpieces, traditional tiers &amp; sculpted cakes handcrafted from scratch.
+            </p>
           </div>
 
           {/* -------------------------------------------------------------
@@ -648,11 +701,39 @@ export default function CreationsPage() {
           =================================================================== */}
       <section id="scene-showcase" ref={showcaseRef} aria-label="Scene 2 — Product Showcase" className="w-full pt-20 sm:pt-32 scroll-mt-60 sm:scroll-mt-48">
         {/* Product Cards Grid */}
+        {/* Product Showcase Container */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          {/* Editorial Section Introduction */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8 sm:mb-10 pb-4 border-b border-bronze/30">
+            <div>
+              <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.26em] text-primary-gold font-semibold block mb-1">
+                ✦ Exhibition Catalogue &bull; Collection 2026
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-brand-white">
+                {selectedCategory === 'all'
+                  ? 'The Complete Patisserie Archive'
+                  : selectedCategory === 'weddings'
+                  ? 'Matrimonial & Grand Reception Tiers'
+                  : selectedCategory === 'traditional'
+                  ? 'Kwanjula & Cultural Ceremonial Cakes'
+                  : selectedCategory === 'birthdays'
+                  ? 'Milestone & Celebration Sculptures'
+                  : selectedCategory === 'graduation'
+                  ? 'Academic Achievement & Crest Creations'
+                  : 'Bespoke Custom & Avant-Garde Drip'}
+              </h2>
+            </div>
+            <div className="text-left sm:text-right">
+              <span className="font-mono text-xs text-champagne-gold">
+                Showing <strong className="font-serif text-primary-gold text-sm font-semibold">{filteredProducts.length}</strong> of {cakeProducts.length} Atelier Works
+              </span>
+            </div>
+          </div>
+
           {filteredProducts.length === 0 ? (
             <div className="text-center py-20 px-4 bg-[#181512] border border-bronze/30 rounded-xl max-w-xl mx-auto">
-              <span className="text-3xl block mb-3">&bull; &#10022; &bull;</span>
-              <h2 className="font-serif text-2xl text-primary-gold mb-2">No matching creations found</h2>
+              <span className="text-3xl block mb-3 text-primary-gold">&bull; &#10022; &bull;</span>
+              <h3 className="font-serif text-2xl text-primary-gold mb-2">No matching creations found</h3>
               <p className="font-sans text-xs sm:text-sm text-gray-400 mb-6">
                 Try adjusting your search criteria or explore our bespoke custom cake service to create an entirely original design.
               </p>
@@ -676,109 +757,256 @@ export default function CreationsPage() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-              {filteredProducts.map((cake, idx) => (
-                <article
-                  key={cake.id}
-                  data-aos="fade-up"
-                  data-aos-delay={`${(idx % 3) * 100}`}
-                  className="group relative flex flex-col bg-[#181512] border border-bronze/30 hover:border-primary-gold/70 rounded-md overflow-hidden transition-all duration-300 shadow-xl hover:shadow-[0_8px_30px_rgba(20,18,16,0.9)]"
-                >
-                  {/* Visual Media with Zoom & Badges - Click to open Quick Preview */}
-                  <div
-                    onClick={() => setQuickViewCake(cake)}
-                    className="relative w-full aspect-4/5 overflow-hidden bg-[#141210] cursor-pointer"
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault()
-                        setQuickViewCake(cake)
-                      }
-                    }}
-                    aria-label={`View quick preview of ${cake.name}`}
-                  >
-                    <img
-                      src={cake.image}
-                      alt={cake.alt}
-                      loading="lazy"
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                    />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+              {filteredProducts.map((cake, idx) => {
+                const isLeadFeature = idx === 0
 
-                    {/* Gradient Fade Overlay at Bottom of Image */}
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-[#181512] via-transparent to-transparent opacity-80 pointer-events-none"
-                    />
-
-                    {/* Top Floating Badges */}
-                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                      <span className="px-2.5 py-1 rounded bg-[#141210]/85 backdrop-blur-xs border border-primary-gold/40 text-[10px] font-mono uppercase tracking-[0.16em] text-champagne-gold font-semibold">
-                        {cake.categoryLabel}
-                      </span>
-
-                      <span className="px-2 py-1 rounded bg-[#141210]/85 backdrop-blur-xs border border-white/20 text-[10px] font-sans font-medium text-gray-200">
-                        {cake.tiersDisplay}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card Content & Narrative */}
-                  <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between">
-                    <div>
-                      {/* Cake Type & Guest Capacity */}
-                      <div className="flex items-center justify-between text-[11px] text-gray-400 font-sans mb-1.5 sm:mb-2">
-                        <span className="text-primary-gold font-medium">{cake.cakeType}</span>
-                        <span>Serves: {cake.servings}</span>
-                      </div>
-
-                      {/* Cake Title */}
-                      <h2 className="font-serif font-semibold text-lg sm:text-xl text-brand-white group-hover:text-primary-gold transition-colors leading-snug mb-2 sm:mb-2.5">
-                        <Link to={`/creations/${cake.slug}`} className="focus:outline-none focus-visible:underline">
-                          {cake.name}
-                        </Link>
-                      </h2>
-
-                      {/* Summary */}
-                      <p className="font-sans text-xs text-gray-300/90 leading-relaxed line-clamp-2 mb-3 sm:mb-4 font-normal">
-                        {cake.summary}
-                      </p>
-
-                      {/* Key Craft Highlights Chips */}
-                      <div className="flex flex-wrap gap-1.5 mb-4 sm:mb-5">
-                        {cake.highlights.slice(0, 2).map((hl, i) => (
-                          <span
-                            key={i}
-                            className="inline-block text-[10px] font-sans px-2 py-0.5 rounded bg-[#1F1C18] border border-bronze/25 text-gray-300"
-                          >
-                            &bull; {hl}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Price & Detailed Link Footer */}
-                    <div className="pt-3 sm:pt-4 border-t border-bronze/25 flex items-center justify-between gap-2 sm:gap-3">
-                      <div>
-                        <span className="block text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-gray-400">
-                          Starting Estimate
-                        </span>
-                        <span className="block font-serif text-base sm:text-lg text-primary-gold font-semibold">
-                          {cake.priceDisplay}
-                        </span>
-                      </div>
-
-                      <Link
-                        to={`/creations/${cake.slug}`}
-                        className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded bg-primary-gold/15 hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/40 hover:border-primary-gold text-xs font-semibold tracking-wider uppercase transition-all duration-200 min-h-[38px] sm:min-h-[40px]"
+                if (isLeadFeature) {
+                  return (
+                    <article
+                      key={cake.id}
+                      data-aos="fade-up"
+                      className="col-span-1 md:col-span-2 lg:col-span-3 group relative bg-[#181512] border border-bronze/40 hover:border-primary-gold/70 rounded-lg overflow-hidden transition-all duration-500 shadow-2xl hover:shadow-[0_12px_45px_rgba(222,172,75,0.18)] flex flex-col lg:flex-row mb-2 sm:mb-4"
+                    >
+                      {/* Left Media (56% on lg) */}
+                      <div
+                        onClick={() => openLightbox(cake)}
+                        className="relative w-full lg:w-[56%] aspect-4/3 sm:aspect-16/10 lg:aspect-auto overflow-hidden bg-[#141210] cursor-pointer"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            openLightbox(cake)
+                          }
+                        }}
+                        aria-label={`Open exhibition lightbox for ${cake.name}`}
                       >
-                        <span>View Details</span>
-                        <span aria-hidden="true">&rarr;</span>
-                      </Link>
-                    </div>
+                        <img
+                          src={cake.image}
+                          alt={cake.alt}
+                          loading="lazy"
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                        />
+                        <div
+                          aria-hidden="true"
+                          className="absolute inset-0 bg-gradient-to-t from-[#181512] via-transparent to-transparent opacity-75 pointer-events-none"
+                        />
+                        {/* Floating Badges */}
+                        <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                          <span className="px-3 py-1 rounded bg-[#141210]/90 backdrop-blur-sm border border-primary-gold/50 text-[10px] font-mono uppercase tracking-[0.2em] text-champagne-gold font-semibold flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary-gold animate-pulse" />
+                            Featured Masterpiece
+                          </span>
+                          <span className="px-2.5 py-1 rounded bg-[#141210]/90 backdrop-blur-sm border border-white/20 text-[11px] font-mono text-gray-200">
+                            № 01
+                          </span>
+                        </div>
+                        {/* Center Hover Pill */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-black/30">
+                          <span className="px-4 py-2 rounded-full bg-[#141210]/95 border border-primary-gold text-champagne-gold font-sans text-xs font-semibold tracking-wider uppercase shadow-2xl flex items-center gap-2">
+                            <span>Explore Creation</span>
+                            <span>✦</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Right Editorial Story & Specs */}
+                      <div className="p-6 sm:p-8 lg:p-10 flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-400 font-sans mb-2.5">
+                            <span className="text-primary-gold font-mono uppercase tracking-[0.16em] text-[11px] font-semibold">
+                              {cake.categoryLabel} &bull; {cake.cakeType}
+                            </span>
+                            <span className="text-gray-300 font-mono text-[11px] bg-[#1F1C18] px-2.5 py-0.5 rounded border border-bronze/25">
+                              {cake.tiersDisplay} &bull; {cake.servings}
+                            </span>
+                          </div>
+
+                          <h3 className="font-serif font-semibold text-2xl sm:text-3xl text-brand-white group-hover:text-primary-gold transition-colors leading-tight mb-3">
+                            <Link to={`/creations/${cake.slug}`} className="focus:outline-none focus-visible:underline">
+                              {cake.name}
+                            </Link>
+                          </h3>
+
+                          <p className="font-sans text-xs sm:text-sm text-gray-300/90 leading-relaxed font-normal mb-5">
+                            {cake.summary}
+                          </p>
+
+                          {/* Key Highlights */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
+                            {cake.highlights.slice(0, 4).map((hl, i) => (
+                              <div key={i} className="flex items-start gap-2 text-xs text-gray-300">
+                                <span className="text-primary-gold text-[10px] mt-0.5">✦</span>
+                                <span className="leading-tight">{hl}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="pt-4 border-t border-bronze/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <div>
+                            <span className="block text-[10px] font-mono uppercase tracking-wider text-gray-400">
+                              Starting Estimate
+                            </span>
+                            <span className="block font-serif text-xl sm:text-2xl text-primary-gold font-semibold">
+                              {cake.priceDisplay}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2.5">
+                            <button
+                              type="button"
+                              onClick={() => openLightbox(cake)}
+                              className="px-4 py-2.5 rounded bg-[#1F1C18] hover:bg-[#28241F] text-champagne-gold border border-primary-gold/40 hover:border-primary-gold text-xs font-semibold tracking-wider uppercase transition-colors cursor-pointer"
+                            >
+                              Quick Preview
+                            </button>
+                            <Link
+                              to={`/creations/${cake.slug}`}
+                              className="px-5 py-2.5 rounded bg-primary-gold hover:bg-gold-highlight text-dark-canvas text-xs font-semibold tracking-wider uppercase transition-all shadow-[0_2px_14px_rgba(222,172,75,0.25)]"
+                            >
+                              <span>View Details</span>
+                              <span aria-hidden="true" className="ml-1.5">&rarr;</span>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  )
+                }
+
+                // Standard Editorial Portrait Cards
+                return (
+                  <div key={cake.id} className="contents">
+                    {/* Atelier Storytelling Interlude after Item 2 if in All collection */}
+                    {idx === 2 && selectedCategory === 'all' && (
+                      <div
+                        data-aos="fade-up"
+                        className="col-span-1 md:col-span-2 lg:col-span-3 my-4 sm:my-6 py-8 sm:py-12 px-6 sm:px-12 bg-gradient-to-r from-[#181512] via-[#221C17] to-[#181512] border-y border-primary-gold/30 rounded-lg relative overflow-hidden shadow-2xl text-center"
+                      >
+                        <div
+                          aria-hidden="true"
+                          className="absolute top-0 right-1/4 w-80 h-80 bg-primary-gold/5 blur-[100px] rounded-full pointer-events-none"
+                        />
+                        <div className="max-w-3xl mx-auto relative z-10">
+                          <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-primary-gold font-semibold block mb-3">
+                            ✦ THE ATELIER PHILOSOPHY ✦
+                          </span>
+                          <blockquote className="font-serif italic text-lg sm:text-2xl md:text-3xl text-brand-white leading-relaxed mb-4">
+                            &ldquo;A celebration cake is not merely confectionery; it is an ephemeral sculpture, the crowning centerpiece of life&rsquo;s most treasured memories.&rdquo;
+                          </blockquote>
+                          <div className="flex items-center justify-center gap-3 text-xs text-champagne-gold font-sans uppercase tracking-widest">
+                            <span>Zuena K.</span>
+                            <span className="w-1 h-1 rounded-full bg-primary-gold" />
+                            <span className="text-gray-400">Master Patissier &amp; Creative Director</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <article
+                      data-aos="fade-up"
+                      data-aos-delay={`${(idx % 3) * 100}`}
+                      className="group relative flex flex-col bg-[#181512] border border-bronze/30 hover:border-primary-gold/70 rounded-lg overflow-hidden transition-all duration-300 shadow-xl hover:shadow-[0_10px_35px_rgba(20,18,16,0.95)]"
+                    >
+                      {/* Visual Media with Zoom & Badges - Click to open Quick Preview */}
+                      <div
+                        onClick={() => openLightbox(cake)}
+                        className="relative w-full aspect-4/5 overflow-hidden bg-[#141210] cursor-pointer"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            openLightbox(cake)
+                          }
+                        }}
+                        aria-label={`View quick preview of ${cake.name}`}
+                      >
+                        <img
+                          src={cake.image}
+                          alt={cake.alt}
+                          loading="lazy"
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                        />
+                        <div
+                          aria-hidden="true"
+                          className="absolute inset-0 bg-gradient-to-t from-[#181512] via-transparent to-transparent opacity-80 pointer-events-none"
+                        />
+                        {/* Top Floating Badges */}
+                        <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                          <span className="px-2.5 py-1 rounded bg-[#141210]/85 backdrop-blur-xs border border-primary-gold/40 text-[10px] font-mono uppercase tracking-[0.16em] text-champagne-gold font-semibold">
+                            {cake.categoryLabel}
+                          </span>
+                          <span className="px-2 py-1 rounded bg-[#141210]/85 backdrop-blur-xs border border-white/20 text-[10px] font-mono text-gray-300">
+                            № {String(idx + 1).padStart(2, '0')}
+                          </span>
+                        </div>
+                        {/* Hover Quick Preview Button */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-black/30">
+                          <span className="px-3.5 py-1.5 rounded-full bg-[#141210]/95 border border-primary-gold/80 text-champagne-gold font-sans text-[11px] font-semibold tracking-wider uppercase shadow-2xl flex items-center gap-1.5">
+                            <span>Quick Preview</span>
+                            <span>✦</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Card Content & Narrative */}
+                      <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center justify-between text-[11px] text-gray-400 font-sans mb-1.5 sm:mb-2">
+                            <span className="text-primary-gold font-medium">{cake.cakeType}</span>
+                            <span>Serves: {cake.servings}</span>
+                          </div>
+
+                          <h3 className="font-serif font-semibold text-lg sm:text-xl text-brand-white group-hover:text-primary-gold transition-colors leading-snug mb-2 sm:mb-2.5">
+                            <Link to={`/creations/${cake.slug}`} className="focus:outline-none focus-visible:underline">
+                              {cake.name}
+                            </Link>
+                          </h3>
+
+                          <p className="font-sans text-xs text-gray-300/90 leading-relaxed line-clamp-2 mb-3 sm:mb-4 font-normal">
+                            {cake.summary}
+                          </p>
+
+                          <div className="flex flex-wrap gap-1.5 mb-4 sm:mb-5">
+                            {cake.highlights.slice(0, 2).map((hl, i) => (
+                              <span
+                                key={i}
+                                className="inline-block text-[10px] font-sans px-2 py-0.5 rounded bg-[#1F1C18] border border-bronze/25 text-gray-300"
+                              >
+                                &bull; {hl}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Price & Detailed Link Footer */}
+                        <div className="pt-3 sm:pt-4 border-t border-bronze/25 flex items-center justify-between gap-2 sm:gap-3">
+                          <div>
+                            <span className="block text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-gray-400">
+                              Starting Estimate
+                            </span>
+                            <span className="block font-serif text-base sm:text-lg text-primary-gold font-semibold">
+                              {cake.priceDisplay}
+                            </span>
+                          </div>
+
+                          <Link
+                            to={`/creations/${cake.slug}`}
+                            className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded bg-primary-gold/15 hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/40 hover:border-primary-gold text-xs font-semibold tracking-wider uppercase transition-all duration-200 min-h-[38px] sm:min-h-[40px]"
+                          >
+                            <span>View Details</span>
+                            <span aria-hidden="true">&rarr;</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </article>
                   </div>
-                </article>
-              ))}
+                )
+              })}
             </div>
           )}
         </main>
@@ -867,29 +1095,30 @@ export default function CreationsPage() {
                 Whether you envision a soaring five-tier matrimonial centerpiece, a culturally steeped Kwanjula ceremonial creation, or an avant-garde sculpted milestone cake, our team translates your vision into an unforgettable celebration.
               </p>
 
+              {/* 3-Step Bespoke Journey Timeline */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-5 border-y border-bronze/30 mb-8">
                 <div>
                   <span className="block font-serif text-sm text-champagne-gold font-semibold">
-                    100% Bespoke
+                    1. Consultation &amp; Tasting
                   </span>
                   <span className="block font-sans text-xs text-gray-400 mt-1">
-                    Custom tier scale, colors &amp; flavours
+                    Private studio tasting &amp; custom flavour design in Kampala
                   </span>
                 </div>
                 <div className="sm:border-l border-bronze/25 sm:pl-3">
                   <span className="block font-serif text-sm text-champagne-gold font-semibold">
-                    Reference Photos
+                    2. Bespoke Sketch
                   </span>
                   <span className="block font-sans text-xs text-gray-400 mt-1">
-                    Upload your dream design or sketch
+                    Architectural tier scale, sugar florals &amp; 24K gold foil
                   </span>
                 </div>
                 <div className="sm:border-l border-bronze/25 sm:pl-3">
                   <span className="block font-serif text-sm text-champagne-gold font-semibold">
-                    Décor Staging
+                    3. White-Glove Staging
                   </span>
                   <span className="block font-sans text-xs text-gray-400 mt-1">
-                    Harmonized with venue drapery &amp; lighting
+                    Climate-controlled delivery &amp; banquet pedestal setup
                   </span>
                 </div>
               </div>
@@ -921,89 +1150,167 @@ export default function CreationsPage() {
       </section>
 
       {/* ===================================================================
-          QUICK VIEW MODAL
+          EXHIBITION LIGHTBOX / PREVIEW MODAL
           =================================================================== */}
       {quickViewCake && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="quickview-title"
-          className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-4 bg-dark-canvas/85 backdrop-blur-md animate-fadeIn"
-          onClick={() => setQuickViewCake(null)}
+          aria-labelledby="lightbox-title"
+          className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+          onClick={closeLightbox}
         >
+          {/* Desktop Navigation Arrow: Previous */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              prevLightbox()
+            }}
+            className="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-[#181512]/90 hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/50 items-center justify-center text-2xl transition-all shadow-2xl cursor-pointer"
+            aria-label="Previous cake"
+          >
+            &#8249;
+          </button>
+
+          {/* Desktop Navigation Arrow: Next */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              nextLightbox()
+            }}
+            className="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-[#181512]/90 hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/50 items-center justify-center text-2xl transition-all shadow-2xl cursor-pointer"
+            aria-label="Next cake"
+          >
+            &#8250;
+          </button>
+
           <div
-            className="relative w-full max-w-3xl bg-[#181512] border border-primary-gold/50 rounded-lg shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh] sm:max-h-[90vh]"
+            className="relative w-full max-w-4xl bg-[#181512] border border-primary-gold/60 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col md:flex-row max-h-[92vh] sm:max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
-            <button
-              type="button"
-              onClick={() => setQuickViewCake(null)}
-              className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-20 w-8 h-8 rounded-full bg-dark-canvas/90 text-gray-300 hover:text-white border border-white/20 flex items-center justify-center text-lg focus:outline-none focus:ring-2 focus:ring-primary-gold cursor-pointer shadow-lg"
-              aria-label="Close preview modal"
-            >
-              &times;
-            </button>
+            {/* Top Close Button */}
+            <div className="absolute top-3 right-3 z-30 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={closeLightbox}
+                className="w-9 h-9 rounded-full bg-[#141210]/90 text-gray-300 hover:text-white hover:bg-primary-gold/20 border border-white/20 flex items-center justify-center text-xl focus:outline-none focus:ring-2 focus:ring-primary-gold cursor-pointer shadow-lg transition-colors"
+                aria-label="Close exhibition modal"
+              >
+                &times;
+              </button>
+            </div>
 
-            {/* Modal Image */}
-            <div className="w-full md:w-1/2 h-44 sm:h-56 md:h-auto md:aspect-auto shrink-0 relative bg-[#141210]">
+            {/* Modal Image Display */}
+            <div className="w-full md:w-1/2 h-56 sm:h-72 md:h-auto md:min-h-[460px] shrink-0 relative bg-[#141210] overflow-hidden">
               <img
                 src={quickViewCake.image}
                 alt={quickViewCake.alt}
                 className="w-full h-full object-cover object-center"
               />
-              <div className="absolute bottom-3 left-3">
-                <span className="px-2.5 py-1 rounded bg-[#141210]/90 border border-primary-gold/40 text-[10px] font-mono uppercase text-champagne-gold">
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-[#181512] via-transparent to-transparent opacity-60 pointer-events-none"
+              />
+              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                <span className="px-3 py-1 rounded bg-[#141210]/90 border border-primary-gold/40 text-[10px] font-mono uppercase text-champagne-gold">
                   {quickViewCake.tiersDisplay} &bull; {quickViewCake.servings}
+                </span>
+                <span className="px-2.5 py-1 rounded bg-[#141210]/90 border border-white/20 text-[10px] font-mono text-gray-300">
+                  № {String((activeModalIndex ?? 0) + 1).padStart(2, '0')} / {String(filteredProducts.length).padStart(2, '0')}
                 </span>
               </div>
             </div>
 
-            {/* Modal Content */}
-            <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-8 overflow-y-auto flex flex-col justify-between">
+            {/* Modal Content Panel */}
+            <div className="w-full md:w-1/2 p-5 sm:p-7 md:p-8 overflow-y-auto flex flex-col justify-between">
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary-gold font-semibold block mb-1">
-                  {quickViewCake.categoryLabel}
-                </span>
-                <h3 id="quickview-title" className="font-serif font-semibold text-xl sm:text-2xl text-brand-white leading-tight mb-2">
+                <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.2em] text-primary-gold font-semibold mb-2">
+                  <span>{quickViewCake.categoryLabel}</span>
+                  <span className="text-gray-400">{quickViewCake.cakeType}</span>
+                </div>
+
+                <h3 id="lightbox-title" className="font-serif font-semibold text-xl sm:text-2xl text-brand-white leading-tight mb-2">
                   {quickViewCake.name}
                 </h3>
-                <div className="text-primary-gold font-serif text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
+
+                <div className="text-primary-gold font-serif text-lg sm:text-xl font-semibold mb-3">
                   {quickViewCake.priceDisplay}{' '}
                   <span className="text-xs font-sans text-gray-400 font-normal">(Starting Estimate)</span>
                 </div>
-                <p className="font-sans text-xs text-gray-300 leading-relaxed mb-3 sm:mb-4">
+
+                <p className="font-sans text-xs sm:text-sm text-gray-300 leading-relaxed mb-4">
                   {quickViewCake.description}
                 </p>
 
                 <h4 className="font-serif text-xs uppercase tracking-wider text-champagne-gold font-semibold mb-2">
-                  Signature Highlights:
+                  Signature Craft Highlights:
                 </h4>
-                <ul className="space-y-1.5 text-xs text-gray-300 mb-4 sm:mb-6">
+                <ul className="space-y-1.5 text-xs text-gray-300 mb-4">
                   {quickViewCake.highlights.map((item, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="text-primary-gold font-bold">&check;</span>
+                      <span className="text-primary-gold font-bold">✦</span>
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
+
+                {quickViewCake.flavorOptions && (
+                  <div className="mb-4 pt-3 border-t border-bronze/25">
+                    <h5 className="font-serif text-[11px] uppercase tracking-wider text-champagne-gold font-semibold mb-1.5">
+                      Recommended Flavour Pairings:
+                    </h5>
+                    <div className="flex flex-wrap gap-1">
+                      {quickViewCake.flavorOptions.map((f, i) => (
+                        <span key={i} className="text-[10px] font-sans px-2 py-0.5 rounded bg-[#1F1C18] border border-bronze/30 text-gray-300">
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div className="pt-3 sm:pt-4 border-t border-bronze/30 flex flex-col sm:flex-row gap-2.5 sm:gap-3">
-                <Link
-                  to={`/creations/${quickViewCake.slug}`}
-                  onClick={() => setQuickViewCake(null)}
-                  className="flex-1 py-3 px-4 rounded bg-primary-gold text-dark-canvas text-xs font-semibold uppercase tracking-wider text-center hover:bg-gold-highlight transition-colors"
-                >
-                  View Full Product Page &rarr;
-                </Link>
-                <Link
-                  to="/custom-cake"
-                  onClick={() => setQuickViewCake(null)}
-                  className="py-3 px-4 rounded border border-bronze/50 text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider text-center hover:border-primary-gold transition-colors"
-                >
-                  Bespoke Inquiry
-                </Link>
+              {/* Action Buttons & Prev/Next for mobile */}
+              <div className="pt-4 border-t border-bronze/30 flex flex-col gap-2.5">
+                <div className="flex items-center gap-2.5">
+                  <Link
+                    to={`/creations/${quickViewCake.slug}`}
+                    onClick={closeLightbox}
+                    className="flex-1 py-3 px-4 rounded bg-primary-gold text-dark-canvas text-xs font-semibold uppercase tracking-wider text-center hover:bg-gold-highlight transition-all shadow-[0_2px_14px_rgba(222,172,75,0.25)]"
+                  >
+                    View Full Product Page &rarr;
+                  </Link>
+                  <Link
+                    to="/custom-cake"
+                    onClick={closeLightbox}
+                    className="py-3 px-4 rounded border border-primary-gold/60 text-champagne-gold hover:text-white text-xs font-semibold uppercase tracking-wider text-center hover:bg-primary-gold/10 transition-colors"
+                  >
+                    Bespoke Inquiry
+                  </Link>
+                </div>
+
+                {/* Mobile Navigation Controls */}
+                <div className="flex md:hidden items-center justify-between pt-2">
+                  <button
+                    type="button"
+                    onClick={prevLightbox}
+                    className="text-xs font-mono text-champagne-gold hover:text-white py-1 px-3 rounded border border-bronze/40 flex items-center gap-1"
+                  >
+                    &#8249; Previous
+                  </button>
+                  <span className="text-[10px] font-mono text-gray-400">
+                    {activeModalIndex + 1} of {filteredProducts.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={nextLightbox}
+                    className="text-xs font-mono text-champagne-gold hover:text-white py-1 px-3 rounded border border-bronze/40 flex items-center gap-1"
+                  >
+                    Next &#8250;
+                  </button>
+                </div>
               </div>
             </div>
           </div>
