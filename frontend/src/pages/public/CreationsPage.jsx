@@ -640,8 +640,20 @@ export default function CreationsPage() {
                   data-aos-delay={`${(idx % 3) * 100}`}
                   className="group relative flex flex-col bg-[#181512] border border-bronze/30 hover:border-primary-gold/70 rounded-md overflow-hidden transition-all duration-300 shadow-xl hover:shadow-[0_8px_30px_rgba(20,18,16,0.9)]"
                 >
-                  {/* Visual Media with Zoom & Badges */}
-                  <div className="relative w-full aspect-4/5 overflow-hidden bg-[#141210]">
+                  {/* Visual Media with Zoom & Badges - Click to open Quick Preview */}
+                  <div
+                    onClick={() => setQuickViewCake(cake)}
+                    className="relative w-full aspect-4/5 overflow-hidden bg-[#141210] cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        setQuickViewCake(cake)
+                      }
+                    }}
+                    aria-label={`View quick preview of ${cake.name}`}
+                  >
                     <img
                       src={cake.image}
                       alt={cake.alt}
@@ -652,7 +664,7 @@ export default function CreationsPage() {
                     {/* Gradient Fade Overlay at Bottom of Image */}
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-[#181512] via-transparent to-transparent opacity-80"
+                      className="absolute inset-0 bg-gradient-to-t from-[#181512] via-transparent to-transparent opacity-80 pointer-events-none"
                     />
 
                     {/* Top Floating Badges */}
@@ -665,19 +677,6 @@ export default function CreationsPage() {
                         {cake.tiersDisplay}
                       </span>
                     </div>
-
-                    {/* Hover Quick View Trigger */}
-                    <button
-                      type="button"
-                      onClick={() => setQuickViewCake(cake)}
-                      className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 px-4 py-2 rounded bg-dark-canvas/90 backdrop-blur-sm border border-primary-gold text-champagne-gold text-xs font-semibold tracking-wider uppercase hover:bg-primary-gold hover:text-dark-canvas shadow-lg flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
-                    >
-                      <svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      <span>Quick Preview</span>
-                    </button>
                   </div>
 
                   {/* Card Content & Narrative */}

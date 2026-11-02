@@ -26,12 +26,6 @@ export default function ProductDetailPage() {
   const currentPriceUgx = currentTierConfig?.price || product.basePriceUgx
   const currentPriceFormatted = `UGX ${currentPriceUgx.toLocaleString()}`
 
-  // Related products from same or adjacent categories
-  const relatedCreations = useMemo(() => {
-    return cakeProducts
-      .filter((cake) => cake.id !== product.id)
-      .slice(0, 3)
-  }, [product.id])
 
   const handleRequestSubmit = (e) => {
     e.preventDefault()
@@ -301,25 +295,34 @@ export default function ProductDetailPage() {
               {requestSubmitted ? (
                 <div className="bg-[#1B1916] border border-primary-gold p-6 rounded-lg text-center animate-fadeIn shadow-2xl">
                   <div className="w-12 h-12 rounded-full bg-primary-gold/20 text-primary-gold flex items-center justify-center mx-auto mb-3">
-                    <svg aria-hidden="true" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg aria-hidden="true" className="w-6 h-6 text-primary-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <h3 className="font-serif text-xl text-primary-gold mb-1">
-                    Order Request Initiated!
+                    Added to Cart!
                   </h3>
                   <p className="font-sans text-xs text-gray-300 leading-relaxed max-w-md mx-auto mb-4">
-                    You selected <strong>{product.name}</strong> ({currentTierConfig?.tiers} Tiers, {selectedFlavor}) with an estimated quote of <strong>{currentPriceFormatted}</strong>.
+                    You added <strong>{product.name}</strong> ({currentTierConfig?.tiers} Tiers, {selectedFlavor}) with an estimated quote of <strong>{currentPriceFormatted}</strong> to your cart.
                   </p>
                   <p className="font-sans text-[11px] text-gray-400 mb-4">
                     Our team will contact you directly to confirm date availability, delivery arrangements, and final details.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-2 justify-center">
                     <Link
-                      to="/creations"
-                      className="px-5 py-2.5 rounded bg-primary-gold text-dark-canvas text-xs font-semibold uppercase tracking-wider hover:bg-gold-highlight transition-colors"
+                      to="/cart"
+                      className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded bg-primary-gold text-dark-canvas text-xs font-semibold uppercase tracking-wider hover:bg-gold-highlight transition-colors"
                     >
-                      Browse More Cakes &rarr;
+                      <svg aria-hidden="true" className="w-4 h-4 text-dark-canvas" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                      </svg>
+                      <span>View Cart &rarr;</span>
+                    </Link>
+                    <Link
+                      to="/creations"
+                      className="px-5 py-2.5 rounded border border-bronze/50 text-gray-300 text-xs font-semibold uppercase tracking-wider hover:text-white transition-colors"
+                    >
+                      Browse More Cakes
                     </Link>
                     <button
                       type="button"
@@ -351,9 +354,12 @@ export default function ProductDetailPage() {
                   <div className="flex flex-col sm:flex-row gap-3 pt-2">
                     <button
                       type="submit"
-                      className="flex-1 py-3.5 px-6 rounded bg-primary-gold text-dark-canvas hover:bg-gold-highlight hover:shadow-[0_4px_24px_rgba(222,172,75,0.35)] transition-all duration-300 font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase text-center cursor-pointer min-h-[46px]"
+                      className="flex-1 py-3.5 px-6 rounded bg-primary-gold text-dark-canvas hover:bg-gold-highlight hover:shadow-[0_4px_24px_rgba(222,172,75,0.35)] transition-all duration-300 font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase text-center cursor-pointer min-h-[46px] inline-flex items-center justify-center gap-2"
                     >
-                      Request This Cake &bull; {currentPriceFormatted}
+                      <svg aria-hidden="true" className="w-4 h-4 text-dark-canvas shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                      </svg>
+                      <span>Add to Cart &bull; {currentPriceFormatted}</span>
                     </button>
 
                     <Link
@@ -381,76 +387,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
-
-        {/* ===================================================================
-            RELATED CREATIONS FROM OUR ATELIER
-            =================================================================== */}
-        <section aria-label="Related Works" className="mt-20 sm:mt-24 pt-12 border-t border-bronze/30">
-          <div className="text-center mb-10">
-            <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-primary-gold font-semibold block mb-1">
-              Curated Recommendations
-            </span>
-            <h2 className="font-serif font-normal text-2xl sm:text-3xl text-brand-white">
-              You May Also Celebrate With
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {relatedCreations.map((relCake) => (
-              <article
-                key={relCake.id}
-                className="group bg-[#181512] border border-bronze/30 hover:border-primary-gold/70 rounded-md overflow-hidden transition-all duration-300 flex flex-col shadow-xl"
-              >
-                <div className="relative w-full aspect-4/5 overflow-hidden bg-[#141210]">
-                  <img
-                    src={relCake.image}
-                    alt={relCake.alt}
-                    loading="lazy"
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="px-2.5 py-1 rounded bg-[#141210]/85 border border-primary-gold/40 text-[10px] font-mono uppercase text-champagne-gold">
-                      {relCake.categoryLabel}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-5 flex-1 flex flex-col justify-between">
-                  <div>
-                    <span className="text-[11px] text-gray-400 font-sans block mb-1">
-                      {relCake.cakeType} &bull; {relCake.servings}
-                    </span>
-                    <h3 className="font-serif font-semibold text-lg text-brand-white group-hover:text-primary-gold transition-colors leading-snug mb-2">
-                      <Link to={`/creations/${relCake.slug}`}>{relCake.name}</Link>
-                    </h3>
-                    <p className="font-sans text-xs text-gray-300/80 line-clamp-2 mb-4">
-                      {relCake.summary}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-bronze/25 flex items-center justify-between">
-                    <div>
-                      <span className="block text-[9px] font-mono uppercase text-gray-400">
-                        Starting from
-                      </span>
-                      <span className="font-serif text-base text-primary-gold font-semibold">
-                        {relCake.priceDisplay}
-                      </span>
-                    </div>
-
-                    <Link
-                      to={`/creations/${relCake.slug}`}
-                      className="text-xs font-semibold uppercase tracking-wider text-champagne-gold hover:text-gold-highlight flex items-center gap-1"
-                    >
-                      <span>Details</span>
-                      <span aria-hidden="true">&rarr;</span>
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
       </div>
     </div>
   )
