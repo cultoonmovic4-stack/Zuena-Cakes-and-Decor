@@ -78,6 +78,7 @@ export default function CreationsPage() {
 
   // Scroll and animation states
   const [isScrolled, setIsScrolled] = useState(false)
+  const [scrollYPos, setScrollYPos] = useState(0)
   const [appearedCircles, setAppearedCircles] = useState(new Set())
   const [deltasReady, setDeltasReady] = useState(false)
   const [deltas, setDeltas] = useState({
@@ -87,6 +88,8 @@ export default function CreationsPage() {
     graduation: { x: 0, y: 0 },
     custom: { x: 0, y: 0 },
   })
+
+  const heroRef = useRef(null)
 
   // Anchor and slot refs for FLIP coordinate calculation
   const heroAnchorRefs = {
@@ -206,21 +209,34 @@ export default function CreationsPage() {
     return () => timeouts.forEach(clearTimeout)
   }, [])
 
-  // Scroll listener to trigger flight from hero constellation into sticky filter bar
+  // Scroll listener: Wait until user has scrolled ~3 times (hero scene is 3/4 off viewport)
+  // The circles move naturally with the hero until 3/4 threshold, then fly into the sticky filter bar
   useEffect(() => {
     let ticking = false
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const sy = window.scrollY
-          const scrolled = sy > 40
-          if (scrolled) {
-            // Once user scrolls, ensure all circles are set to appeared
-            setAppearedCircles(
-              new Set(['birthdays', 'weddings', 'traditional', 'graduation', 'custom'])
-            )
-          }
-          setIsScrolled(scrolled)
+          setScrollYPos(sy)
+
+          const heroEl = heroRef.current
+          const heroHeight = heroEl ? heroEl.offsetHeight : 600
+          // Trigger when hero scene is 3/4 off the viewport (~450px, ~3 scrolls)
+          const triggerThreshold = Math.round(heroHeight * 0.75)
+          const resetThreshold = Math.round(heroHeight * 0.65)
+
+          setIsScrolled((prev) => {
+            if (!prev && sy >= triggerThreshold) {
+              setAppearedCircles(
+                new Set(['birthdays', 'weddings', 'traditional', 'graduation', 'custom'])
+              )
+              return true
+            } else if (prev && sy < resetThreshold) {
+              return false
+            }
+            return prev
+          })
+
           if (sy < 15) {
             measureDeltas()
           }
@@ -272,24 +288,27 @@ export default function CreationsPage() {
   }
 
   return (
-    <div className="w-full bg-dark-canvas text-brand-white font-sans selection:bg-primary-gold selection:text-dark-canvas">
+    <div className="w-full bg-[#1A1613] text-brand-white font-sans selection:bg-primary-gold selection:text-dark-canvas">
       {/* ===================================================================
-          STICKY DYNAMIC FILTER BAR (HOLDS THE 5 CAKE CIRCLES + ALL CREATIONS)
-          - Pinned right under navbar (top-20)
+          FIXED DYNAMIC FILTER BAR (HOLDS THE 5 CAKE CIRCLES + ALL CREATIONS)
+          - Pinned right under navbar (top-20 = 80px)
+          - Fixed position takes 0px normal flow height (Hero starts flush at top: 0)
           - When isScrolled === false:
-            Transparent, unclipped overflow. The 5 circles are visually translated
-            down into the Hero Constellation around the title.
+            Completely transparent, pointer-events-none.
+            The 5 circles are visually translated into the Hero Constellation
+            around the title and follow the hero scroll naturally for the first ~3 scrolls.
           - When isScrolled === true:
-            The circles smoothly fly into the sticky filter bar in exact specified sequence:
-            1. Birthday cakes -> 2. Wedding cakes -> 3. Kwanjula cakes -> 4. Graduation cakes -> 5. Custom cakes
+            Bar background fades in with dark luxury blur & border.
+            Circles smoothly fly into filter bar in exact specified sequence:
+            1. Birthday -> 2. Wedding -> 3. Kwanjula -> 4. Graduation -> 5. Custom
             Docked in exact requested order:
             1. All creations, 2. Birthday cakes, 3. Wedding cakes, 4. Kwanjula cakes, 5. Graduation cakes, 6. Custom cakes
           =================================================================== */}
       <div
-        className={`sticky top-20 z-40 w-full overflow-visible transition-colors duration-500 ${
+        className={`fixed top-20 left-0 right-0 z-40 w-full overflow-visible transition-colors duration-500 ${
           isScrolled
-            ? 'bg-dark-canvas/95 backdrop-blur-md border-b border-bronze/35 shadow-2xl py-3 pointer-events-auto'
-            : 'bg-transparent border-transparent pointer-events-none py-0'
+            ? 'bg-[#141210]/95 backdrop-blur-md border-b border-bronze/35 shadow-2xl py-3 pointer-events-auto'
+            : 'bg-transparent border-transparent pointer-events-none py-3'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
@@ -323,10 +342,12 @@ export default function CreationsPage() {
                 const hasAppeared = appearedCircles.has(circle.id)
                 const delta = deltas[circle.id] || { x: 0, y: 0 }
 
-                // In Hero mode, button is shifted to hero constellation anchor
+                // In Hero mode, button follows the hero scroll naturally until 3/4 threshold
+                const currentDy = delta.y - scrollYPos
+
                 const transformStyle = !isScrolled
                   ? deltasReady
-                    ? `translate3d(${delta.x}px, ${delta.y}px, 0)`
+                    ? `translate3d(${delta.x}px, ${currentDy}px, 0)`
                     : 'none'
                   : 'translate3d(0, 0, 0)'
 
@@ -356,9 +377,9 @@ export default function CreationsPage() {
                         transform: transformStyle,
                         opacity: initialOpacity,
                         scale: scaleStyle,
-                        transition: deltasReady
+                        transition: isScrolled
                           ? `transform 750ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 500ms ease, scale 500ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease`
-                          : 'none',
+                          : `opacity 500ms ease, scale 500ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
                         transitionDelay: getFlightDelay(circle.id, isScrolled),
                       }}
                       className={`cursor-pointer focus:outline-none pointer-events-auto transition-all ${
@@ -377,7 +398,7 @@ export default function CreationsPage() {
                         className={`rounded-full p-0.5 border-2 transition-all duration-700 ease-out overflow-hidden shadow-xl ${
                           isScrolled
                             ? 'w-7 h-7 sm:w-8 sm:h-8 border-primary-gold/60 bg-[#141210]'
-                            : 'w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 border-primary-gold/70 hover:border-primary-gold bg-[#181512] hover:scale-105 hover:shadow-[0_0_28px_rgba(222,172,75,0.45)]'
+                            : 'w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 border-primary-gold/70 hover:border-primary-gold bg-[#1A1613] hover:scale-105 hover:shadow-[0_0_28px_rgba(222,172,75,0.45)]'
                         }`}
                       >
                         <img
@@ -392,7 +413,7 @@ export default function CreationsPage() {
                         className={`transition-all duration-500 ${
                           isScrolled
                             ? 'flex items-center gap-1.5'
-                            : 'mt-2 px-2.5 py-0.5 rounded-full bg-[#141210]/95 border border-primary-gold/40 text-[10px] sm:text-xs font-sans font-semibold tracking-wider uppercase text-champagne-gold shadow-md whitespace-nowrap'
+                            : 'mt-1 px-2.5 py-0.5 rounded-full bg-[#1A1613]/95 border border-primary-gold/40 text-[10px] sm:text-[11px] font-sans font-semibold tracking-wider uppercase text-champagne-gold shadow-md whitespace-nowrap'
                         }`}
                       >
                         <span>{circle.label}</span>
@@ -416,78 +437,81 @@ export default function CreationsPage() {
 
       {/* ===================================================================
           SCENE 1: CINEMATIC CONSTELLATION HERO
-          - All 5 circles are within the viewport bounds (no scrolling needed to see Kwanjula/Custom)
-          - Circles smoothly fly up to become the filters upon scrolling
-          - Scene 2 Product Showcase follows immediately below without empty dead space
+          - Uniform warm background (#1A1613) directly after the navbar (no black strip)
+          - All 5 circles are completely visible within the viewport upon landing
+          - Circles remain locked in constellation as user scrolls, then fly into
+            the filter bar when the hero scene is 3/4 off viewport (~3 scrolls)
           =================================================================== */}
       <section
+        ref={heroRef}
         aria-label="Scene 1 — Creations Constellation Hero"
-        className="relative w-full min-h-[calc(100vh-5rem)] flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#181512] via-dark-canvas to-dark-canvas border-b border-bronze/25 px-4"
+        className="relative w-full h-[calc(100vh-5rem)] min-h-[480px] max-h-[660px] flex items-center justify-center overflow-hidden bg-[#1A1613] border-b border-bronze/20 px-4"
       >
-        {/* Atmospheric Ambient Glow */}
+        {/* Warm Ambient Gold Radial Glow spanning the hero seamlessly */}
         <div
           aria-hidden="true"
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] sm:w-[500px] sm:h-[500px] lg:w-[680px] lg:h-[680px] bg-primary-gold/5 blur-[140px] rounded-full pointer-events-none"
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(222,172,75,0.10)_0%,rgba(26,22,19,0.35)_50%,rgba(26,22,19,0.75)_85%)] pointer-events-none"
         />
 
         {/* Central Constellation Canvas */}
-        <div className="relative w-full max-w-4xl h-[520px] sm:h-[560px] md:h-[600px] flex items-center justify-center">
-          {/* CENTER: "OUR CREATIONS" TITLE (Gently dims when circles take off into filter bar) */}
+        <div className="relative w-full max-w-4xl h-[420px] sm:h-[450px] md:h-[470px] flex items-center justify-center">
+          {/* CENTER: "OUR CREATIONS" TITLE */}
           <div
             className={`z-10 text-center max-w-[280px] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-2 select-none transition-all duration-700 ease-out ${
               isScrolled ? 'opacity-35 scale-95 pointer-events-none' : 'opacity-100 scale-100'
             }`}
           >
             {/* Main Monumental Serif Title */}
-            <h1 className="font-serif font-normal text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-primary-gold uppercase tracking-tight leading-[1.05] drop-shadow-[0_2px_12px_rgba(20,18,16,0.95)]">
+            <h1 className="font-serif font-normal text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-primary-gold uppercase tracking-tight leading-[1.05] drop-shadow-[0_2px_12px_rgba(20,18,16,0.95)]">
               Our Creations
             </h1>
           </div>
 
-            {/* -------------------------------------------------------------
-                HERO CONSTELLATION ANCHOR SLOTS (Invisible Reference Coordinates)
-                ------------------------------------------------------------- */}
-            {/* Anchor 1: Wedding Cakes (Top Center) */}
-            <div
-              ref={heroAnchorRefs.weddings}
-              className="absolute top-2 sm:top-4 md:top-6 left-1/2 -translate-x-1/2 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 pointer-events-none"
-              aria-hidden="true"
-            />
+          {/* -------------------------------------------------------------
+              HERO CONSTELLATION ANCHOR SLOTS (Invisible Reference Coordinates)
+              Fitted so top, middle, and bottom circles are 100% visible on load!
+              ------------------------------------------------------------- */}
+          {/* Anchor 1: Wedding Cakes (Top Center) */}
+          <div
+            ref={heroAnchorRefs.weddings}
+            className="absolute top-1 sm:top-2 md:top-3 left-1/2 -translate-x-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            aria-hidden="true"
+          />
 
-            {/* Anchor 2: Birthday Cakes (Mid Left) */}
-            <div
-              ref={heroAnchorRefs.birthdays}
-              className="absolute left-2 sm:left-6 md:left-12 lg:left-16 top-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 pointer-events-none"
-              aria-hidden="true"
-            />
+          {/* Anchor 2: Birthday Cakes (Mid Left) */}
+          <div
+            ref={heroAnchorRefs.birthdays}
+            className="absolute left-1 sm:left-4 md:left-8 lg:left-12 top-1/2 -translate-y-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            aria-hidden="true"
+          />
 
-            {/* Anchor 3: Graduation Cakes (Mid Right) */}
-            <div
-              ref={heroAnchorRefs.graduation}
-              className="absolute right-2 sm:right-6 md:right-12 lg:right-16 top-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 pointer-events-none"
-              aria-hidden="true"
-            />
+          {/* Anchor 3: Graduation Cakes (Mid Right) */}
+          <div
+            ref={heroAnchorRefs.graduation}
+            className="absolute right-1 sm:right-4 md:right-8 lg:right-12 top-1/2 -translate-y-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            aria-hidden="true"
+          />
 
-            {/* Anchor 4: Kwanjula Cakes (Bottom Left) */}
-            <div
-              ref={heroAnchorRefs.traditional}
-              className="absolute bottom-2 sm:bottom-4 md:bottom-6 left-[24%] sm:left-[28%] md:left-[30%] -translate-x-1/2 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 pointer-events-none"
-              aria-hidden="true"
-            />
+          {/* Anchor 4: Kwanjula Cakes (Bottom Left) */}
+          <div
+            ref={heroAnchorRefs.traditional}
+            className="absolute bottom-1 sm:bottom-2 md:bottom-3 left-[22%] sm:left-[26%] -translate-x-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            aria-hidden="true"
+          />
 
-            {/* Anchor 5: Custom Cakes (Bottom Right) */}
-            <div
-              ref={heroAnchorRefs.custom}
-              className="absolute bottom-2 sm:bottom-4 md:bottom-6 right-[24%] sm:right-[28%] md:right-[30%] translate-x-1/2 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 pointer-events-none"
-              aria-hidden="true"
-            />
-          </div>
-        </section>
+          {/* Anchor 5: Custom Cakes (Bottom Right) */}
+          <div
+            ref={heroAnchorRefs.custom}
+            className="absolute bottom-1 sm:bottom-2 md:bottom-3 right-[22%] sm:right-[26%] translate-x-1/2 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 pointer-events-none"
+            aria-hidden="true"
+          />
+        </div>
+      </section>
 
       {/* ===================================================================
           SCENE 2: INTERACTIVE PRODUCT SHOWCASE
           =================================================================== */}
-      <section id="scene-showcase" aria-label="Scene 2 — Product Showcase" className="w-full scroll-mt-28">
+      <section id="scene-showcase" aria-label="Scene 2 — Product Showcase" className="w-full pt-16 scroll-mt-36">
         {/* Search, Sort and Results Count Toolbar */}
         <div className="bg-[#161310] border-b border-bronze/25 py-3">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
