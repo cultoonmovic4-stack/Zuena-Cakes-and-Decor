@@ -135,12 +135,11 @@ export default function HomePage() {
 
   return (
     <div className="w-full font-sans bg-dark-canvas text-brand-white">
-      {/* Scene 1 — The Sculptural Atelier Hero (Elevated Grand Opening) */}
+      {/* Scene 1 — Sculptural Editorial Hero (Direction 1: The Full-Span Architectural Billboard) */}
       <section
-        aria-label="Scene 1 — Sculptural Editorial Hero"
-        className="relative w-full h-[calc(100svh-5rem)] min-h-[580px] max-h-[840px] sm:max-h-[1050px] flex items-end justify-center overflow-hidden bg-dark-canvas"
+        aria-label="Scene 1 — Sculptural Editorial"
+        className="relative w-full h-[calc(100svh-5rem)] min-h-[560px] max-h-[820px] sm:max-h-[1050px] flex items-end justify-center overflow-hidden bg-dark-canvas"
       >
-
         {/* Layer 1 (z-10): Full-Span Monumental Two-Line Typographic Wall centered behind the middle of the cake */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center -translate-y-[3%] sm:-translate-y-[2%] md:-translate-y-[2%] lg:-translate-y-[2%] px-1 sm:px-6 md:px-8 lg:px-10 pointer-events-none select-none">
           <h1
@@ -160,7 +159,7 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Layer 3 (z-30): Perfectly aligned (0px offset) optical contrast pass with soft studio chiaroscuro vignette on mobile */}
+        {/* Layer 3 (z-30): Perfectly aligned (0px offset) optical contrast pass with soft studio chiaroscuro vignette on mobile so the centered headline reads clearly across the bright cake */}
         <div
           aria-hidden="true"
           className="absolute inset-0 z-30 flex flex-col items-center justify-center -translate-y-[3%] sm:-translate-y-[2%] md:-translate-y-[2%] lg:-translate-y-[2%] px-1 sm:px-6 md:px-8 lg:px-10 pointer-events-none select-none"
@@ -174,124 +173,98 @@ export default function HomePage() {
             <EditorialHeadlineLines keyPrefix="fg" cycle={cycle} phase={phase} />
           </div>
         </div>
-
-        {/* Layer 4 (z-40): Atelier Framing & Action Gateways */}
-        {/* 4A. Desktop Editorial Flanking Wing — Left: Haute Patisserie */}
-        <div className="hidden md:flex flex-col items-start text-left z-40 absolute left-6 lg:left-12 bottom-8 lg:bottom-10 max-w-[280px] pointer-events-auto">
-          <span className="text-[10px] tracking-[0.24em] uppercase font-sans text-primary-gold font-semibold mb-1">
-            01 / Haute Patisserie
-          </span>
-          <p className="text-xs text-gray-300 font-sans leading-relaxed mb-3">
-            Sculptural tiered centerpieces tailored to your milestone.
-          </p>
-          <Link
-            to="/creations"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-[0.14em] uppercase bg-primary-gold text-[#141210] hover:bg-gold-highlight hover:shadow-[0_0_24px_rgba(222,172,75,0.4)] transition-all duration-300 min-h-[40px]"
-          >
-            <span>Explore Creations</span>
-            <span aria-hidden="true">&rarr;</span>
-          </Link>
-        </div>
-
-        {/* 4B. Desktop Editorial Flanking Wing — Right: Scenic Production */}
-        <div className="hidden md:flex flex-col items-end text-right z-40 absolute right-6 lg:right-12 bottom-8 lg:bottom-10 max-w-[280px] pointer-events-auto">
-          <span className="text-[10px] tracking-[0.24em] uppercase font-sans text-primary-gold font-semibold mb-1">
-            02 / Scenic Production
-          </span>
-          <p className="text-xs text-gray-300 font-sans leading-relaxed mb-3">
-            Immersive stage architecture, ceiling drape &amp; tablescapes.
-          </p>
-          <Link
-            to="/decorations"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-[0.14em] uppercase border border-primary-gold/60 text-champagne-gold hover:border-primary-gold hover:text-white hover:bg-primary-gold/15 transition-all duration-300 min-h-[40px]"
-          >
-            <span>Event Styling</span>
-            <span aria-hidden="true">&rarr;</span>
-          </Link>
-        </div>
-
-        {/* 4C. Desktop Center Scroll Invitation */}
-        <div className="hidden md:flex flex-col items-center justify-center z-40 absolute bottom-4 inset-x-0 pointer-events-none select-none">
-          <span className="text-[9px] uppercase tracking-[0.28em] text-champagne-gold/60 font-sans mb-1.5">
-            Scroll to Explore
-          </span>
-          <div className="w-[1px] h-4 bg-gradient-to-b from-primary-gold/60 to-transparent animate-pulse" />
-        </div>
-
-        {/* 4D. Mobile Bottom Action Dock */}
-        <div className="md:hidden absolute bottom-0 inset-x-0 z-40 flex flex-col items-center justify-end px-4 pb-4 pt-8 bg-gradient-to-t from-dark-canvas via-dark-canvas/85 to-transparent pointer-events-auto">
-          <div className="w-full max-w-xs flex flex-row items-center justify-center gap-2.5">
-            <Link
-              to="/creations"
-              className="flex-1 inline-flex items-center justify-center px-4 py-2.5 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-primary-gold text-[#141210] hover:bg-gold-highlight transition-all duration-300 text-center min-h-[44px]"
-            >
-              Creations
-            </Link>
-            <Link
-              to="/decorations"
-              className="flex-1 inline-flex items-center justify-center px-4 py-2.5 rounded-full text-[11px] font-semibold tracking-wider uppercase border border-primary-gold/60 text-champagne-gold hover:border-primary-gold hover:text-white hover:bg-primary-gold/10 transition-all duration-300 text-center min-h-[44px]"
-            >
-              Event Styling
-            </Link>
-          </div>
-        </div>
       </section>
 
-      {/* Inter-Scene Architectural Breathing Interlude */}
-      <div
-        aria-hidden="true"
-        className="w-full h-24 sm:h-32 lg:h-44 bg-dark-canvas flex flex-col items-center justify-center pointer-events-none select-none"
-      >
-        <div className="w-[1px] h-12 sm:h-16 bg-gradient-to-b from-primary-gold/40 to-transparent" />
-      </div>
-
-      {/* Scene 2 — Act I: The Atmospheric Tableau */}
+      {/* Scene 2 — More Than a Cake. A Celebration, Thoughtfully Created. */}
       <section
-        aria-label="Scene 2 — The Atmospheric Tableau"
-        className="relative w-full min-h-[720px] sm:min-h-[840px] flex items-center justify-center overflow-hidden bg-dark-canvas py-28 sm:py-36 lg:py-44"
+        aria-label="Scene 2 — A Celebration, Thoughtfully Created"
+        className="relative w-full min-h-[600px] sm:min-h-[640px] md:min-h-[740px] lg:min-h-[840px] flex items-center justify-center overflow-hidden bg-dark-canvas"
       >
-        {/* Full-Bleed Background Ballroom Atmosphere */}
+        {/* Photographic Background Asset: Celebratory Cake & Ballroom Décor Setting */}
         <img
           src="/scene2_celebration_bg.jpg"
           alt="Artisanal white celebration cake on a gold pedestal within an opulent candlelit ballroom floral setting"
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none scale-105"
+          className="absolute inset-0 w-full h-full object-cover object-[76%_center] sm:object-[70%_center] md:object-center pointer-events-none select-none"
         />
 
-        {/* Natural Chiaroscuro Dark Chamber Shading */}
+        {/* Ambient Gradient Overlays for Natural Visual Contrast and Smooth Seams */}
+        {/* 1. Balanced ambient tint on mobile so the cake remains visible behind the centered text */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[#141210]/78 pointer-events-none"
+          className="absolute inset-0 bg-[#141210]/68 sm:bg-transparent pointer-events-none"
         />
-
-        {/* Soft Top Seam Transition from Dark Canvas */}
+        {/* 2. Left-to-right directional shade on tablet/desktop */}
         <div
           aria-hidden="true"
-          className="absolute top-0 inset-x-0 h-32 sm:h-48 bg-gradient-to-b from-dark-canvas to-transparent pointer-events-none"
+          className="hidden sm:block absolute inset-0 bg-gradient-to-r from-[#141210]/95 via-[#141210]/75 to-transparent sm:w-[75%] md:w-[65%] lg:w-[58%] pointer-events-none"
         />
-
-        {/* Soft Bottom Seam Transition into Scene 4 */}
+        {/* 3. Top seamless transition from Scene 1 */}
         <div
           aria-hidden="true"
-          className="absolute bottom-0 inset-x-0 h-32 sm:h-48 bg-gradient-to-t from-dark-canvas to-transparent pointer-events-none"
+          className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-[#141210] to-transparent pointer-events-none"
+        />
+        {/* 4. Bottom seamless transition to subsequent sections */}
+        <div
+          aria-hidden="true"
+          className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#141210] to-transparent pointer-events-none"
         />
 
-        {/* Centered Floating Golden Message Chamber */}
-        <div className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 text-center flex flex-col items-center">
-          {/* Floating Headline */}
-          <h2 className="font-serif font-normal text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[1.1] tracking-tight text-white mb-6 [text-shadow:0_4px_30px_rgba(0,0,0,0.9)]">
-            <span>More Than a Cake.</span>
-            <span className="block text-primary-gold italic font-serif mt-2">
-              A Celebration, Thoughtfully Created.
-            </span>
-          </h2>
+        {/* Scene 2 Narrative Content — Centered on Mobile, Left-Aligned on Tablet/Desktop */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32 flex items-center justify-center sm:justify-start">
+          <div className="w-full max-w-md sm:max-w-xl lg:max-w-2xl flex flex-col items-center text-center sm:items-start sm:text-left">
+            {/* Approved Headline with Exact Reference Image Color Balancing */}
+            <h2
+              data-aos="fade-up"
+              className="font-serif font-normal text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[4rem] leading-[1.14] sm:leading-[1.12] tracking-tight break-words"
+            >
+              <span className="block text-white">
+                More Than a Cake.
+              </span>
+              <span className="block text-primary-gold font-serif mt-1">
+                A Celebration,
+              </span>
+              <span className="block text-white mt-1">
+                Thoughtfully Created.
+              </span>
+            </h2>
 
-          {/* Hairline Divider */}
-          <div className="w-16 h-[1px] bg-primary-gold/60 my-6" />
+            {/* Subtle Editorial Accent Line */}
+            <div
+              aria-hidden="true"
+              data-aos="fade-up"
+              data-aos-delay="100"
+              className="w-12 h-[1px] bg-primary-gold/60 my-5 sm:my-8 mx-auto sm:mx-0"
+            />
 
-          {/* Quiet Narrative Stanza */}
-          <p className="font-sans text-sm sm:text-base md:text-lg text-gray-200 leading-relaxed font-normal max-w-xl mx-auto mb-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.9)]">
-            From exquisite celebration cakes to artfully curated event settings, we unite craftsmanship and aesthetic refinement to give every occasion a distinctive sense of occasion.
-          </p>
+            {/* Approved Supporting Statement */}
+            <p
+              data-aos="fade-up"
+              data-aos-delay="150"
+              className="font-sans text-sm sm:text-base text-gray-200/90 leading-relaxed max-w-sm sm:max-w-lg mb-7 sm:mb-10 font-normal break-words"
+            >
+              From exquisite celebration cakes to artfully curated event settings, we unite craftsmanship and aesthetic refinement to give every occasion a distinctive sense of occasion.
+            </p>
+
+            {/* Calls to Action — Centered on Mobile */}
+            <div
+              data-aos="fade-up"
+              data-aos-delay="240"
+              className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 sm:gap-4 pt-1 w-full max-w-xs sm:max-w-md min-w-0"
+            >
+              <Link
+                to="/creations"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 rounded text-xs sm:text-sm font-semibold tracking-wider uppercase bg-primary-gold text-[#141210] hover:bg-gold-highlight hover:shadow-[0_4px_24px_rgba(222,172,75,0.35)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] min-h-[44px] text-center"
+              >
+                Explore Our Creations
+              </Link>
+              <Link
+                to="/decorations"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 rounded text-xs sm:text-sm font-semibold tracking-wider uppercase border border-primary-gold/60 text-champagne-gold hover:border-primary-gold hover:text-white hover:bg-primary-gold/10 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] min-h-[44px] text-center"
+              >
+                Discover Our Decorations
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
