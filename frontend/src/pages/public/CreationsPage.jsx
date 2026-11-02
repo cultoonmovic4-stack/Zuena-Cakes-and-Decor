@@ -79,7 +79,8 @@ export default function CreationsPage() {
   // Scroll and animation states
   const [isScrolled, setIsScrolled] = useState(false)
   const [scrollYPos, setScrollYPos] = useState(0)
-  const [scrollDirection, setScrollDirection] = useState('down')
+  const [scrollDirection, setScrollDirection] = useState('up')
+  const [filterBarHidden, setFilterBarHidden] = useState(false)
   const lastScrollYRef = useRef(0)
   const [appearedCircles, setAppearedCircles] = useState(new Set())
   const [deltasReady, setDeltasReady] = useState(false)
@@ -224,23 +225,29 @@ export default function CreationsPage() {
           const sy = window.scrollY
           setScrollYPos(sy)
 
-          // Detect scroll direction for mobile show/hide filter bar
-          const prevY = lastScrollYRef.current
-          const diff = sy - prevY
-          if (Math.abs(diff) > 6) {
-            if (diff > 0) {
-              setScrollDirection('down')
-            } else {
-              setScrollDirection('up')
-            }
-            lastScrollYRef.current = sy
-          }
-
           const heroEl = heroRef.current
           const heroHeight = heroEl ? heroEl.offsetHeight : 600
           // Trigger when hero scene is 3/4 off the viewport (~450px, ~3 scrolls)
           const triggerThreshold = Math.round(heroHeight * 0.75)
           const resetThreshold = Math.round(heroHeight * 0.65)
+
+          // Detect scroll direction and hide/show filter bar
+          const prevY = lastScrollYRef.current
+          const diff = sy - prevY
+          if (Math.abs(diff) > 6) {
+            if (diff > 0) {
+              setScrollDirection('down')
+              // Disappear when user scrolls down (once scrolled past the hero morph zone)
+              if (sy > triggerThreshold + 80) {
+                setFilterBarHidden(true)
+              }
+            } else {
+              setScrollDirection('up')
+              // Appear when user scrolls up
+              setFilterBarHidden(false)
+            }
+            lastScrollYRef.current = sy
+          }
 
           setIsScrolled((prev) => {
             if (!prev && sy >= triggerThreshold) {
@@ -249,7 +256,8 @@ export default function CreationsPage() {
               )
               return true
             } else if (prev && sy < resetThreshold) {
-              setScrollDirection('down')
+              setScrollDirection('up')
+              setFilterBarHidden(false)
               return false
             }
             return prev
@@ -267,7 +275,8 @@ export default function CreationsPage() {
           }
 
           if (sy < 15) {
-            setScrollDirection('down')
+            setScrollDirection('up')
+            setFilterBarHidden(false)
             measureDeltas()
           }
           ticking = false
@@ -338,7 +347,7 @@ export default function CreationsPage() {
         ref={filterBarRef}
         style={{
           transform:
-            isScrolled && scrollDirection === 'up' && typeof window !== 'undefined' && window.innerWidth < 640
+            isScrolled && filterBarHidden
               ? 'translate3d(0, -150%, 0)'
               : filterOffsetY < 0
               ? `translate3d(0, ${filterOffsetY}px, 0)`
@@ -349,8 +358,8 @@ export default function CreationsPage() {
             ? 'bg-[#141210]/95 backdrop-blur-md border-b border-bronze/35 shadow-2xl py-1.5 sm:py-2.5 pointer-events-auto'
             : 'bg-transparent border-transparent pointer-events-none py-2.5'
         } ${
-          isScrolled && scrollDirection === 'up'
-            ? '-translate-y-full opacity-0 pointer-events-none sm:translate-y-0 sm:opacity-100 sm:pointer-events-auto'
+          isScrolled && filterBarHidden
+            ? '-translate-y-full opacity-0 pointer-events-none'
             : 'translate-y-0 opacity-100'
         }`}
       >
