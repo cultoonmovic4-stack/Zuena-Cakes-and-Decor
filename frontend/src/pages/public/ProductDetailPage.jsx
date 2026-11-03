@@ -71,28 +71,22 @@ export default function ProductDetailPage() {
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
               />
 
-              {/* Ambient Shadow Gradients */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-[#141210]/90 via-transparent to-transparent pointer-events-none"
-              />
-
               {/* Floating Top Left Pill Badge */}
               <div className="absolute top-4 left-4 flex flex-col gap-2">
-                <span className="px-3 py-1 rounded bg-[#141210]/90 backdrop-blur-xs border border-primary-gold/50 text-[11px] font-mono uppercase tracking-[0.18em] text-champagne-gold font-semibold shadow-md">
+                <span className="px-3 py-1 rounded bg-[#141210] border border-primary-gold/50 text-[11px] font-mono uppercase tracking-[0.18em] text-champagne-gold font-semibold shadow-md">
                   {product.categoryLabel}
                 </span>
-                <span className="px-3 py-1 rounded bg-[#141210]/85 backdrop-blur-xs border border-white/20 text-[11px] font-sans font-medium text-gray-200 shadow-md">
+                <span className="px-3 py-1 rounded bg-[#141210] border border-white/20 text-[11px] font-sans font-medium text-gray-200 shadow-md">
                   {currentTierConfig?.tiers || product.tiers} Tiers &bull; {currentTierConfig?.guests || product.servings}
                 </span>
               </div>
 
               {/* Bottom Caption Overlay */}
               <div className="absolute bottom-4 inset-x-4 flex items-center justify-between text-xs text-gray-300">
-                <span className="bg-[#141210]/80 px-2.5 py-1 rounded backdrop-blur-xs text-[11px] font-mono text-gray-400">
+                <span className="bg-[#141210] px-2.5 py-1 rounded text-[11px] font-mono text-gray-400 border border-bronze/30">
                   {product.cakeType}
                 </span>
-                <span className="bg-[#141210]/80 px-2.5 py-1 rounded backdrop-blur-xs text-[11px] text-champagne-gold font-medium">
+                <span className="bg-[#141210] px-2.5 py-1 rounded text-[11px] text-champagne-gold font-medium border border-bronze/30">
                   {product.leadTime}
                 </span>
               </div>
