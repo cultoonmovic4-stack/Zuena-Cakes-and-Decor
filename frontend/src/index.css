@@ -146,13 +146,16 @@
   will-change: opacity, transform;
 }
 
+/* Respect reduced-motion preferences for animations */
 @media (prefers-reduced-motion: reduce) {
   .hero-circle-cinematic {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
   }
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
-
-
-
