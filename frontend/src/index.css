@@ -112,5 +112,11 @@
   }
 }
 
-
-
+/* Respect reduced-motion preferences for scroll animations */
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
