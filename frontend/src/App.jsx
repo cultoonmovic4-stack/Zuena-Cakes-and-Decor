@@ -3,11 +3,13 @@ import PublicLayout from './layouts/PublicLayout.jsx'
 import AdminLayout from './layouts/AdminLayout.jsx'
 import HomePage from './pages/public/HomePage.jsx'
 import CreationsPage from './pages/public/CreationsPage.jsx'
+import CollectionPage from './pages/public/CollectionPage.jsx'
 import ProductDetailPage from './pages/public/ProductDetailPage.jsx'
 import CustomCakePage from './pages/public/CustomCakePage.jsx'
 import DecorationsPage from './pages/public/DecorationsPage.jsx'
 import DecorationEnquiryPage from './pages/public/DecorationEnquiryPage.jsx'
 import CartPage from './pages/public/CartPage.jsx'
+import Scene2TestPage from './pages/public/Scene2TestPage.jsx'
 
 function AdminLoginPlaceholder() {
   return (
@@ -66,11 +68,20 @@ function App() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/creations" element={<CreationsPage />} />
+        <Route path="/creations/birthday" element={<CollectionPage categoryKey="birthday" />} />
+        <Route path="/creations/birthday/:occasion" element={<CollectionPage categoryKey="birthday" />} />
+        <Route path="/creations/wedding" element={<CollectionPage categoryKey="wedding" />} />
+        <Route path="/creations/wedding/:occasion" element={<CollectionPage categoryKey="wedding" />} />
+        <Route path="/creations/graduation" element={<CollectionPage categoryKey="graduation" />} />
+        <Route path="/creations/graduation/:occasion" element={<CollectionPage categoryKey="graduation" />} />
+        <Route path="/creations/kwanjula" element={<CollectionPage categoryKey="kwanjula" />} />
+        <Route path="/creations/kwanjula/:occasion" element={<CollectionPage categoryKey="kwanjula" />} />
         <Route path="/creations/:slug" element={<ProductDetailPage />} />
         <Route path="/custom-cake" element={<CustomCakePage />} />
         <Route path="/decorations" element={<DecorationsPage />} />
         <Route path="/decorations/enquire" element={<DecorationEnquiryPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/scene2-test" element={<Scene2TestPage />} />
         <Route path="*" element={<PublicNotFoundPlaceholder />} />
       </Route>
     </Routes>

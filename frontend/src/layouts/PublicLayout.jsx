@@ -78,10 +78,10 @@ export default function PublicLayout() {
   }, [isMobileMenuOpen])
 
   const mobileNavLinkClass = ({ isActive }) =>
-    `block px-4 py-3 font-serif text-sm tracking-wide border-l-2 transition-colors ${
+    `flex items-center px-4 py-3 font-serif text-sm tracking-wide transition-colors ${
       isActive
-        ? 'text-primary-gold border-primary-gold bg-bronze/10'
-        : 'text-gray-300 border-transparent hover:text-gold-highlight hover:bg-white/5'
+        ? 'text-primary-gold'
+        : 'text-gray-300 hover:text-gold-highlight'
     }`
 
   return (
@@ -89,7 +89,7 @@ export default function PublicLayout() {
       {/* Public Header Shell — Concept 4: Serif Editorial Minimal */}
       <header
         aria-label="Site Header"
-        className="w-full bg-[#141210] border-b border-bronze/25 sticky top-0 z-40"
+        className="w-full bg-[#141210] border-b border-bronze/25 sticky top-0 z-50"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           {/* Logo Brand Link */}
@@ -195,7 +195,14 @@ export default function PublicLayout() {
                 onClick={closeMobileMenu}
                 className={mobileNavLinkClass}
               >
-                {link.label}
+                {({ isActive }) => (
+                  <span className="inline-flex items-center gap-2.5">
+                    {isActive && (
+                      <span aria-hidden="true" className="w-3.5 h-[1.5px] bg-primary-gold inline-block" />
+                    )}
+                    <span>{link.label}</span>
+                  </span>
+                )}
               </NavLink>
             ))}
             <NavLink
@@ -203,7 +210,14 @@ export default function PublicLayout() {
               onClick={closeMobileMenu}
               className={mobileNavLinkClass}
             >
-              Cart (0)
+              {({ isActive }) => (
+                <span className="inline-flex items-center gap-2.5">
+                  {isActive && (
+                    <span aria-hidden="true" className="w-3.5 h-[1.5px] bg-primary-gold inline-block" />
+                  )}
+                  <span>Cart (0)</span>
+                </span>
+              )}
             </NavLink>
           </nav>
         )}
@@ -356,7 +370,7 @@ export default function PublicLayout() {
         type="button"
         onClick={scrollToTop}
         aria-label="Back to top"
-        className={`fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#141210]/90 backdrop-blur-xs border border-primary-gold/70 text-primary-gold hover:bg-primary-gold hover:text-[#141210] shadow-[0_8px_28px_rgba(0,0,0,0.65)] flex items-center justify-center transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] ${
+        className={`fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-[60] w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#141210]/90 backdrop-blur-xs border border-primary-gold/70 text-primary-gold hover:bg-primary-gold hover:text-[#141210] shadow-[0_8px_28px_rgba(0,0,0,0.65)] flex items-center justify-center transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#141210] ${
           showBackToTop
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 translate-y-4 pointer-events-none'
