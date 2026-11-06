@@ -1,58 +1,20 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import ivoryEleganceImg from '../../assets/images/wd 1.jpg'
-import chocolateDelightImg from '../../assets/images/3.jpg'
-
-const INITIAL_ITEMS = [
-  {
-    id: 'item-1',
-    number: '01',
-    title: 'Ivory Elegance',
-    quantity: 1,
-    priceUGX: 480000,
-    priceFormatted: 'UGX 480,000',
-    image: ivoryEleganceImg,
-    imageAlt: 'Ivory Elegance celebration cake with delicate champagne drapery and fresh roses on a gold stand',
-  },
-  {
-    id: 'item-2',
-    number: '02',
-    title: 'Chocolate Delight',
-    quantity: 1,
-    priceUGX: 450000,
-    priceFormatted: 'UGX 450,000',
-    image: chocolateDelightImg,
-    imageAlt: 'Chocolate Delight two-tier dark chocolate ganache drip cake with truffles and berries on a gold stand',
-  },
-]
+import { useCart } from '../../context/useCart.js'
 
 export default function CartPage() {
-  const [items, setItems] = useState(INITIAL_ITEMS)
-  const [selectedId, setSelectedId] = useState(INITIAL_ITEMS[0].id)
+  const { items, removeItem: removeCartItem, resetItems, totalFormatted } = useCart()
+  const [selectedId, setSelectedId] = useState(null)
   const [hoveredId, setHoveredId] = useState(null)
 
   const removeItem = (id, e) => {
     e.stopPropagation()
-    setItems((prev) => {
-      const remaining = prev.filter((item) => item.id !== id)
-      if (selectedId === id && remaining.length > 0) {
-        setSelectedId(remaining[0].id)
-      }
-      return remaining
-    })
-  }
-
-  const resetItems = () => {
-    setItems(INITIAL_ITEMS)
-    setSelectedId(INITIAL_ITEMS[0].id)
+    removeCartItem(id)
   }
 
   // Active cake being previewed in the hero frame
   const activeId = hoveredId || selectedId
   const activeItem = items.find((item) => item.id === activeId) || items[0]
-
-  const totalUGX = items.reduce((sum, item) => sum + item.priceUGX * item.quantity, 0)
-  const totalFormatted = `UGX ${totalUGX.toLocaleString()}`
 
   return (
     <div className="min-h-[80vh] w-full bg-[#141210] text-brand-white font-sans py-8 sm:py-14 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
@@ -156,8 +118,13 @@ export default function CartPage() {
                               {item.title}
                             </h2>
                             <p className="text-xs text-gray-400 font-sans mt-0.5">
-                              Qty: {item.quantity}
+                              Qty: {item.quantity}{item.tierLabel ? ` • ${item.tierLabel}` : ''}{item.flavor ? ` • ${item.flavor}` : ''}
                             </p>
+                            {item.specialNote && (
+                              <p className="text-[11px] text-primary-gold/80 italic font-sans mt-0.5 line-clamp-1">
+                                Note: {item.specialNote}
+                              </p>
+                            )}
                           </div>
                         </div>
 

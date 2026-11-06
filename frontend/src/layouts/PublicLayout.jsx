@@ -1,3 +1,4 @@
+import { useCart } from '../context/useCart.js'
 import { useState, useEffect } from 'react'
 import { NavLink, Link, Outlet, useLocation } from 'react-router'
 import AOS from 'aos'
@@ -24,6 +25,7 @@ const footerDecorLinks = [
 
 export default function PublicLayout() {
   const location = useLocation()
+  const { totalCount } = useCart()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [prevPathname, setPrevPathname] = useState(location.pathname)
   const [showBackToTop, setShowBackToTop] = useState(false)
@@ -136,13 +138,13 @@ export default function PublicLayout() {
                     : 'text-gray-300 hover:text-gold-highlight'
                 }`
               }
-              aria-label="Shopping Cart, 0 items"
+              aria-label={`Shopping Cart, ${totalCount} items`}
             >
               <svg aria-hidden="true" className="w-4 h-4 text-primary-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               <span>Cart</span>
-              <span className="text-[11px] font-mono text-primary-gold">(0)</span>
+              <span className="text-[11px] font-mono text-primary-gold">({totalCount})</span>
             </NavLink>
           </nav>
 
@@ -151,12 +153,12 @@ export default function PublicLayout() {
             <Link
               to="/cart"
               className="inline-flex items-center gap-1 py-1.5 text-xs text-gray-300 hover:text-primary-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold"
-              aria-label="Shopping Cart, 0 items"
+              aria-label={`Shopping Cart, ${totalCount} items`}
             >
               <svg aria-hidden="true" className="w-4 h-4 text-primary-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-              <span className="text-[11px] font-mono text-primary-gold">(0)</span>
+              <span className="text-[11px] font-mono text-primary-gold">({totalCount})</span>
             </Link>
 
             <button

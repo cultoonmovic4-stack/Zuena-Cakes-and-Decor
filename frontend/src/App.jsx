@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router'
+import { CartProvider } from './context/CartContext.jsx'
 import PublicLayout from './layouts/PublicLayout.jsx'
 import AdminLayout from './layouts/AdminLayout.jsx'
 import HomePage from './pages/public/HomePage.jsx'
@@ -54,39 +55,40 @@ function PublicNotFoundPlaceholder() {
 
 function App() {
   return (
-    <Routes>
-      {/* Standalone Administrative Login (outside both layouts) */}
-      <Route path="/admin/login" element={<AdminLoginPlaceholder />} />
+    <CartProvider>
+      <Routes>
+        {/* Standalone Administrative Login (outside both layouts) */}
+        <Route path="/admin/login" element={<AdminLoginPlaceholder />} />
 
-      {/* Staff Administration Layout Routes */}
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminSectionPlaceholder />} />
-        <Route path="*" element={<AdminSectionPlaceholder />} />
-      </Route>
+        {/* Staff Administration Layout Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminSectionPlaceholder />} />
+          <Route path="*" element={<AdminSectionPlaceholder />} />
+        </Route>
 
-      {/* Public Customer Layout Routes */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/creations" element={<CreationsPage />} />
-        <Route path="/creations/birthday" element={<CollectionPage categoryKey="birthday" />} />
-        <Route path="/creations/birthday/:occasion" element={<CollectionPage categoryKey="birthday" />} />
-        <Route path="/creations/wedding" element={<CollectionPage categoryKey="wedding" />} />
-        <Route path="/creations/wedding/:occasion" element={<CollectionPage categoryKey="wedding" />} />
-        <Route path="/creations/graduation" element={<CollectionPage categoryKey="graduation" />} />
-        <Route path="/creations/graduation/:occasion" element={<CollectionPage categoryKey="graduation" />} />
-        <Route path="/creations/kwanjula" element={<CollectionPage categoryKey="kwanjula" />} />
-        <Route path="/creations/kwanjula/:occasion" element={<CollectionPage categoryKey="kwanjula" />} />
-        <Route path="/creations/:slug" element={<ProductDetailPage />} />
-        <Route path="/custom-cake" element={<CustomCakePage />} />
-        <Route path="/decorations" element={<DecorationsPage />} />
-        <Route path="/decorations/enquire" element={<DecorationEnquiryPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/scene2-test" element={<Scene2TestPage />} />
-        <Route path="*" element={<PublicNotFoundPlaceholder />} />
-      </Route>
-    </Routes>
+        {/* Public Customer Layout Routes */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/creations" element={<CreationsPage />} />
+          <Route path="/creations/birthday" element={<CollectionPage categoryKey="birthday" />} />
+          <Route path="/creations/birthday/:occasion" element={<CollectionPage categoryKey="birthday" />} />
+          <Route path="/creations/wedding" element={<CollectionPage categoryKey="wedding" />} />
+          <Route path="/creations/wedding/:occasion" element={<CollectionPage categoryKey="wedding" />} />
+          <Route path="/creations/graduation" element={<CollectionPage categoryKey="graduation" />} />
+          <Route path="/creations/graduation/:occasion" element={<CollectionPage categoryKey="graduation" />} />
+          <Route path="/creations/kwanjula" element={<CollectionPage categoryKey="kwanjula" />} />
+          <Route path="/creations/kwanjula/:occasion" element={<CollectionPage categoryKey="kwanjula" />} />
+          <Route path="/creations/:slug" element={<ProductDetailPage />} />
+          <Route path="/custom-cake" element={<CustomCakePage />} />
+          <Route path="/decorations" element={<DecorationsPage />} />
+          <Route path="/decorations/enquire" element={<DecorationEnquiryPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/scene2-test" element={<Scene2TestPage />} />
+          <Route path="*" element={<PublicNotFoundPlaceholder />} />
+        </Route>
+      </Routes>
+    </CartProvider>
   )
 }
 
 export default App
-
