@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useParams, Link } from 'react-router'
+import AOS from 'aos'
 import { cakeProducts } from '../../data/creationsData'
 import { useCart } from '../../context/useCart.js'
 
@@ -50,9 +51,10 @@ export default function ProductDetailPage() {
     setAddedNotification(false)
   }
 
-  // Scroll to top on slug change
+  // Scroll to top on slug change and refresh AOS layout calculations
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
+    AOS.refresh()
   }, [slug])
 
   // Curator's Pairings: 2–3 related creations from same or complementary category
@@ -107,7 +109,6 @@ export default function ProductDetailPage() {
 
   // Tier photography fallback: Use verified tier image if present; otherwise fallback to master hero
   const activeImage = currentTierConfig?.image || product.image
-  const isUsingFallbackImage = !currentTierConfig?.image || currentTierConfig.image === product.image
 
   // Handle Add to Order
   const handleAddToOrder = (e) => {
@@ -138,36 +139,16 @@ export default function ProductDetailPage() {
   return (
     <div className="w-full bg-dark-canvas text-brand-white font-sans selection:bg-primary-gold selection:text-dark-canvas">
       {/* ===================================================================
-          BREADCRUMB BAR
-          =================================================================== */}
-      <div className="border-b border-bronze/20 bg-[#12100E]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
-          <nav aria-label="Breadcrumb" className="text-xs text-gray-400 flex flex-wrap items-center gap-2 font-sans">
-            <Link to="/" className="hover:text-primary-gold transition-colors">
-              Home
-            </Link>
-            <span className="text-bronze/60">/</span>
-            <Link to="/creations" className="hover:text-primary-gold transition-colors">
-              Our Creations
-            </Link>
-            <span className="text-bronze/60">/</span>
-            <span className="text-gray-400 capitalize">{product.categoryLabel}</span>
-            <span className="text-bronze/60">/</span>
-            <span className="text-champagne-gold font-medium truncate max-w-[240px] sm:max-w-none">
-              {product.name}
-            </span>
-          </nav>
-        </div>
-      </div>
-
-      {/* ===================================================================
           SCENE 1: THE CREATION (Photography-Led Atelier Hero Presentation)
           =================================================================== */}
       <section className="py-10 sm:py-16 border-b border-bronze/20 bg-dark-canvas">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             {/* Visual Column: Photographic Studio Frame with Subtle Crossfade */}
-            <div className="lg:col-span-7 flex flex-col gap-3">
+            <div
+              className="lg:col-span-7 flex flex-col gap-3"
+              data-aos="fade-right"
+            >
               <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-bronze/40 bg-[#161311] shadow-2xl group">
                 <img
                   key={activeImage}
@@ -176,22 +157,9 @@ export default function ProductDetailPage() {
                   className="w-full h-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-102"
                 />
 
-                {/* Floating Category & Atelier Badges */}
-                <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
-                  <span className="px-3 py-1 rounded bg-[#141210]/90 backdrop-blur-md border border-primary-gold/50 text-[11px] font-mono uppercase tracking-[0.18em] text-champagne-gold font-semibold shadow-lg">
-                    {product.categoryLabel}
-                  </span>
-                  <span className="px-3 py-1 rounded bg-[#141210]/90 backdrop-blur-md border border-white/20 text-[11px] font-sans font-medium text-gray-200 shadow-md">
-                    {currentTierConfig?.tiers} {currentTierConfig?.tiers === 1 ? 'Tall Tier' : 'Tiers'} &bull; {currentTierConfig?.guests}
-                  </span>
-                </div>
-
-                {/* Bottom Craft Overlay */}
-                <div className="absolute bottom-4 inset-x-4 flex items-center justify-between text-xs text-gray-300 z-20">
-                  <span className="bg-[#141210]/90 backdrop-blur-md px-3 py-1.5 rounded text-[11px] font-mono text-gray-300 border border-bronze/40">
-                    {product.cakeType}
-                  </span>
-                  <span className="bg-[#141210]/90 backdrop-blur-md px-3 py-1.5 rounded text-[11px] text-champagne-gold font-medium border border-bronze/40">
+                {/* Lead Time Badge */}
+                <div className="absolute bottom-4 right-4 z-20">
+                  <span className="bg-[#141210]/90 backdrop-blur-md px-3 py-1.5 rounded text-[11px] text-champagne-gold font-medium border border-bronze/40 shadow-md">
                     Lead time: {product.leadTime}
                   </span>
                 </div>
@@ -199,31 +167,21 @@ export default function ProductDetailPage() {
                 {/* Atmospheric Vignette */}
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-canvas/70 via-transparent to-transparent pointer-events-none" />
               </div>
-
-              {/* Illustrative Reference Disclaimer (Condition 6) */}
-              {isUsingFallbackImage && (
-                <p className="text-[11px] text-gray-400 font-sans italic text-center px-2">
-                  Photographed in {product.tiers} {product.tiers === 1 ? 'tier' : 'tiers'}. Shown as an illustrative reference; final tier arrangement and decorative presentation adjust for your selected {currentTierConfig?.tiers} {currentTierConfig?.tiers === 1 ? 'tier' : 'tiers'}.
-                </p>
-              )}
             </div>
 
             {/* Narrative Column: Product Identity & Editorial Intro */}
-            <div className="lg:col-span-5 flex flex-col justify-center">
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="font-mono text-xs uppercase tracking-[0.22em] text-primary-gold font-semibold">
-                  Zuena Atelier &bull; {product.id.toUpperCase()}
-                </span>
-                <span className="text-bronze/60">&bull;</span>
-                <span className="text-xs text-gray-400 font-sans uppercase tracking-wider">
-                  {product.categoryLabel}
-                </span>
-                {product.isProvisional && (
+            <div
+              className="lg:col-span-5 flex flex-col justify-center lg:-translate-y-10"
+              data-aos="fade-left"
+              data-aos-delay="100"
+            >
+              {product.isProvisional && (
+                <div className="mb-3">
                   <span className="px-2 py-0.5 rounded bg-bronze/25 border border-primary-gold/40 text-[10px] font-mono uppercase tracking-wider text-primary-gold font-medium">
                     Provisional Demo Design
                   </span>
-                )}
-              </div>
+                </div>
+              )}
 
               <h1 className="font-serif font-normal text-3xl sm:text-4xl lg:text-5xl text-brand-white leading-[1.12] mb-4">
                 {product.name}
@@ -305,10 +263,7 @@ export default function ProductDetailPage() {
           =================================================================== */}
       <section className="py-12 sm:py-16 bg-[#161311] border-b border-bronze/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mb-8">
-            <span className="text-xs font-mono uppercase tracking-[0.22em] text-primary-gold block mb-1 font-semibold">
-              Scene 2 &bull; The Details
-            </span>
+          <div className="max-w-2xl mb-8" data-aos="fade-up">
             <h2 className="text-2xl sm:text-3xl font-serif font-normal text-brand-white">
               Atelier Specifications &amp; Craftsmanship
             </h2>
@@ -319,81 +274,81 @@ export default function ProductDetailPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {/* Spec 1: Architecture & Dimensions */}
-            <div className="bg-[#1B1815] border border-bronze/30 rounded-xl p-5 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-primary-gold block mb-2 font-semibold">
-                  01 &bull; Dimensions
-                </span>
-                <h3 className="font-serif text-base text-brand-white mb-2 font-semibold">
-                  Cake Architecture
-                </h3>
-                <p className="font-sans text-xs text-gray-300 leading-relaxed">
-                  {product.dimensions}
-                </p>
-              </div>
-              <p className="font-sans text-[11px] text-gray-400 mt-4 pt-3 border-t border-bronze/20">
-                Tier dimensions based on standard atelier cake sizing.
+            <div
+              className="bg-[#1B1815] border border-bronze/30 rounded-xl p-5"
+              data-aos="fade-up"
+              data-aos-delay="0"
+            >
+              <span className="text-[10px] font-mono uppercase tracking-wider text-primary-gold block mb-2 font-semibold">
+                01 &bull; Dimensions
+              </span>
+              <h3 className="font-serif text-base text-brand-white mb-2 font-semibold">
+                Cake Architecture
+              </h3>
+              <p className="font-sans text-xs text-gray-300 leading-relaxed">
+                {product.dimensions}
               </p>
             </div>
 
             {/* Spec 2: Preparation & Lead Time */}
-            <div className="bg-[#1B1815] border border-bronze/30 rounded-xl p-5 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-primary-gold block mb-2 font-semibold">
-                  02 &bull; Advance Notice
-                </span>
-                <h3 className="font-serif text-base text-brand-white mb-2 font-semibold">
-                  Lead Time
-                </h3>
-                <p className="font-sans text-xs text-gray-300 leading-relaxed">
-                  Minimum advance notice: <strong className="text-champagne-gold">{product.leadTime}</strong>.
-                </p>
-              </div>
-              <p className="font-sans text-[11px] text-gray-400 mt-4 pt-3 border-t border-bronze/20">
-                Subject to studio scheduling and confirmation.
+            <div
+              className="bg-[#1B1815] border border-bronze/30 rounded-xl p-5"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <span className="text-[10px] font-mono uppercase tracking-wider text-primary-gold block mb-2 font-semibold">
+                02 &bull; Advance Notice
+              </span>
+              <h3 className="font-serif text-base text-brand-white mb-2 font-semibold">
+                Lead Time
+              </h3>
+              <p className="font-sans text-xs text-gray-300 leading-relaxed">
+                Minimum advance notice: <strong className="text-champagne-gold">{product.leadTime}</strong>.
               </p>
             </div>
 
             {/* Spec 3: Dietary & Allergens */}
-            <div className="bg-[#1B1815] border border-bronze/30 rounded-xl p-5 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-primary-gold block mb-2 font-semibold">
-                  03 &bull; Dietary Guidance
-                </span>
-                <h3 className="font-serif text-base text-brand-white mb-2 font-semibold">
-                  Allergen Transparency
-                </h3>
-                <p className="font-sans text-xs text-gray-300 leading-relaxed">
-                  {product.allergens}
-                </p>
-              </div>
-              <p className="font-sans text-[11px] text-gray-400 mt-4 pt-3 border-t border-bronze/20">
-                Dietary modifications may be noted in custom requests.
+            <div
+              className="bg-[#1B1815] border border-bronze/30 rounded-xl p-5"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <span className="text-[10px] font-mono uppercase tracking-wider text-primary-gold block mb-2 font-semibold">
+                03 &bull; Dietary Guidance
+              </span>
+              <h3 className="font-serif text-base text-brand-white mb-2 font-semibold">
+                Allergen Transparency
+              </h3>
+              <p className="font-sans text-xs text-gray-300 leading-relaxed">
+                {product.allergens}
               </p>
             </div>
 
             {/* Spec 4: Logistics & Delivery */}
-            <div className="bg-[#1B1815] border border-bronze/30 rounded-xl p-5 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-primary-gold block mb-2 font-semibold">
-                  04 &bull; Event Delivery
-                </span>
-                <h3 className="font-serif text-base text-brand-white mb-2 font-semibold">
-                  Venue Logistics
-                </h3>
-                <p className="font-sans text-xs text-gray-300 leading-relaxed">
-                  Delivery and venue coordination available across Kampala and surrounding areas.
-                </p>
-              </div>
-              <p className="font-sans text-[11px] text-gray-400 mt-4 pt-3 border-t border-bronze/20">
-                Arranged directly upon order confirmation.
+            <div
+              className="bg-[#1B1815] border border-bronze/30 rounded-xl p-5"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <span className="text-[10px] font-mono uppercase tracking-wider text-primary-gold block mb-2 font-semibold">
+                04 &bull; Event Delivery
+              </span>
+              <h3 className="font-serif text-base text-brand-white mb-2 font-semibold">
+                Venue Logistics
+              </h3>
+              <p className="font-sans text-xs text-gray-300 leading-relaxed">
+                Delivery and venue coordination available across Kampala and surrounding areas.
               </p>
             </div>
           </div>
 
           {/* Key Craft Highlights Row */}
           {product.highlights && product.highlights.length > 0 && (
-            <div className="mt-8 p-5 bg-[#1B1815] border border-bronze/30 rounded-xl">
+            <div
+              className="mt-8 p-5 bg-[#1B1815] border border-bronze/30 rounded-xl"
+              data-aos="fade-up"
+              data-aos-delay="150"
+            >
               <span className="text-[11px] font-mono uppercase tracking-wider text-primary-gold block mb-3 font-semibold">
                 Signature Artisanal Highlights
               </span>
@@ -415,10 +370,7 @@ export default function ProductDetailPage() {
           =================================================================== */}
       <section id="make-it-yours" className="py-12 sm:py-20 bg-dark-canvas border-b border-bronze/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mb-10">
-            <span className="text-xs font-mono uppercase tracking-[0.22em] text-primary-gold block mb-1 font-semibold">
-              Scene 3 &bull; Bespoke Configuration
-            </span>
+          <div className="max-w-2xl mb-10" data-aos="fade-up">
             <h2 className="text-3xl sm:text-4xl font-serif font-normal text-brand-white">
               Make It Yours
             </h2>
@@ -429,7 +381,12 @@ export default function ProductDetailPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             {/* Left: Configuration Steps Form */}
-            <form onSubmit={handleAddToOrder} className="lg:col-span-7 space-y-8">
+            <form
+              onSubmit={handleAddToOrder}
+              className="lg:col-span-7 space-y-8"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
               {/* Step 1: Tier Scale Selection */}
               <div className="bg-[#181512] border border-bronze/30 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -551,18 +508,31 @@ export default function ProductDetailPage() {
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-4 px-6 rounded-lg bg-primary-gold text-dark-canvas hover:bg-gold-highlight hover:shadow-[0_4px_24px_rgba(222,172,75,0.35)] transition-all duration-300 font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase text-center cursor-pointer min-h-[48px] inline-flex items-center justify-center gap-2"
+                  aria-label="Add to Order Request"
+                  className="group w-full py-4 px-6 rounded-lg bg-primary-gold text-dark-canvas hover:bg-gold-highlight transition-all duration-300 font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase text-center cursor-pointer min-h-[48px] inline-flex items-center justify-center overflow-hidden"
                 >
-                  <svg aria-hidden="true" className="w-4 h-4 text-dark-canvas shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg
+                    aria-hidden="true"
+                    className="w-4 h-4 text-dark-canvas shrink-0 transition-transform duration-300 ease-out group-hover:scale-130"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
-                  <span>Add to Order Request &bull; {currentPriceFormatted}</span>
+                  <span className="max-w-[260px] opacity-100 overflow-hidden whitespace-nowrap transition-all duration-300 ease-out ml-2 group-hover:max-w-0 group-hover:opacity-0 group-hover:ml-0">
+                    Add to Order Request
+                  </span>
                 </button>
               </div>
             </form>
 
             {/* Right: Live Configuration Summary Card & Notification */}
-            <div className="lg:col-span-5 sticky top-24 space-y-6">
+            <div
+              className="lg:col-span-5 sticky top-24 space-y-6"
+              data-aos="fade-left"
+              data-aos-delay="200"
+            >
               {/* Order Confirmation Banner */}
               {addedNotification && (
                 <div className="bg-[#1A1714] border border-primary-gold p-6 rounded-xl shadow-2xl text-center animate-fadeInDown">
@@ -597,11 +567,8 @@ export default function ProductDetailPage() {
 
               {/* Live Configuration Estimate Card */}
               <div className="bg-[#181512] border border-bronze/40 rounded-xl p-6 shadow-2xl space-y-5">
-                <div className="flex items-center justify-between pb-4 border-b border-bronze/25">
+                <div className="pb-4 border-b border-bronze/25">
                   <span className="font-mono text-xs uppercase tracking-wider text-primary-gold font-semibold">
-                    Live Configuration
-                  </span>
-                  <span className="text-[11px] text-gray-400 font-sans">
                     Provisional Estimate
                   </span>
                 </div>
@@ -620,16 +587,13 @@ export default function ProductDetailPage() {
                     <p className="text-xs text-primary-gold mt-1 font-mono">
                       {currentTierConfig?.tiers} {currentTierConfig?.tiers === 1 ? 'Tall Tier' : 'Tiers'} &bull; {currentTierConfig?.guests}
                     </p>
-                    <p className="text-[11px] text-gray-400 mt-0.5 truncate max-w-[200px]">
-                      {selectedFlavor}
-                    </p>
                   </div>
                 </div>
 
                 {/* Estimate Price Callout */}
                 <div className="pt-4 border-t border-bronze/25 flex items-baseline justify-between">
                   <span className="text-xs font-mono uppercase tracking-wider text-gray-400">
-                    Configuration Total:
+                    Total:
                   </span>
                   <span className="font-serif text-2xl text-primary-gold font-semibold">
                     {currentPriceFormatted}
@@ -660,7 +624,7 @@ export default function ProductDetailPage() {
           =================================================================== */}
       <section className="py-14 sm:py-20 bg-[#12100E]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mb-10">
+          <div className="max-w-2xl mb-10" data-aos="fade-up">
             <span className="text-xs font-mono uppercase tracking-[0.22em] text-primary-gold block mb-1 font-semibold">
               Scene 4 &bull; Curator&rsquo;s Selection
             </span>
@@ -673,12 +637,14 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {relatedPairings.map((pairing) => {
+            {relatedPairings.map((pairing, idx) => {
               const pairMinPrice = Math.min(...pairing.tierConfig.map((t) => t.price))
               return (
                 <Link
                   key={pairing.id}
                   to={`/creations/${pairing.slug}`}
+                  data-aos="fade-up"
+                  data-aos-delay={`${idx * 120}`}
                   className="group bg-[#161311] border border-bronze/30 rounded-xl overflow-hidden hover:border-primary-gold/60 transition-all duration-300 flex flex-col shadow-lg"
                 >
                   <div className="relative aspect-[4/5] overflow-hidden bg-[#141210]">
