@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router'
+import HomeLoader from '../../components/home/HomeLoader'
 import weddingCakeImg from '../../assets/images/wd 1.jpg'
 import birthdayCakeImg from '../../assets/images/bd 1.jpg'
 import chocolateCakeImg from '../../assets/images/3.jpg'
@@ -135,6 +136,8 @@ export default function HomePage() {
 
   return (
     <div className="w-full font-sans bg-dark-canvas text-brand-white">
+      {/* Signature Luxury Atelier Entrance Loader */}
+      <HomeLoader />
       {/* Scene 1 — Sculptural Editorial Hero (Direction 1: The Full-Span Architectural Billboard) */}
       <section
         aria-label="Scene 1 — Sculptural Editorial"
