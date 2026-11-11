@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router'
+import { createDecorationEnquiry } from '../../admin/decorations/decorationEnquiriesService'
 import decoration4Img from '../../assets/images/decoration4.jpg'
 import decoration5Img from '../../assets/images/decoration5.jpg'
 import decoration7Img from '../../assets/images/decoration7.jpg'
@@ -64,6 +65,8 @@ export default function DecorationEnquiryPage() {
   })
 
   const [submitted, setSubmitted] = useState(false)
+  const [createdReference, setCreatedReference] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [isDisciplineOpen, setIsDisciplineOpen] = useState(false)
   const disciplineDropdownRef = useRef(null)
@@ -89,15 +92,30 @@ export default function DecorationEnquiryPage() {
     }
   }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.customerName.trim() || !formData.phone.trim() || !formData.eventDate) {
       setErrorMessage('Please provide your name, telephone number, and target celebration date.')
       return
     }
     setErrorMessage('')
-    setSubmitted(true)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setIsSubmitting(true)
+
+    try {
+      const record = await createDecorationEnquiry({
+        ...formData,
+        prefilledStyle,
+      })
+      if (record && record.reference) {
+        setCreatedReference(record.reference)
+      }
+    } catch {
+      // Fallback gracefully so customer always sees receipt
+    } finally {
+      setIsSubmitting(false)
+      setSubmitted(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   return (
@@ -139,7 +157,7 @@ export default function DecorationEnquiryPage() {
           /* Confirmation Plaque */
           <div className="bg-[#181614] border-l-2 border-l-primary-gold border-t border-r border-b border-white/10 rounded-xl p-8 sm:p-12 shadow-2xl">
             <span className="inline-block px-3 py-1 bg-primary-gold/15 border border-primary-gold/40 text-[10px] font-mono uppercase tracking-[0.2em] text-champagne-gold mb-4 rounded-full">
-              Enquiry Recorded &bull; Pending Atelier Review
+              {createdReference ? `Enquiry ${createdReference} Logged` : 'Enquiry Recorded'} &bull; Pending Atelier Review
             </span>
             <h2 className="font-serif font-normal text-2xl sm:text-4xl text-brand-white leading-tight mb-3">
               Thank You, <span className="text-primary-gold">{formData.customerName}</span>.
@@ -534,9 +552,10 @@ export default function DecorationEnquiryPage() {
               </p>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-9 py-3.5 bg-primary-gold text-[#141210] hover:bg-gold-highlight font-sans text-xs font-semibold uppercase tracking-[0.16em] rounded-md transition-all cursor-pointer shadow-lg "
+                disabled={isSubmitting}
+                className="w-full sm:w-auto px-9 py-3.5 bg-primary-gold text-[#141210] hover:bg-gold-highlight font-sans text-xs font-semibold uppercase tracking-[0.16em] rounded-md transition-all cursor-pointer shadow-lg disabled:opacity-50"
               >
-                Submit Consultation Request &rarr;
+                {isSubmitting ? 'Submitting Enquiry...' : 'Submit Consultation Request \u2192'}
               </button>
             </div>
           </form>

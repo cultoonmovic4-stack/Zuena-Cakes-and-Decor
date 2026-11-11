@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router';
 import { cakeProducts } from '../../data/creationsData';
 import {
   AdminDataTable,
   AdminEmptyState,
   AdminStatusBadge,
 } from '../components/ui';
+import { fetchOrders } from '../orders/ordersService';
+import { fetchDecorationEnquiries } from '../decorations/decorationEnquiriesService';
 
 /**
  * Computes dynamic time-based greeting according to local browser time.
@@ -70,6 +73,9 @@ export default function OverviewPage({
   recentSubmissions = [],
 }) {
   const [currentDate, setCurrentDate] = useState(() => new Date());
+  const [liveOrdersCount, setLiveOrdersCount] = useState(null);
+  const [liveDecorCount, setLiveDecorCount] = useState(null);
+  const [liveSubmissions, setLiveSubmissions] = useState([]);
 
   // Periodically refresh current time to update greeting and date when crossing time boundaries
   useEffect(() => {
@@ -77,6 +83,50 @@ export default function OverviewPage({
       setCurrentDate(new Date());
     }, 60000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Fetch live orders and decoration enquiries if props are unprovided
+  useEffect(() => {
+    let isCancelled = false;
+
+    Promise.all([
+      fetchOrders().catch(() => ({ data: [], total: 0 })),
+      fetchDecorationEnquiries().catch(() => ({ data: [], total: 0 })),
+    ]).then(([ordersRes, decorRes]) => {
+      if (isCancelled) return;
+
+      setLiveOrdersCount(ordersRes.total);
+      setLiveDecorCount(decorRes.total);
+
+      // Build combined recent submissions
+      const orderItems = (ordersRes.data || []).map((o) => ({
+        date: o.orderDate ? o.orderDate.split('T')[0] : '—',
+        fullDate: o.orderDate || '',
+        reference: o.reference,
+        type: 'Order',
+        customer: o.customer?.name || 'Customer',
+        url: `/admin/orders/${o.id}`,
+      }));
+
+      const decorItems = (decorRes.data || []).map((d) => ({
+        date: d.submissionDate ? d.submissionDate.split('T')[0] : '—',
+        fullDate: d.submissionDate || '',
+        reference: d.reference,
+        type: 'Decoration',
+        customer: d.customer?.name || 'Client',
+        url: `/admin/decoration-enquiries/${d.id}`,
+      }));
+
+      const combined = [...orderItems, ...decorItems]
+        .sort((a, b) => new Date(b.fullDate || 0) - new Date(a.fullDate || 0))
+        .slice(0, 10);
+
+      setLiveSubmissions(combined);
+    });
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   const greeting = getTimeBasedGreeting(currentDate);
@@ -87,13 +137,32 @@ export default function OverviewPage({
     ? cakeProducts.length
     : '—';
 
+  const resolvedOrdersTotal =
+    totalOrders !== '—'
+      ? totalOrders
+      : liveOrdersCount !== null
+      ? liveOrdersCount
+      : '—';
+
+  const resolvedDecorTotal =
+    totalDecorationEnquiries !== '—'
+      ? totalDecorationEnquiries
+      : liveDecorCount !== null
+      ? liveDecorCount
+      : '—';
+
+  const resolvedSubmissions =
+    recentSubmissions && recentSubmissions.length > 0
+      ? recentSubmissions
+      : liveSubmissions;
+
   // Section B business totals
   const businessTotals = [
     {
       id: 'orders',
       label: 'Total Orders',
-      value: totalOrders,
-      note: 'Awaiting module sync',
+      value: resolvedOrdersTotal,
+      note: liveOrdersCount !== null ? 'Live orders count' : 'Awaiting module sync',
     },
     {
       id: 'custom-requests',
@@ -104,8 +173,8 @@ export default function OverviewPage({
     {
       id: 'decor-enquiries',
       label: 'Decoration Enquiries',
-      value: totalDecorationEnquiries,
-      note: 'Awaiting module sync',
+      value: resolvedDecorTotal,
+      note: liveDecorCount !== null ? 'Live enquiries count' : 'Awaiting module sync',
     },
     {
       id: 'catalogue',
@@ -216,7 +285,7 @@ export default function OverviewPage({
         {/* Combined Table with Integrated Empty State */}
         <AdminDataTable
           columns={submissionColumns}
-          data={recentSubmissions}
+          data={resolvedSubmissions}
           emptyState={
             <AdminEmptyState
               icon="overview"
@@ -233,7 +302,16 @@ export default function OverviewPage({
                 {item.date}
               </td>
               <td className="px-4 py-3 font-mono text-xs text-[#DEAC4B] font-medium">
-                {item.reference}
+                {item.url ? (
+                  <Link
+                    to={item.url}
+                    className="hover:text-[#FBD46D] hover:underline"
+                  >
+                    {item.reference}
+                  </Link>
+                ) : (
+                  item.reference
+                )}
               </td>
               <td className="px-4 py-3 text-stone-200">
                 <AdminStatusBadge tone={getSubmissionTypeTone(item.type)}>
