@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router'
 import decoration0Img from '../../assets/images/decoration0.jpg'
 import decoration1Img from '../../assets/images/decoration1.jpg'
@@ -175,6 +175,33 @@ export default function DecorationsPage() {
       prev === null ? null : (prev + 1) % portfolioStudies.length
     )
   }, [])
+
+  const touchStartXRef = useRef(null)
+  const touchEndXRef = useRef(null)
+
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.targetTouches[0].clientX
+    touchEndXRef.current = null
+  }
+
+  const handleTouchMove = (e) => {
+    touchEndXRef.current = e.targetTouches[0].clientX
+  }
+
+  const handleTouchEnd = () => {
+    if (touchStartXRef.current === null || touchEndXRef.current === null) return
+    const distance = touchStartXRef.current - touchEndXRef.current
+    const isSwipe = Math.abs(distance) > 40
+    if (isSwipe) {
+      if (distance > 0) {
+        showNextImage()
+      } else {
+        showPrevImage()
+      }
+    }
+    touchStartXRef.current = null
+    touchEndXRef.current = null
+  }
 
   useEffect(() => {
     if (lightboxIndex === null) return
@@ -739,8 +766,11 @@ export default function DecorationsPage() {
 
           {/* Center Image Stage */}
           <div
-            className="relative flex-1 w-full flex items-center justify-center overflow-auto px-4 sm:px-16 py-2"
+            className="relative flex-1 w-full flex items-center justify-center overflow-auto px-2 sm:px-16 py-2 touch-pan-y"
             onClick={closeLightbox}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <button
               type="button"
@@ -749,7 +779,7 @@ export default function DecorationsPage() {
                 showPrevImage()
               }}
               aria-label="Previous image"
-              className="fixed left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#181512] hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/50 flex items-center justify-center shadow-2xl transition-colors cursor-pointer"
+              className="hidden sm:flex fixed left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#181512]/90 hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/50 items-center justify-center shadow-2xl transition-colors cursor-pointer"
             >
               &#8592;
             </button>
@@ -761,10 +791,10 @@ export default function DecorationsPage() {
                 e.stopPropagation()
                 setIsZoomed((z) => !z)
               }}
-              className={`transition-transform duration-300 rounded-xs shadow-[0_20px_70px_rgba(0,0,0,0.9)] ${
+              className={`transition-transform duration-300 rounded-xs shadow-[0_20px_70px_rgba(0,0,0,0.9)] select-none ${
                 isZoomed
                   ? 'max-w-none w-[135vw] sm:w-[115vw] max-h-none cursor-zoom-out'
-                  : 'max-h-[72vh] sm:max-h-[76vh] max-w-[92vw] sm:max-w-[82vw] w-auto h-auto object-contain cursor-zoom-in'
+                  : 'max-h-[70vh] sm:max-h-[76vh] max-w-[94vw] sm:max-w-[82vw] w-auto h-auto object-contain cursor-zoom-in'
               }`}
             />
 
@@ -775,7 +805,7 @@ export default function DecorationsPage() {
                 showNextImage()
               }}
               aria-label="Next image"
-              className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#181512] hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/50 flex items-center justify-center shadow-2xl transition-colors cursor-pointer"
+              className="hidden sm:flex fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#181512]/90 hover:bg-primary-gold text-champagne-gold hover:text-dark-canvas border border-primary-gold/50 items-center justify-center shadow-2xl transition-colors cursor-pointer"
             >
               &#8594;
             </button>
@@ -783,21 +813,21 @@ export default function DecorationsPage() {
 
           {/* Bottom Caption & Enquire Action */}
           <div
-            className="w-full px-4 sm:px-8 py-4 bg-[#100e0c] border-t border-white/10 z-20"
+            className="w-full px-4 sm:px-8 py-3 sm:py-4 bg-[#100e0c] border-t border-white/10 z-20"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
+              <div className="min-w-0">
                 <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary-gold block">
                   {activeLightboxStudy.categoryTag} &bull; {activeLightboxStudy.venueType}
                 </span>
-                <p className="font-sans text-xs sm:text-sm text-gray-300 mt-0.5">
+                <p className="font-sans text-xs sm:text-sm text-gray-300 mt-0.5 line-clamp-2 sm:line-clamp-none">
                   {activeLightboxStudy.summary}
                 </p>
               </div>
               <Link
                 to={`/decorations/enquire?style=${encodeURIComponent(activeLightboxStudy.title)}&occasion=${encodeURIComponent(activeLightboxStudy.occasionParam)}`}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-gold text-[#141210] hover:bg-gold-highlight font-sans text-xs font-semibold uppercase tracking-[0.16em] rounded transition-colors shrink-0"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-gold text-[#141210] hover:bg-gold-highlight font-sans text-xs font-semibold uppercase tracking-[0.16em] rounded transition-colors shrink-0 text-center w-full sm:w-auto"
               >
                 <span>Enquire About This Style</span>
                 <span aria-hidden="true">&rarr;</span>

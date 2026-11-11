@@ -204,6 +204,17 @@ export default function DecorationEnquiryPage() {
             </dl>
 
             <div className="flex flex-wrap items-center gap-4">
+              <a
+                href={`https://wa.me/256705100010?text=${encodeURIComponent(
+                  `Hello Zuena Cakes & Decor, I have submitted an event decoration enquiry (${createdReference || 'Pending Ref'}) for my ${formData.occasion} on ${formData.eventDate || 'my celebration date'}.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#25D366] hover:bg-[#20ba5a] text-[#141210] text-xs font-semibold uppercase tracking-[0.14em] rounded-sm transition-all shadow-md"
+              >
+                <span>Connect via WhatsApp</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
               <button
                 type="button"
                 onClick={() => setSubmitted(false)}
@@ -213,7 +224,7 @@ export default function DecorationEnquiryPage() {
               </button>
               <Link
                 to="/decorations"
-                className="px-6 py-3 border border-white/20 text-champagne-gold hover:text-white text-xs font-semibold uppercase tracking-[0.16em] rounded-sm transition-colors"
+                className="px-6 py-3 border border-white/20 text-champagne-gold hover:text-white text-xs font-semibold uppercase tracking-[0.16em] rounded-sm transition-colors text-center"
               >
                 Return to Lookbook
               </Link>

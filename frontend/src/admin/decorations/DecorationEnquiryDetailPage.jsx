@@ -118,6 +118,7 @@ export default function DecorationEnquiryDetailPage() {
   });
   const [isSavingNotes, setIsSavingNotes] = useState(false);
   const [notesFeedback, setNotesFeedback] = useState(null);
+  const [copiedBrief, setCopiedBrief] = useState(false);
 
   const statusSelectId = useId();
 
@@ -268,17 +269,44 @@ export default function DecorationEnquiryDetailPage() {
   const matchedLookbookImage =
     enquiry.prefilledStyle && portfolioThumbnails[enquiry.prefilledStyle];
 
-  const waNumber = formatWhatsAppNumber(enquiry.customer?.phone);
+  const waNumber = formatWhatsAppNumber(enquiry?.customer?.phone);
   const waUrl = waNumber
     ? `https://wa.me/${waNumber}?text=${encodeURIComponent(
         `Hello ${enquiry.customer?.name}, this is Zuena Cakes & Decor reaching out regarding your ${enquiry.occasion} decoration enquiry (${enquiry.reference}).`
       )}`
     : null;
 
+  const handleCopyBrief = () => {
+    if (!enquiry) return;
+    const briefText = [
+      `Zuena Cakes & Decor — Decoration Enquiry Brief`,
+      `Reference: ${enquiry.reference}`,
+      `Customer: ${enquiry.customer?.name} (${enquiry.customer?.phone}${enquiry.customer?.email ? ` | ${enquiry.customer?.email}` : ''})`,
+      `Occasion: ${enquiry.occasion}`,
+      `Date: ${formatLongDate(enquiry.eventDate)}`,
+      `Venue: ${enquiry.venueLocation || 'To be determined'}`,
+      `Guest Scale: ${enquiry.guestCount || 'To be determined'}`,
+      `Styling Discipline: ${enquiry.stylingDiscipline}`,
+      enquiry.prefilledStyle ? `Lookbook Reference: ${enquiry.prefilledStyle}` : null,
+      enquiry.preferredPalette ? `Color Palette: ${enquiry.preferredPalette}` : null,
+      enquiry.notes ? `Client Vision Notes: "${enquiry.notes}"` : null,
+      `Status: ${currentStatusMeta.label}`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(briefText).then(() => {
+        setCopiedBrief(true);
+        setTimeout(() => setCopiedBrief(false), 2400);
+      });
+    }
+  };
+
   return (
     <div className="space-y-8">
-      {/* Back Link */}
-      <div>
+      {/* Top Bar Navigation & Actions */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <AdminButton
           variant="ghost"
           size="sm"
@@ -286,6 +314,15 @@ export default function DecorationEnquiryDetailPage() {
           icon="arrow-left"
         >
           Back to Decoration Enquiries
+        </AdminButton>
+
+        <AdminButton
+          variant="secondary"
+          size="sm"
+          onClick={handleCopyBrief}
+          icon={copiedBrief ? "check" : "calendar"}
+        >
+          {copiedBrief ? 'Brief Copied to Clipboard!' : 'Copy Enquiry Brief'}
         </AdminButton>
       </div>
 
